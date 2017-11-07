@@ -1,0 +1,14 @@
+{
+    "legacy_addon_id": "",
+    "title": "Antispam by CleanTalk",
+    "description": "Max power, all-in-one, no CAPTCHA, premium antispam plugin. No comment spam, no registration spam. Formerly Antispam by CleanTalk",
+    "version_id": 1000,
+    "version_string": "1.0",
+    "dev": "CleanTalk",
+    "dev_url": "https://cleantalk.org/",
+    "faq_url": "https://cleantalk.org/help",
+    "support_url": "https://cleantalk.org/my/support",
+    "extra_urls": [],
+    "require": [],
+    "icon": "ct_icon.png"
+}
