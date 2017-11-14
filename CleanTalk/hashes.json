@@ -1,13 +1,13 @@
 {
-    "src/addons/CleanTalk/addon.json": "d295046995b982d0096c057d2d9e9db62253c116916b25af4888e45027df4fa6",
+    "src/addons/CleanTalk/addon.json": "64dbc3d70f15a33b4b0a6af16238d47dfe8400e901778a32320e395b2d889e36",
     "src/addons/CleanTalk/Cleantalk.php": "f7e63291c80d6c1f1f360a271a6a758e6526c544f711c68265ff862d387f9e2e",
     "src/addons/CleanTalk/CleantalkHelper.php": "0750e36efbe20d5981a9bbd566b1d582a011247e50389b3f88c56f930f3aced3",
     "src/addons/CleanTalk/CleantalkRequest.php": "8ca03a08ffdfbd8a5f342b15cf382087b6b750d47ce40dd677f175e1b7e8bdfe",
     "src/addons/CleanTalk/CleantalkResponse.php": "2623e9a1725d948c1d89b7a45564e953ebc5548aba6785116493651189016479",
     "src/addons/CleanTalk/ct_icon.png": "fb2c4bc996616fb6cb2386a162b6cbb1ce5500bd8fa7a9fe8bc6c344855d846e",
     "src/addons/CleanTalk/Setup.php": "755fc5d20833aa3a22de45cdc34ff9c0b6b2463f54d3de48f9f1e2dd887437af",
-    "src/addons/CleanTalk/XF/Pub/Controller/AbstractController.php": "83a1e941a288b30f1109c7df6d9131a1a5495799dd8189132b5ea75422b240d3",
-    "src/addons/CleanTalk/XF/Service/Post/Preparer.php": "4ebe58d63f1ef8f1a55b6faa6c7ef0a7657eda30c04968daf734dccb5c0b4182",
-    "src/addons/CleanTalk/XF/Service/User/Registration.php": "b3df66603c30e31aaf4615c0d765fae3f46dc82a9974b9013cc8986f214e9bd7",
-    "src/addons/CleanTalk/XF/Template/Templater.php": "78f9ff4af99ed5aedee0338c1dfc731a19701218fac2b65dfa687e069593f506"
+    "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkContent.php": "b124bf7826f367eb36da518f4d0e070f05200dbdc77dda3aa29aeeedfbfebc88",
+    "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "f46966f9044ae5780a67c068a4dae09214b6f2908163b5ba980c3a2c260f4d76",
+    "src/addons/CleanTalk/XF/SubContainer/Spam.php": "a83023a036fbcca5381b434142bad78a2fd4cbefeda042395abc69a45eed9c8b",
+    "src/addons/CleanTalk/XF/Template/Templater.php": "711cc675f3873c084e310ebb37752ced2f8faee53f4272dd3fc36039203a5298"
 }

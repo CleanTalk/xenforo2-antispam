@@ -8,7 +8,7 @@
     <default_value>1</default_value>
     <relation group_id="cleantalk" display_order="2"/>
   </option>
-  <option option_id="ct_checkthreads" edit_format="onoff" data_type="boolean">
+  <option option_id="ct_checkcontent" edit_format="onoff" data_type="boolean">
     <default_value>1</default_value>
     <relation group_id="cleantalk" display_order="3"/>
   </option>
