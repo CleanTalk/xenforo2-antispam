@@ -1,6 +1,10 @@
 <?php
 
 namespace CleanTalk\XF\Spam\Checker;
+require_once $_SERVER['DOCUMENT_ROOT'].'/src/addons/CleanTalk/Cleantalk.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/src/addons/CleanTalk/CleantalkHelper.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/src/addons/CleanTalk/CleantalkRequest.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/src/addons/CleanTalk/CleantalkResponse.php';
 use Cleantalk\Cleantalk;
 use Cleantalk\CleantalkRequest;
 use Cleantalk\CleantalkResponse;
@@ -63,7 +67,7 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
         $ct_request->sender_nickname = $user->username;
         $ct_request->message = $message;
         $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
-        $ct_request->agent = 'xenforo2-12';
+        $ct_request->agent = 'xenforo2-13';
         $ct_request->js_on = $js_on;
         $ct_request->submit_time = time() - $cookie_timestamp;
         $ct_request->sender_info = $sender_info;
