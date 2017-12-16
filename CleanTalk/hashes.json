@@ -1,13 +1,17 @@
 {
-    "src/addons/CleanTalk/addon.json": "8bcce088e1c4dd30fc9e69b2fafc1f1a6acb9b2bc036ee2868f7f9d9067a0d6c",
+    "src/addons/CleanTalk/addon.json": "32ba744803a6a17fffea337b68c8730ff0412e5e4d319e117cf6aa14a250975c",
     "src/addons/CleanTalk/Cleantalk.php": "fc97bd1797f9ee918b531e550b694ffc68a0081fe3770e2aebc86381862041a7",
     "src/addons/CleanTalk/CleantalkHelper.php": "0750e36efbe20d5981a9bbd566b1d582a011247e50389b3f88c56f930f3aced3",
     "src/addons/CleanTalk/CleantalkRequest.php": "8ca03a08ffdfbd8a5f342b15cf382087b6b750d47ce40dd677f175e1b7e8bdfe",
     "src/addons/CleanTalk/CleantalkResponse.php": "2623e9a1725d948c1d89b7a45564e953ebc5548aba6785116493651189016479",
     "src/addons/CleanTalk/ct_icon.png": "fb2c4bc996616fb6cb2386a162b6cbb1ce5500bd8fa7a9fe8bc6c344855d846e",
     "src/addons/CleanTalk/Setup.php": "755fc5d20833aa3a22de45cdc34ff9c0b6b2463f54d3de48f9f1e2dd887437af",
-    "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkContent.php": "bccd37a2abdde4b910b2bf6f607ef6b0d9cd014ae5ef2a78a23d6fdbed238309",
-    "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "699e0b57e27751b138fd8baef83647df4a2b7ac423213b9d7ca3b20001bf7829",
+    "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkContent.php": "d21cd502122c67b9a1f0422eebd7ae09dfc2347854906e998af161ac165c3f43",
+    "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "94a29a02c8d11ec32ae10e0c9001264a87267a6be072bbff38225da1b3936efe",
     "src/addons/CleanTalk/XF/SubContainer/Spam.php": "a83023a036fbcca5381b434142bad78a2fd4cbefeda042395abc69a45eed9c8b",
-    "src/addons/CleanTalk/XF/Template/Templater.php": "711cc675f3873c084e310ebb37752ced2f8faee53f4272dd3fc36039203a5298"
+    "src/addons/CleanTalk/XF/Template/Templater.php": "9e7ef731c2b4cef90dc90b974a6ff412c2d7ca3317126fc8ef03c3383e328077",
+    "src/addons/CleanTalk/_data/class_extensions.xml": "eedeacc38d2b53082bd6a4619b3983b6374dba78fc6b7719e34f6f21a55d376a",
+    "src/addons/CleanTalk/_data/options.xml": "6da91b3de682e0ce22484618c8e006dbfa5221bba18db1488cc87bf24b307239",
+    "src/addons/CleanTalk/_data/option_groups.xml": "3c0af3d3990a60fe78c796c01b02c0ba83c3e5be3671991b7827016dfb6ee94a",
+    "src/addons/CleanTalk/_data/phrases.xml": "dbef32c8d348cbb2982f5b3540e3ba3a3b4d873179ef6ce5c417991ff91a4e2f"
 }

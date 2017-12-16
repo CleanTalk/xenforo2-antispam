@@ -66,7 +66,7 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
         $ct_request->sender_email = $user->email;
         $ct_request->sender_nickname = $user->username;
         $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
-        $ct_request->agent = 'xenforo2-13';
+        $ct_request->agent = 'xenforo2-14';
         $ct_request->js_on = $js_on;
         $ct_request->submit_time = time() - $cookie_timestamp;
         $ct_request->sender_info = $sender_info;
