@@ -9,9 +9,5 @@
     "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkContent.php": "d21cd502122c67b9a1f0422eebd7ae09dfc2347854906e998af161ac165c3f43",
     "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "94a29a02c8d11ec32ae10e0c9001264a87267a6be072bbff38225da1b3936efe",
     "src/addons/CleanTalk/XF/SubContainer/Spam.php": "a83023a036fbcca5381b434142bad78a2fd4cbefeda042395abc69a45eed9c8b",
-    "src/addons/CleanTalk/XF/Template/Templater.php": "9e7ef731c2b4cef90dc90b974a6ff412c2d7ca3317126fc8ef03c3383e328077",
-    "src/addons/CleanTalk/_data/class_extensions.xml": "eedeacc38d2b53082bd6a4619b3983b6374dba78fc6b7719e34f6f21a55d376a",
-    "src/addons/CleanTalk/_data/options.xml": "6da91b3de682e0ce22484618c8e006dbfa5221bba18db1488cc87bf24b307239",
-    "src/addons/CleanTalk/_data/option_groups.xml": "3c0af3d3990a60fe78c796c01b02c0ba83c3e5be3671991b7827016dfb6ee94a",
-    "src/addons/CleanTalk/_data/phrases.xml": "dbef32c8d348cbb2982f5b3540e3ba3a3b4d873179ef6ce5c417991ff91a4e2f"
+    "src/addons/CleanTalk/XF/Template/Templater.php": "9d57ccf6ae6af57f6c1d4c0d1e57e119eaaca5727a2aea4ecabe08403b3c7f6d"
 }
