@@ -4,6 +4,7 @@ namespace CleanTalk\XF\SubContainer;
 
 use XF\Container;
 use XF\Entity;
+
 class Spam extends XFCP_Spam
 {
 	public function initialize()
