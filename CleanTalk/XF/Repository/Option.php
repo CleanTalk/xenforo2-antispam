@@ -16,7 +16,7 @@ class Option extends \XF\Repository\Option
 		$options = parent::updateOptions($values);
 		if ($values['ct_apikey'])
 		{
-			CleantalkHelper::api_method_send_empty_feedback($values['ct_apikey'], 'xenforo2-16');
+			CleantalkHelper::api_method_send_empty_feedback($values['ct_apikey'], 'xenforo2-17');
 			
 			if ($values['ct_sfw'])
 			{

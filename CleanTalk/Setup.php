@@ -23,10 +23,7 @@ class Setup extends AbstractSetup
 	        $table->addColumn('network', 'int', 10);
 	        $table->addColumn('mask', 'int', 10);
 	    });
-	}
 
-	public function installStep2()
-	{
 	    $this->schemaManager()->createTable('xf_cleantalk_sfw_logs', function(Create $table)
 	    {
 	        $table->addColumn('ip', 'varchar', 15);
@@ -34,16 +31,30 @@ class Setup extends AbstractSetup
 	        $table->addColumn('blocked_entries', 'int', 11);
 	        $table->addColumn('entries_timestamp', 'int', 11);
 	        $table->addPrimaryKey('ip');
-	    });		
+	    });	    
 	}
 
+	public function upgrade16Step1()
+	{
+	    $this->schemaManager()->createTable('xf_cleantalk_sfw', function(Create $table)
+	    {
+	        $table->addColumn('network', 'int', 10);
+	        $table->addColumn('mask', 'int', 10);
+	    });
+
+	    $this->schemaManager()->createTable('xf_cleantalk_sfw_logs', function(Create $table)
+	    {
+	        $table->addColumn('ip', 'varchar', 15);
+	        $table->addColumn('all_entries', 'int', 11);
+	        $table->addColumn('blocked_entries', 'int', 11);
+	        $table->addColumn('entries_timestamp', 'int', 11);
+	        $table->addPrimaryKey('ip');
+	    });	
+	}
+	
 	public function uninstallStep1()
 	{
 	    $this->schemaManager()->dropTable('xf_cleantalk_sfw');
-	}
-
-	public function uninstallStep2()
-	{
-	    $this->schemaManager()->dropTable('xf_cleantalk_sfw_logs');
+	    $this->schemaManager()->dropTable('xf_cleantalk_sfw_logs');	    
 	}	
 }
