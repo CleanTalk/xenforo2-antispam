@@ -14,11 +14,11 @@ class Option extends \XF\Repository\Option
 	public function updateOptions(array $values)
 	{
 		$options = parent::updateOptions($values);
-		if ($values['ct_apikey'])
+		if (isset($values['ct_apikey']) && $values['ct_apikey'] != '')
 		{
 			CleantalkHelper::api_method_send_empty_feedback($values['ct_apikey'], 'xenforo2-17');
 			
-			if ($values['ct_sfw'])
+			if (isset($values['ct_sfw']) && intval($values['ct_sfw']) == 1)
 			{
 				$sfw = new CleantalkSFW();
 				$sfw->sfw_update($values['ct_apikey']);
