@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <option_groups>
   <group group_id="cleantalk" display_order="100" debug_only="0"/>
+  <group group_id="cleantalk_data" display_order="101" debug_only="1"/>
 </option_groups>

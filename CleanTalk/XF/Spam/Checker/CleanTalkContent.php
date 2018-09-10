@@ -64,6 +64,11 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
         ); 
 
         $ct = new Cleantalk();
+        $ct->server_url = $this->app->options()->ct_server_url;
+        $ct->work_url = $this->app->options()->ct_work_url;
+        $ct->server_ttl = $this->app->options()->ct_server_ttl;
+        $ct->server_changed = $this->app->options()->ct_server_changed;
+                
         $ct_request = new CleantalkRequest();
         $ct_request->auth_key = $this->getApiKey();
         $ct_request->sender_email = $user->email;
@@ -72,13 +77,19 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
         $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
         $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
         $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
-        $ct_request->agent = 'xenforo2-17';
+        $ct_request->agent = 'xenforo2-18';
         $ct_request->js_on = (isset($_POST['ct_checkjs']) && $_POST['ct_checkjs'] == date("Y")) ? 1 : 0;
         $ct_request->submit_time = time() - intval($page_set_timestamp);
         $ct_request->sender_info = $sender_info;
-        $ct->work_url = 'http://moderate.cleantalk.org';
-        $ct->server_url = 'http://moderate.cleantalk.org';
         $ct_result = $ct->isAllowMessage($ct_request);
+
+        //Set fastest server
+        if ($ct->server_change)
+        {
+            $this->app->repository('XF:Option')->updateOption('ct_work_url',$ct->work_url);
+            $this->app->repository('XF:Option')->updateOption('ct_server_ttl',$ct->server_ttl); 
+            $this->app->repository('XF:Option')->updateOption('ct_server_changed',time());                       
+        }
 
         if ($ct_result->errno == 0 && $ct_result->allow == 0)
         {
@@ -134,6 +145,6 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
 
     protected function getApiKey()
     {
-        return trim($this->app()->options()->ct_apikey);
+        return trim($this->app->options()->ct_apikey);
     }        	
 }

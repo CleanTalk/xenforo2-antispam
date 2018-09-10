@@ -104,44 +104,63 @@ class Templater extends XFCP_Templater
 	public function renderTemplate($template, array $params = [], $addDefaultParams = true)
 	{
 		$output = parent::renderTemplate($template, $params, $addDefaultParams);
+		static $show_flag = true;
 
+		if ($show_flag)
+		{
+			$show_flag = false;
+
+			$this->ctSetCookie();
+
+			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
+			{
+			   	$is_sfw_check = true;
+				$sfw = new CleantalkSFW();
+				$sfw->ip_array = (array)CleantalkSFW::ip_get(array('real'), true);	
+					
+	            foreach($sfw->ip_array as $key => $value)
+	            {
+			        if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key'] == md5($value . trim($this->app->options()->ct_apikey)))
+			        {
+			          $is_sfw_check=false;
+			          if(isset($_COOKIE['ct_sfw_passed']))
+			          {
+			            @setcookie ('ct_sfw_passed'); //Deleting cookie
+			            $sfw->sfw_update_logs($value, 'passed');
+			          }
+			        }
+		      	} unset($key, $value);	
+
+				if($is_sfw_check)
+				{
+					$sfw->check_ip();
+					if($sfw->result)
+					{
+						$sfw->sfw_update_logs($sfw->blocked_ip, 'blocked');
+						$sfw->sfw_die(trim($this->app->options()->ct_apikey));
+					}
+				}
+
+				if (time() - $this->app->options()->ct_sfw_last_send_log > $this->app->options()->ct_sfw_send_log_interval)
+				{
+					$sfw->send_logs(trim($this->app->options()->ct_apikey));
+					$this->app->repository('XF:Option')->updateOption('ct_sfw_last_send_log',time());
+				}
+
+				if (time() - $this->app->options()->ct_sfw_last_check > $this->app->options()->ct_sfw_check_interval)
+				{
+					$sfw->sfw_update(trim($this->app->options()->ct_apikey));
+					$this->app->repository('XF:Option')->updateOption('ct_sfw_last_check',time());
+				}	      				
+			}
+		}
+		
 		if ($this->app->options()->ct_footerlink)
 		{
 			$footer = "<li><div id='cleantalk_footer_link' style='width:100%;margin-right:250px;'><a href='https://cleantalk.org/xenforo-antispam-addon'>Anti-spam by CleanTalk</a> for Xenforo!</div></li>";
 			$output = str_replace('<ul class="p-footer-linkList">', '<ul class="p-footer-linkList">' . $footer, $output);			
 		}
-		
-		$this->ctSetCookie();
 
-		if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
-		{
-		   	$is_sfw_check = true;
-			$sfw = new CleantalkSFW();
-			$sfw->ip_array = (array)CleantalkSFW::ip_get(array('real'), true);	
-				
-            foreach($sfw->ip_array as $key => $value)
-            {
-		        if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key'] == md5($value . trim($this->app->options()->ct_apikey)))
-		        {
-		          $is_sfw_check=false;
-		          if(isset($_COOKIE['ct_sfw_passed']))
-		          {
-		            @setcookie ('ct_sfw_passed'); //Deleting cookie
-		            $sfw->sfw_update_logs($value, 'passed');
-		          }
-		        }
-	      	} unset($key, $value);	
-
-			if($is_sfw_check)
-			{
-				$sfw->check_ip();
-				if($sfw->result)
-				{
-					$sfw->sfw_update_logs($sfw->blocked_ip, 'blocked');
-					$sfw->sfw_die(trim($this->app->options()->ct_apikey));
-				}
-			}	      				
-		}
 
 		return $output;
 	}
