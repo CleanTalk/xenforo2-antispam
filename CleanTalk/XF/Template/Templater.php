@@ -109,8 +109,8 @@ class Templater extends XFCP_Templater
 		if ($show_flag)
 		{
 			$show_flag = false;
-
-			$this->ctSetCookie();
+			if (!headers_sent())
+				$this->ctSetCookie();
 
 			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
 			{
