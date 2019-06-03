@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<options/>
+<options>
+  <option option_id="ct_apikey" edit_format="textbox" data_type="string">
+    <default_value></default_value>
+    <relation group_id="cleantalk" display_order="1"/>
+  </option>
+  <option option_id="ct_checkcontent" edit_format="onoff" data_type="boolean">
+    <default_value>1</default_value>
+    <relation group_id="cleantalk" display_order="2"/>
+  </option>
+  <option option_id="ct_checkreg" edit_format="onoff" data_type="boolean">
+    <default_value>1</default_value>
+    <relation group_id="cleantalk" display_order="3"/>
+  </option>
+  <option option_id="ct_footerlink" edit_format="onoff" data_type="boolean">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk" display_order="5"/>
+  </option>
+  <option option_id="ct_server_changed" edit_format="spinbox" data_type="integer">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_server_ttl" edit_format="spinbox" data_type="integer">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_server_url" edit_format="textbox" data_type="string">
+    <default_value>http://moderate.cleantalk.org</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_sfw" edit_format="onoff" data_type="boolean">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk" display_order="4"/>
+  </option>
+  <option option_id="ct_sfw_check_interval" edit_format="spinbox" data_type="integer">
+    <default_value>86400</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_sfw_last_check" edit_format="spinbox" data_type="integer">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_sfw_last_send_log" edit_format="spinbox" data_type="integer">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_sfw_send_log_interval" edit_format="spinbox" data_type="integer">
+    <default_value>3600</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_work_url" edit_format="textbox" data_type="string">
+    <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+</options>
