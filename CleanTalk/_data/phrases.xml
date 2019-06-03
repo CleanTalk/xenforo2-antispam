@@ -1,16 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phrases>
-  <phrase title="cleantalk_matched_x" version_id="10000" version_string="1.0.0"><![CDATA[CleanTalk matched ({matches})]]></phrase>
-  <phrase title="option.ct_apikey" version_id="10000" version_string="1.0.0"><![CDATA[Access key]]></phrase>
-  <phrase title="option.ct_checkcontent" version_id="10000" version_string="1.0.0"><![CDATA[Check users content against the CleanTalk antispam service]]></phrase>
-  <phrase title="option.ct_checkreg" version_id="10000" version_string="1.0.0"><![CDATA[Check new registrations against the CleanTalk antispam service]]></phrase>
-  <phrase title="option.ct_footerlink" version_id="10000" version_string="1.0.0"><![CDATA[Tell others about CleanTalk]]></phrase>
-  <phrase title="option.ct_sfw" version_id="10000" version_string="1.0.0"><![CDATA[Enable SpamFireWall]]></phrase>
-  <phrase title="option_explain.ct_apikey" version_id="10000" version_string="1.0.0"><![CDATA[Click <a href='https://cleantalk.org/register?platform=xenforo2'>here</a> to get access key.]]></phrase>
-  <phrase title="option_explain.ct_checkcontent" version_id="10000" version_string="1.0.0"><![CDATA[Anti-spam by CleanTalk will check all content on your forum]]></phrase>
-  <phrase title="option_explain.ct_checkreg" version_id="10000" version_string="1.0.0"><![CDATA[Anti-spam by CleanTalk will check all registrations on your forum]]></phrase>
-  <phrase title="option_explain.ct_footerlink" version_id="10000" version_string="1.0.0"><![CDATA[Checking this box places a small link in the footer that lets others know what anti-spam tool protects your website]]></phrase>
-  <phrase title="option_explain.ct_sfw" version_id="10000" version_string="1.0.0"><![CDATA[This option allows to filter spam bots before they access website. Also reduces CPU usage on hosting server and accelerates pages load time]]></phrase>
-  <phrase title="option_group.cleantalk" version_id="10000" version_string="1.0.0"><![CDATA[Antispam by CleanTalk]]></phrase>
-  <phrase title="option_group_description.cleantalk" version_id="10000" version_string="1.0.0"><![CDATA[]]></phrase>
-</phrases>
+<phrases/>
