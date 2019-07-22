@@ -81,7 +81,7 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
         $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
         $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
         $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
-        $ct_request->agent = 'xenforo2-19';
+        $ct_request->agent = 'xenforo2-20';
         $ct_request->js_on = (isset($_POST['ct_checkjs']) && $_POST['ct_checkjs'] == date("Y")) ? 1 : 0;
         $ct_request->submit_time = time() - intval($page_set_timestamp);
         $ct_request->sender_info = $sender_info;
