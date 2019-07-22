@@ -8,13 +8,30 @@
     <default_value>1</default_value>
     <relation group_id="cleantalk" display_order="2"/>
   </option>
-  <option option_id="ct_checkreg" edit_format="onoff" data_type="boolean">
+  <option option_id="ct_check_pm" edit_format="onoff" data_type="boolean">
     <default_value>1</default_value>
     <relation group_id="cleantalk" display_order="3"/>
   </option>
+  <option option_id="ct_checkreg" edit_format="onoff" data_type="boolean">
+    <default_value>1</default_value>
+    <relation group_id="cleantalk" display_order="4"/>
+  </option>
+  <option option_id="ct_block_type" edit_format="radio" data_type="string">
+    <default_value>rejected</default_value>
+    <edit_format_params>
+      rejected={{ phrase('cleantalk_block_type_rejected') }}
+      automoderate={{ phrase('cleantalk_block_type_automoderate') }}
+      moderate={{ phrase('cleantalk_block_type_moderate') }}
+    </edit_format_params>    
+    <relation group_id="cleantalk" display_order="5"/>
+  </option>
+  <option option_id="ct_sfw" edit_format="onoff" data_type="boolean">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk" display_order="6"/>
+  </option>  
   <option option_id="ct_footerlink" edit_format="onoff" data_type="boolean">
     <default_value>0</default_value>
-    <relation group_id="cleantalk" display_order="5"/>
+    <relation group_id="cleantalk" display_order="7"/>
   </option>
   <option option_id="ct_server_changed" edit_format="spinbox" data_type="integer">
     <default_value>0</default_value>
@@ -27,10 +44,6 @@
   <option option_id="ct_server_url" edit_format="textbox" data_type="string">
     <default_value>http://moderate.cleantalk.org</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
-  </option>
-  <option option_id="ct_sfw" edit_format="onoff" data_type="boolean">
-    <default_value>0</default_value>
-    <relation group_id="cleantalk" display_order="4"/>
   </option>
   <option option_id="ct_sfw_check_interval" edit_format="spinbox" data_type="integer">
     <default_value>86400</default_value>

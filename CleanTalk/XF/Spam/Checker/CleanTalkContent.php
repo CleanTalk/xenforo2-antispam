@@ -13,35 +13,43 @@ use CleanTalk\CleantalkHelper;
 
 class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\Spam\Checker\ContentCheckerInterface
 {
-	protected function getType()
-	{
-		return 'CleanTalkContent';
-	}
+    protected function getType()
+    {
+        return 'CleanTalkContent';
+    }
 
-	public function check(\XF\Entity\User $user, $message, array $extraParams = [])
-	{
-		$decision = 'allowed';
+    public function check(\XF\Entity\User $user, $message, array $extraParams = [])
+    {
+        $decision = 'allowed';
 
-		try
-		{
-			$isSpam = $this->isSpam($user, $message, $extraParams);
-			if ($isSpam['decision'])
-			{
-				$decision = 'denied';
-				$ct_matches[] = "Reason: ".$isSpam['reason'];
-				$this->logDetail('cleantalk_matched_x', [
-					'matches' => implode(', ', $ct_matches)
-				]);
-			}
-		}
-		catch (\GuzzleHttp\Exception\RequestException $e) { $this->app()->logException($e, false, 'CleanTalk error: '); }
-		catch (\InvalidArgumentException $e) { $this->app()->logException($e, false, 'CleanTalk service error: '); }
+        try
+        {
+            $isSpam = $this->isSpam($user, $message, $extraParams);
+            if ($isSpam['decision'])
+            {
+                switch ($this->app->options->ct_block_type)
+                {
+                    case 'rejected': $decision = 'denied'; break;
+                    case 'moderate': $decision = 'moderated'; break;
+                    case 'automoderate': $decision = ($isSpam['stop_queue'] == 1) ? $decision = 'denied' : $decision = 'moderated'; break;
+                }
+                $ct_matches[] = "Reason: ".$isSpam['reason'];
+                $this->logDetail('cleantalk_matched_x', [
+                    'matches' => implode(', ', $ct_matches)
+                ]);
+            }
+        }
+        catch (\GuzzleHttp\Exception\RequestException $e) { $this->app()->logException($e, false, 'CleanTalk error: '); }
+        catch (\InvalidArgumentException $e) { $this->app()->logException($e, false, 'CleanTalk service error: '); }
 
-		$this->logDecision($decision);
-	}
+        $this->logDecision($decision);
+    }
 
-	protected function isSpam(\XF\Entity\User $user, $message, $extraParams)
-	{
+    protected function isSpam(\XF\Entity\User $user, $message, $extraParams)
+    {
+        if (isset($extraParams['content_type']) && $extraParams['content_type'] == 'conversation_message' && !$this->app->options()->ct_check_pm)
+            return;
+
         $decision = null;
 
         $page_set_timestamp = (isset($_COOKIE['ct_ps_timestamp']) ? $_COOKIE['ct_ps_timestamp'] : 0);
@@ -93,34 +101,35 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
 
         if ($ct_result->errno == 0 && $ct_result->allow == 0)
         {
-        	$decision['decision'] = true;
-        	$decision['reason'] = $ct_result->comment;   	
+            $decision['decision'] = true;
+            $decision['stop_queue'] = $ct_result->stop_queue;
+            $decision['reason'] = $ct_result->comment;      
         }
         
         return $decision;
-	}
+    }
 
-	public function submitHam($contentType, $contentIds)
-	{
-		foreach ($this->getContentSpamCheckParams($contentType, $contentIds) AS $contentId => $params)
-		{
-			if ($params)
-			{
-				$this->_submitHam($params);
-			}
-		}
-	}
+    public function submitHam($contentType, $contentIds)
+    {
+        foreach ($this->getContentSpamCheckParams($contentType, $contentIds) AS $contentId => $params)
+        {
+            if ($params)
+            {
+                $this->_submitHam($params);
+            }
+        }
+    }
 
-	public function submitSpam($contentType, $contentIds)
-	{
-		foreach ($this->getContentSpamCheckParams($contentType, $contentIds) AS $contentId => $params)
-		{
-			if ($params)
-			{
-				$this->_submitSpam($params);
-			}
-		}
-	}
+    public function submitSpam($contentType, $contentIds)
+    {
+        foreach ($this->getContentSpamCheckParams($contentType, $contentIds) AS $contentId => $params)
+        {
+            if ($params)
+            {
+                $this->_submitSpam($params);
+            }
+        }
+    }
 
     protected function ctCookiesTest()
     {   
@@ -146,5 +155,5 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
     protected function getApiKey()
     {
         return trim($this->app->options()->ct_apikey);
-    }        	
+    }           
 }

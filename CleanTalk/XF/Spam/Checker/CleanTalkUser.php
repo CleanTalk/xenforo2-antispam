@@ -27,7 +27,12 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
             $isSpam = $this->isSpam($user, $extraParams);
             if ($isSpam['decision'])
             {
-                $decision = 'denied';
+                switch ($this->app->options->ct_block_type)
+                {
+                    case 'rejected': $decision = 'denied'; break;
+                    case 'moderate': $decision = 'moderated'; break;
+                    case 'automoderate': $decision = ($isSpam['stop_queue'] == 1) ? $decision = 'denied' : $decision = 'moderated'; break;
+                }
                 $ct_matches[] = "Reason: ".$isSpam['reason'];
                 $this->logDetail('cleantalk_matched_x', [
                     'matches' => implode(', ', $ct_matches)
@@ -89,10 +94,11 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
             $this->app->repository('XF:Option')->updateOption('ct_server_ttl',$ct->server_ttl); 
             $this->app->repository('XF:Option')->updateOption('ct_server_changed',time());                       
         }
-        
+
         if ($ct_result->errno == 0 && $ct_result->allow == 0)
         {
             $decision['decision'] = true;
+            $decision['stop_queue'] = $ct_result->stop_queue;
             $decision['reason'] = $ct_result->comment;      
         }
         
