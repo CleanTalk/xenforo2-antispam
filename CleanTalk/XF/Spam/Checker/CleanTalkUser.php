@@ -85,21 +85,24 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
         $ct_request->js_on = (isset($_POST['ct_checkjs']) && $_POST['ct_checkjs'] == date("Y")) ? 1 : 0;
         $ct_request->submit_time = time() - intval($page_set_timestamp);
         $ct_request->sender_info = $sender_info;
-        $ct_result = $ct->isAllowUser($ct_request);
 
-        //Set fastest server
-        if ($ct->server_change)
+        if ($ct_request->sender_email != '') 
         {
-            $this->app->repository('XF:Option')->updateOption('ct_work_url',$ct->work_url);
-            $this->app->repository('XF:Option')->updateOption('ct_server_ttl',$ct->server_ttl); 
-            $this->app->repository('XF:Option')->updateOption('ct_server_changed',time());                       
-        }
+            $ct_result = $ct->isAllowUser($ct_request);
+            //Set fastest server
+            if ($ct->server_change)
+            {
+                $this->app->repository('XF:Option')->updateOption('ct_work_url',$ct->work_url);
+                $this->app->repository('XF:Option')->updateOption('ct_server_ttl',$ct->server_ttl); 
+                $this->app->repository('XF:Option')->updateOption('ct_server_changed',time());                       
+            }
 
-        if ($ct_result->errno == 0 && $ct_result->allow == 0)
-        {
-            $decision['decision'] = true;
-            $decision['stop_queue'] = $ct_result->stop_queue;
-            $decision['reason'] = $ct_result->comment;      
+            if ($ct_result->errno == 0 && $ct_result->allow == 0)
+            {
+                $decision['decision'] = true;
+                $decision['stop_queue'] = $ct_result->stop_queue;
+                $decision['reason'] = $ct_result->comment;      
+            }            
         }
         
         return $decision;
