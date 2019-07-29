@@ -109,8 +109,12 @@ class Templater extends XFCP_Templater
 		if ($show_flag)
 		{
 			$show_flag = false;
+
 			if (!headers_sent())
 				$this->ctSetCookie();
+
+			if (isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam', 'anti-spam', 'apbct')))
+				$this->ctRemoteCalls();
 
 			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
 			{
@@ -182,6 +186,62 @@ class Templater extends XFCP_Templater
         // Cookies test
         $cookie_test_value['check_value'] = md5($cookie_test_value['check_value']);
         setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');		
+	}
+
+	protected function ctRemoteCalls()
+	{
+		$remote_action = $_GET['spbc_remote_call_action'];
+
+		$save_params         = array();
+		$remote_calls_config = json_decode($this->app->options()->ct_remote_calls,true);
+
+		if ($remote_calls_config && is_array($remote_calls_config))
+		{
+			if (array_key_exists($remote_action, $remote_calls_config))
+			{
+				if (time() - $remote_calls_config[$remote_action] > 10)
+				{
+					$remote_calls_config[$remote_action] = time();
+					$this->app->repository('XF:Option')->updateOption('ct_remote_calls',json_encode($remote_calls_config));
+
+					if (strtolower($_GET['spbc_remote_call_token']) == strtolower(md5($this->app->options()->ct_apikey)))
+					{
+						// Close renew banner
+						if ($remote_action == 'close_renew_banner')
+						{
+							die('OK');
+							// SFW update
+						}
+						elseif ($remote_action == 'sfw_update')
+						{
+							$sfw = new CleantalkSFW();
+							$result = $sfw->sfw_update(trim($this->app->options()->ct_apikey));
+							die(empty($result['error']) ? 'OK' : 'FAIL ' . json_encode(array('error' => $result['error_string'])));
+							// SFW send logs
+						}
+						elseif ($remote_action == 'sfw_send_logs')
+						{
+							$sfw = new CleantalkSFW();
+							$result = $sfw->send_logs(trim($this->app->options()->ct_apikey));
+							die(empty($result['error']) ? 'OK' : 'FAIL ' . json_encode(array('error' => $result['error_string'])));
+							// Update plugin
+						}
+						elseif ($remote_action == 'update_plugin')
+						{
+							//add_action('wp', 'apbct_update', 1);
+						}
+						else
+							die('FAIL ' . json_encode(array('error' => 'UNKNOWN_ACTION_2')));
+					}
+					else
+						die('FAIL ' . json_encode(array('error' => 'WRONG_TOKEN')));
+				}
+				else
+					die('FAIL ' . json_encode(array('error' => 'TOO_MANY_ATTEMPTS')));
+			}
+			else
+				die('FAIL ' . json_encode(array('error' => 'UNKNOWN_ACTION')));
+		}
 	}
 	
 }
