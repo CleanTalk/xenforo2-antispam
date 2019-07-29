@@ -192,7 +192,6 @@ class Templater extends XFCP_Templater
 	{
 		$remote_action = $_GET['spbc_remote_call_action'];
 
-		$save_params         = array();
 		$remote_calls_config = json_decode($this->app->options()->ct_remote_calls,true);
 
 		if ($remote_calls_config && is_array($remote_calls_config))
