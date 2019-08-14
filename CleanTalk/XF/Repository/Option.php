@@ -9,7 +9,7 @@ use XF\Mvc\Entity\Repository;
 use CleanTalk\CleantalkSFW;
 use CleanTalk\CleantalkHelper;
 
-class Option extends \XF\Repository\Option
+class Option extends XFCP_Option
 {
 	public function updateOptions(array $values)
 	{
