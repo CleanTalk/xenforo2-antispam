@@ -29,6 +29,10 @@
     <default_value>0</default_value>
     <relation group_id="cleantalk" display_order="7"/>
   </option>
+  <option option_id="ct_remote_calls" edit_format="textbox" data_type="string">
+    <default_value>{"close_renew_banner":"0","sfw_update":"0","sfw_send_logs":"0"}</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
   <option option_id="ct_server_changed" edit_format="spinbox" data_type="integer">
     <default_value>0</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
@@ -63,10 +67,6 @@
   </option>
   <option option_id="ct_work_url" edit_format="textbox" data_type="string">
     <default_value></default_value>
-    <relation group_id="cleantalk_data" display_order="0"/>
-  </option>
-  <option option_id="ct_remote_calls" edit_format="textbox" data_type="string">
-    <default_value>{"close_renew_banner":"0","sfw_update":"0","sfw_send_logs":"0"}</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
 </options>
