@@ -72,7 +72,7 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
         try
         {
             $isSpam = $this->isSpam($user, $message, $extraParams);
-            if ($isSpam['decision'])
+            if (isset($isSpam['decision']))
             {
                 switch ($this->app->options->ct_block_type)
                 {
