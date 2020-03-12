@@ -1,0 +1,7 @@
+/*
+!/.gitignore
+!/LICENSE
+!/README.md
+!/CleanTalk
+/CleanTalk/_output
+/CleanTalk/_releases
