@@ -138,6 +138,8 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
         $ct_request->sender_info = $sender_info;
         $ct_result = $ct->isAllowMessage($ct_request);
 
+	    self::ct_hash( $ct_result->id );
+
         //Set fastest server
         if ($ct->server_change)
         {
@@ -202,5 +204,25 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
     protected function getApiKey()
     {
         return trim($this->app->options()->ct_apikey);
-    }           
+    }
+
+	/**
+	 * Inner function - Stores ang returns cleantalk hash of current comment
+	 * @param	string New hash or NULL
+	 * @return 	string New hash or current hash depending on parameter
+	 */
+    public static function ct_hash( $new_hash = '' ) {
+
+	    /**
+	     * Current hash
+	     */
+	    static $hash;
+
+	    if ( ! empty( $new_hash ) ) {
+		    $hash = $new_hash;
+	    }
+	    return $hash;
+
+    }
+
 }
