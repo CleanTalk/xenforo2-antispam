@@ -31,7 +31,14 @@ class Setup extends AbstractSetup
 	        $table->addColumn('blocked_entries', 'int', 11);
 	        $table->addColumn('entries_timestamp', 'int', 11);
 	        $table->addPrimaryKey('ip');
-	    });	    
+	    });
+
+	    // Adding a column to the post table to store the request id.
+		$this->schemaManager()->alterTable('xf_post', function(\XF\Db\Schema\Alter $table)
+		{
+			$table->addColumn('ct_hash', 'varchar', 255)->setDefault('');
+		});
+
 	}
 
 	public function upgrade16Step1()
@@ -51,10 +58,22 @@ class Setup extends AbstractSetup
 	        $table->addPrimaryKey('ip');
 	    });	
 	}
+
+	public function upgrade22Step1()
+	{
+		// Adding a column to the post table to store the request id.
+		$this->schemaManager()->alterTable('xf_post', function(\XF\Db\Schema\Alter $table)
+		{
+			$table->addColumn('ct_hash', 'varchar', 255)->setDefault('');
+		});
+	}
 	
 	public function uninstallStep1()
 	{
 	    $this->schemaManager()->dropTable('xf_cleantalk_sfw');
-	    $this->schemaManager()->dropTable('xf_cleantalk_sfw_logs');	    
+	    $this->schemaManager()->dropTable('xf_cleantalk_sfw_logs');
+		$this->schemaManager()->alterTable('xf_post', function (\XF\Db\Schema\Alter $table) {
+			$table->dropColumns(array('ct_hash'));
+		});
 	}	
 }
