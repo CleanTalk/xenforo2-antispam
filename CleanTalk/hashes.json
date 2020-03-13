@@ -6,14 +6,14 @@
     "src/addons/CleanTalk/CleantalkResponse.php": "2623e9a1725d948c1d89b7a45564e953ebc5548aba6785116493651189016479",
     "src/addons/CleanTalk/CleantalkSFW.php": "ae2ef1bb5d0828641c94f007e7a7ee543c8a6bc8691a04dc039cf495c2e0a6b2",
     "src/addons/CleanTalk/ct_icon.png": "fb2c4bc996616fb6cb2386a162b6cbb1ce5500bd8fa7a9fe8bc6c344855d846e",
-    "src/addons/CleanTalk/Setup.php": "00e98b3d4f31a578e46a503b439874339d29b19d10f58e7057bd697d9d99dfaf",
+    "src/addons/CleanTalk/Setup.php": "f3cdc94456a7f60e7197371b2204564af2d55281db744ecba8edc18ef6bb988f",
     "src/addons/CleanTalk/sfw_die_page.html": "afb1586bd2ee6c4d9b29cc0e41547b25fe50198f5d12d856cf61409075dadf31",
     "src/addons/CleanTalk/XF/Pub/Controller/Forum.php": "a17b31213888089101053e7f4c3dceaeb87a79b39eb8c5fca7cd238c39bb1808",
     "src/addons/CleanTalk/XF/Pub/Controller/Thread.php": "f5802ebc81d41b9b75d8b376133b0e0040c72ab02a3bf4e1acf089660f77411d",
     "src/addons/CleanTalk/XF/Repository/Option.php": "af877354dcafedaa810e7cc07e2f3cd181743db0851a1202ca5a0568df7d86a8",
     "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkContent.php": "ab05f2c0f1f3368612e9189e49d48d8c1db5ae3dd2e78d2176509eb09bada916",
     "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "bd6eb195e14a5b6cd38476502430ea8fd1432d85223eb899e1f2fe7fc6b06504",
-    "src/addons/CleanTalk/XF/Spam/Cleaner.php": "65f2f2e4e561ee07fcde05a6deb641510a15bbfcdafc4b651bd5a610580639f2",
+    "src/addons/CleanTalk/XF/Spam/Cleaner.php": "63728f74c53bbae1637e7d0fe7157d7b8d43b427e70ca8d4c8bb03a55b55c916",
     "src/addons/CleanTalk/XF/SubContainer/Spam.php": "c006c97f3f193ce8d0b6d531c70759b68d1b7420aac2d666369a91e1e122b709",
     "src/addons/CleanTalk/XF/Template/Templater.php": "50a8c1bbb955aab9d9f64d002d25daaa7a0c810ec38f20dde7bf16323af8287b",
     "src/addons/CleanTalk/_data/admin_navigation.xml": "064ec797484ac00d5ee37367b50b06846d11f480d00550997712707f8fdac8c0",
@@ -41,6 +41,5 @@
     "src/addons/CleanTalk/_data/templates.xml": "95d4b078b90e74e773cef6695ef94c742e74b8d62e6798738f11f0215a58faee",
     "src/addons/CleanTalk/_data/template_modifications.xml": "3b54b7df00a6a4a18c5e012b6e2588e35c23aaa13a5fc227f08646a97590d778",
     "src/addons/CleanTalk/_data/widget_definitions.xml": "37e46965256430f24004c2e7f08ba08f9b0d1cbcc4d70e84b3f4e3ffb713e64b",
-    "src/addons/CleanTalk/_data/widget_positions.xml": "a29cee66134f6bc5d75ed9df1eef21096c24401915c5b5c774389c3d7bb2d5b3",
-    "src/addons/CleanTalk/_hashes.json": "2b3a560dd47d34907f1833c559288a29fca206f4f7240f9f2172c3ecdc883fcf"
+    "src/addons/CleanTalk/_data/widget_positions.xml": "a29cee66134f6bc5d75ed9df1eef21096c24401915c5b5c774389c3d7bb2d5b3"
 }
