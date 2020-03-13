@@ -29,7 +29,7 @@ class Cleaner extends XFCP_Cleaner
 				$db = \XF::db();
 				// Get users's posts hashes
 				$post_hashes = $db->fetchAllColumn(
-					'SELECT ct_hash FROM xf_post WHERE post_id IN (' . implode( ',', $post['postIds'] ) . ') AND message_state = "visible"'
+					'SELECT ct_hash FROM xf_post WHERE post_id IN (' . implode( ',', $post['postIds'] ) . ')'
 				);
 
 				$hashes = array_merge( $hashes, $post_hashes );
@@ -49,7 +49,7 @@ class Cleaner extends XFCP_Cleaner
 				$thread_first_posts_hashes = $db->fetchAllColumn(
 					 'SELECT `ct_hash` FROM `xf_post` WHERE `post_id` IN (
 						    	SELECT `first_post_id` FROM `xf_thread` WHERE `thread_id` IN (' . implode( ',', $thread['threadIds'] ) . ')  
-						    ) AND message_state = "visible"'
+						    )'
 				);
 
 				$hashes = array_merge( $hashes, $thread_first_posts_hashes );
