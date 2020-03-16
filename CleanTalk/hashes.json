@@ -13,7 +13,7 @@
     "src/addons/CleanTalk/XF/Repository/Option.php": "af877354dcafedaa810e7cc07e2f3cd181743db0851a1202ca5a0568df7d86a8",
     "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkContent.php": "ab05f2c0f1f3368612e9189e49d48d8c1db5ae3dd2e78d2176509eb09bada916",
     "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "bd6eb195e14a5b6cd38476502430ea8fd1432d85223eb899e1f2fe7fc6b06504",
-    "src/addons/CleanTalk/XF/Spam/Cleaner.php": "63728f74c53bbae1637e7d0fe7157d7b8d43b427e70ca8d4c8bb03a55b55c916",
+    "src/addons/CleanTalk/XF/Spam/Cleaner.php": "980c97b7617fe91217f1e6b5a03d675ebfff3dfd0ba7a65deca70f59314c9b94",
     "src/addons/CleanTalk/XF/SubContainer/Spam.php": "c006c97f3f193ce8d0b6d531c70759b68d1b7420aac2d666369a91e1e122b709",
     "src/addons/CleanTalk/XF/Template/Templater.php": "50a8c1bbb955aab9d9f64d002d25daaa7a0c810ec38f20dde7bf16323af8287b",
     "src/addons/CleanTalk/_data/admin_navigation.xml": "064ec797484ac00d5ee37367b50b06846d11f480d00550997712707f8fdac8c0",
