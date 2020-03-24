@@ -66,8 +66,11 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
                 'cookies_enabled' => $this->ctCookiesTest(),
                 'REFFERRER_PREVIOUS' => isset($_COOKIE['ct_prev_referer']) ? $_COOKIE['ct_prev_referer'] : null,
             )
-        ); 
+        );
 
+        $plugin_version = $this->app()->addOnManager()->getById('CleanTalk')->getJsonVersion();
+
+        error_log(var_export($plugin_version,1));
         $ct = new Cleantalk();
         $ct->server_url = $this->app->options()->ct_server_url;
         $ct->work_url = $this->app->options()->ct_work_url;
@@ -81,7 +84,7 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
         $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
         $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
         $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
-        $ct_request->agent = 'xenforo2-21';
+        $ct_request->agent = 'xenforo2-' . $plugin_version['version_id'];
         $ct_request->js_on = (isset($_POST['ct_checkjs']) && $_POST['ct_checkjs'] == date("Y")) ? 1 : 0;
         $ct_request->submit_time = time() - intval($page_set_timestamp);
         $ct_request->sender_info = $sender_info;
