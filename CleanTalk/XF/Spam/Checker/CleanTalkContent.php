@@ -94,7 +94,7 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
 
     protected function isSpam(\XF\Entity\User $user, $message, $extraParams)
     {
-        if (isset($extraParams['content_type']) && $extraParams['content_type'] == 'conversation_message' && !$this->app->options()->ct_check_pm)
+        if ($user->message_count > 3 || (isset($extraParams['content_type']) && $extraParams['content_type'] == 'conversation_message' && !$this->app->options()->ct_check_pm))
             return;
 
         $decision = null;

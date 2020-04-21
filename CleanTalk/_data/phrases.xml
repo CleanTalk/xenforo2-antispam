@@ -13,8 +13,8 @@
   <phrase title="option.ct_sfw" version_id="16" version_string="1.6"><![CDATA[Enable SpamFireWall]]></phrase>
   <phrase title="option_explain.ct_apikey" version_id="10" version_string="1.0"><![CDATA[Click <a href='https://cleantalk.org/register?platform=xenforo2'>here</a> to get access key.]]></phrase>
   <phrase title="option_explain.ct_block_type" version_id="20" version_string="2.0"><![CDATA[]]></phrase>
-  <phrase title="option_explain.ct_check_pm" version_id="20" version_string="2.0"><![CDATA[ Anti-spam by CleanTalk will check all messages in conversations]]></phrase>
-  <phrase title="option_explain.ct_checkcontent" version_id="10" version_string="1.0"><![CDATA[Anti-spam by CleanTalk will check all content on your forum]]></phrase>
+  <phrase title="option_explain.ct_check_pm" version_id="23" version_string="2.3"><![CDATA[Anti-spam by CleanTalk will check all private messages of users with fewer than 3 messages]]></phrase>
+  <phrase title="option_explain.ct_checkcontent" version_id="23" version_string="2.3"><![CDATA[Anti-spam by CleanTalk will check content of users with fewer than 3 messages on your forum]]></phrase>
   <phrase title="option_explain.ct_checkreg" version_id="10" version_string="1.0"><![CDATA[Anti-spam by CleanTalk will check all registrations on your forum]]></phrase>
   <phrase title="option_explain.ct_footerlink" version_id="14" version_string="1.4"><![CDATA[Checking this box places a small link in the footer that lets others know what anti-spam tool protects your website]]></phrase>
   <phrase title="option_explain.ct_sfw" version_id="16" version_string="1.6"><![CDATA[This option allows to filter spam bots before they access website. Also reduces CPU usage on hosting server and accelerates pages load time]]></phrase>
