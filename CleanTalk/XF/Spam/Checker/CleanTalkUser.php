@@ -70,7 +70,6 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
 
         $plugin_version = $this->app()->addOnManager()->getById('CleanTalk')->getJsonVersion();
 
-        error_log(var_export($plugin_version,1));
         $ct = new Cleantalk();
         $ct->server_url = $this->app->options()->ct_server_url;
         $ct->work_url = $this->app->options()->ct_work_url;
