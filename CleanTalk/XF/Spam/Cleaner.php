@@ -45,11 +45,15 @@ class Cleaner extends XFCP_Cleaner
 			if( isset( $thread['threadIds'] ) && ! empty( $thread['threadIds'] ) ) {
 
 				$db = \XF::db();
+
+				// Get first thread's posts IDs
+				$firs_post_ids = $db->fetchAllColumn(
+				    'SELECT `first_post_id` FROM `xf_thread` WHERE `thread_id` IN (' . implode( ',', $thread['threadIds'] ) . ')'
+				);
+
 				// Get first thread's posts hashes
 				$thread_first_posts_hashes = $db->fetchAllColumn(
-					 'SELECT `ct_hash` FROM `xf_post` WHERE `post_id` IN (
-						    	SELECT `first_post_id` FROM `xf_thread` WHERE `thread_id` IN (' . implode( ',', $thread['threadIds'] ) . ')  
-						    )'
+					 'SELECT `ct_hash` FROM `xf_post` WHERE `post_id` IN (' . implode( ',', $firs_post_ids ) . ')'
 				);
 
 				$hashes = array_merge( $hashes, $thread_first_posts_hashes );
