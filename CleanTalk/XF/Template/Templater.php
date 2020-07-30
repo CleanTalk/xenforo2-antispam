@@ -101,7 +101,7 @@ class Templater extends XFCP_Templater
         return $form;
 	}
 
-	public function renderTemplate($template, array $params = [], $addDefaultParams = true)
+	public function renderTemplate($template, array $params = [], $addDefaultParams = true, $extensionOverrides = null)
 	{
 		$output = parent::renderTemplate($template, $params, $addDefaultParams);
 		static $show_flag = true;
