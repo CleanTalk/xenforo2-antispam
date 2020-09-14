@@ -2,8 +2,8 @@
 namespace CleanTalk\XF\Spam;
 
 
-use CleanTalk\Cleantalk;
-use CleanTalk\CleantalkRequest;
+use CleanTalk\Antispam\Cleantalk;
+use CleanTalk\Antispam\CleantalkRequest;
 
 class Cleaner extends XFCP_Cleaner
 {

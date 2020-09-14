@@ -1,15 +1,15 @@
 <?php
 namespace CleanTalk\XF\Spam\Checker;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/Cleantalk.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/CleantalkHelper.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/CleantalkRequest.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/CleantalkResponse.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/Cleantalk.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Common/Helper.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/CleantalkRequest.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/CleantalkResponse.php';
 
-use CleanTalk\Cleantalk;
-use CleanTalk\CleantalkRequest;
-use CleanTalk\CleantalkResponse;
-use CleanTalk\CleantalkHelper;
+use CleanTalk\Antispam\Cleantalk;
+use CleanTalk\Antispam\CleantalkRequest;
+use CleanTalk\Antispam\CleantalkResponse;
+use CleanTalk\Common\Helper as CleantalkHelper;
 
 class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spam\Checker\UserCheckerInterface
 {

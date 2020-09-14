@@ -1,20 +1,11 @@
 <?php
-namespace CleanTalk;
-/**
- * Cleantalk Response class
- *
- * @version 2.3
- * @package Cleantalk
- * @subpackage Response
- * @author Cleantalk team (welcome@cleantalk.org)
- * @copyright (C) 2014 CleanTalk team (http://cleantalk.org)
- * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
- * @see https://github.com/CleanTalk/php-antispam 
- *
- */
 
-class CleantalkResponse
-{
+namespace CleanTalk\Antispam;
+
+/**
+ * Response class
+ */
+class CleantalkResponse {
 
     /**
      * Received feedback nubmer
@@ -64,12 +55,6 @@ class CleantalkResponse
      */
     public $errstr = null;
 
-	/**
-     * Error string
-     * @var string
-     */
-    public $curl_err = null;
-	
     /**
      * Is fast submit, 1|0
      * @var string
@@ -144,7 +129,6 @@ class CleantalkResponse
         } else {
             $this->errno = $obj->errno;
             $this->errstr = $obj->errstr;
-			$this->curl_err = !empty($obj->curl_err) ? $obj->curl_err : false;
 
 			$this->errstr = preg_replace("/.+(\*\*\*.+\*\*\*).+/", "$1", $this->errstr);
 
@@ -169,4 +153,6 @@ class CleantalkResponse
                 $this->comment = '*** ' . $this->errstr . ' Antispam service cleantalk.org ***'; 
         }
     }
+
 }
+?>

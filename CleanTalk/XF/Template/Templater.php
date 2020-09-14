@@ -2,14 +2,16 @@
 
 namespace CleanTalk\XF\Template;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/CleantalkSFW.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/ApbctXF2/SFW.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/ApbctXF2/Funcs.php';
 
 use XF\App;
 use XF\Language;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Router;
 use XF\Util\Arr;
-use CleanTalk\CleantalkSFW;
+use CleanTalk\ApbctXF2\SFW as CleantalkSFW;
+use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
 
 class Templater extends XFCP_Templater
 {
@@ -109,53 +111,30 @@ class Templater extends XFCP_Templater
 		if ($show_flag)
 		{
 			$show_flag = false;
-
+			$funcs = new CleantalkFuncs($this->app);
 			if (!headers_sent())
-				$this->ctSetCookie();
+				$funcs->ctSetCookie();
 
 			if (isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam', 'anti-spam', 'apbct')))
-				$this->ctRemoteCalls();
+				$funcs->ctRemoteCalls();
 
 			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
 			{
-			   	$is_sfw_check = true;
-				$sfw = new CleantalkSFW();
-				$sfw->ip_array = (array)CleantalkSFW::ip_get(array('real'), true);	
-					
-	            foreach($sfw->ip_array as $key => $value)
-	            {
-			        if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key'] == md5($value . trim($this->app->options()->ct_apikey)))
-			        {
-			          $is_sfw_check=false;
-			          if(isset($_COOKIE['ct_sfw_passed']))
-			          {
-			            @setcookie ('ct_sfw_passed'); //Deleting cookie
-			            $sfw->sfw_update_logs($value, 'passed');
-			          }
-			        }
-		      	} unset($key, $value);	
+		        $ct_key = trim($this->app->options()->ct_apikey);
+		        
+		        if($ct_key != '') {
 
-				if($is_sfw_check)
-				{
-					$sfw->check_ip();
-					if($sfw->result)
-					{
-						$sfw->sfw_update_logs($sfw->blocked_ip, 'blocked');
-						$sfw->sfw_die(trim($this->app->options()->ct_apikey));
-					}
-				}
+					$sfw = new CleantalkSFW($ct_key);
+		          	$sfw->check_ip();
 
-				if (time() - $this->app->options()->ct_sfw_last_send_log > $this->app->options()->ct_sfw_send_log_interval)
-				{
-					$sfw->send_logs(trim($this->app->options()->ct_apikey));
-					$this->app->repository('XF:Option')->updateOption('ct_sfw_last_send_log',time());
-				}
-
-				if (time() - $this->app->options()->ct_sfw_last_check > $this->app->options()->ct_sfw_check_interval)
-				{
-					$sfw->sfw_update(trim($this->app->options()->ct_apikey));
-					$this->app->repository('XF:Option')->updateOption('ct_sfw_last_check',time());
-				}	      				
+	          		if(time() - $this->app->options()->ct_sfw_last_send_log > $this->app->options()->ct_sfw_send_log_interval) {
+		            	$funcs->ctSFWSendLogs($ct_key);
+	          		}
+		          
+		          	if(time() - $this->app->options()->ct_sfw_last_check > $this->app->options()->ct_sfw_check_interval) {
+		            	$funcs->ctSFWUpdate($ct_key);
+		          	}
+		        }     				
 			}
 		}
 		
@@ -168,79 +147,4 @@ class Templater extends XFCP_Templater
 
 		return $output;
 	}
-
-	protected function ctSetCookie()
-	{
-        // Cookie names to validate
-        $cookie_test_value = array(
-            'cookies_names' => array(),
-            'check_value' => trim($this->app->options()->ct_apikey),
-        );
-        // Pervious referer
-        if(!empty($_SERVER['HTTP_REFERER'])){
-            setcookie('ct_prev_referer', $_SERVER['HTTP_REFERER'], 0, '/');
-            $cookie_test_value['cookies_names'][] = 'ct_prev_referer';
-            $cookie_test_value['check_value'] .= $_SERVER['HTTP_REFERER'];
-        }           
-
-        // Cookies test
-        $cookie_test_value['check_value'] = md5($cookie_test_value['check_value']);
-        setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');		
-	}
-
-	protected function ctRemoteCalls()
-	{
-		$remote_action = $_GET['spbc_remote_call_action'];
-
-		$remote_calls_config = json_decode($this->app->options()->ct_remote_calls,true);
-
-		if ($remote_calls_config && is_array($remote_calls_config))
-		{
-			if (array_key_exists($remote_action, $remote_calls_config))
-			{
-				if (time() - $remote_calls_config[$remote_action] > 10)
-				{
-					$remote_calls_config[$remote_action] = time();
-					$this->app->repository('XF:Option')->updateOption('ct_remote_calls',json_encode($remote_calls_config));
-
-					if (strtolower($_GET['spbc_remote_call_token']) == strtolower(md5($this->app->options()->ct_apikey)))
-					{
-						// Close renew banner
-						if ($remote_action == 'close_renew_banner')
-						{
-							die('OK');
-							// SFW update
-						}
-						elseif ($remote_action == 'sfw_update')
-						{
-							$sfw = new CleantalkSFW();
-							$result = $sfw->sfw_update(trim($this->app->options()->ct_apikey));
-							die(empty($result['error']) ? 'OK' : 'FAIL ' . json_encode(array('error' => $result['error_string'])));
-							// SFW send logs
-						}
-						elseif ($remote_action == 'sfw_send_logs')
-						{
-							$sfw = new CleantalkSFW();
-							$result = $sfw->send_logs(trim($this->app->options()->ct_apikey));
-							die(empty($result['error']) ? 'OK' : 'FAIL ' . json_encode(array('error' => $result['error_string'])));
-							// Update plugin
-						}
-						elseif ($remote_action == 'update_plugin')
-						{
-							//add_action('wp', 'apbct_update', 1);
-						}
-						else
-							die('FAIL ' . json_encode(array('error' => 'UNKNOWN_ACTION_2')));
-					}
-					else
-						die('FAIL ' . json_encode(array('error' => 'WRONG_TOKEN')));
-				}
-				else
-					die('FAIL ' . json_encode(array('error' => 'TOO_MANY_ATTEMPTS')));
-			}
-			else
-				die('FAIL ' . json_encode(array('error' => 'UNKNOWN_ACTION')));
-		}
-	}
-	
 }
