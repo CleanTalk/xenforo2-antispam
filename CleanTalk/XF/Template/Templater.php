@@ -2,6 +2,7 @@
 
 namespace CleanTalk\XF\Template;
 
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Common/API.php';
 require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/ApbctXF2/SFW.php';
 require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/ApbctXF2/Funcs.php';
 
@@ -11,6 +12,7 @@ use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Router;
 use XF\Util\Arr;
 use CleanTalk\ApbctXF2\SFW as CleantalkSFW;
+use CleanTalk\Common\API as CleantalkAPI;
 use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
 
 class Templater extends XFCP_Templater
