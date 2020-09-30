@@ -11,7 +11,7 @@
     "src/addons/CleanTalk/lib/Cleantalk/Common/Helper.php": "d412578af56e186906ba9fa2b2d38e5e945d72036bc43bb798c490cdbd92cde5",
     "src/addons/CleanTalk/lib/error.html": "0399403bf1393674eb8e6e23a1f005f6ad140a31f951490b11ff09b5f7fa9039",
     "src/addons/CleanTalk/lib/sfw_die_page.html": "d54ad0901a17472223f6ff079f3565033700dcf57650fbf9b0adef7c88e2e664",
-    "src/addons/CleanTalk/Setup.php": "1d3d193cfad7106c4b99b183b1bd0a68cfdbfa3e5cb46434a9d7a9c3b0ae4237",
+    "src/addons/CleanTalk/Setup.php": "eb7bb541ae4c9c7cdfea953b5e0575436e78a235bc25595b02f6143a0a7608ad",
     "src/addons/CleanTalk/XF/Pub/Controller/Forum.php": "a17b31213888089101053e7f4c3dceaeb87a79b39eb8c5fca7cd238c39bb1808",
     "src/addons/CleanTalk/XF/Pub/Controller/Thread.php": "f5802ebc81d41b9b75d8b376133b0e0040c72ab02a3bf4e1acf089660f77411d",
     "src/addons/CleanTalk/XF/Repository/Option.php": "f1a9a5013c5f94505ec5abffc3f419b9a218aa99b05c4af46e710dd4b007126d",

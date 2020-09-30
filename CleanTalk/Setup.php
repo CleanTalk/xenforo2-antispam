@@ -22,7 +22,7 @@ class Setup extends AbstractSetup
 	    {
 	        $table->addColumn('network', 'int', 10);
 	        $table->addColumn('mask', 'int', 10);
-	        $table->addColumn('status', 'tinyint', 1);
+	        $table->addColumn('status', 'tinyint', 1)->setDefault(0);
 	    });
 
 	    $this->schemaManager()->createTable('xf_cleantalk_sfw_logs', function(Create $table)
@@ -71,9 +71,9 @@ class Setup extends AbstractSetup
 
 	public function upgrade24Step1() {
 
-	    $this->schemaManager()->alterTable('xf_cleantalk_sfw', function(Create $table)
+	    $this->schemaManager()->alterTable('xf_cleantalk_sfw', function(\XF\Db\Schema\Alter $table)
 	    {
-	        $table->addColumn('status', 'tinyint', 1);
+	        $table->addColumn('status', 'tinyint', 1)->setDefault(0);
 	    });
 	}
 
