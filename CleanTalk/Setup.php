@@ -71,7 +71,7 @@ class Setup extends AbstractSetup
 
 	public function upgrade24Step1() {
 
-	    $this->schemaManager()->createTable('xf_cleantalk_sfw', function(Create $table)
+	    $this->schemaManager()->alterTable('xf_cleantalk_sfw', function(Create $table)
 	    {
 	        $table->addColumn('status', 'tinyint', 1);
 	    });
