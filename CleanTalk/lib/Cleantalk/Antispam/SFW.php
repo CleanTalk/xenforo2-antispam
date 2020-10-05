@@ -281,10 +281,8 @@ abstract class SFW
 			} else {
 				return $result;
 			}
-				
-		} else {
-			return array('error' => true, 'error_string' => 'NO_LOGS_TO_SEND');
 		}
+		return false;
 	}
 	
 	/*
