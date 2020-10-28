@@ -84,9 +84,7 @@ class Funcs {
 	public function ctSFWSendLogs($access_key) {
 		$sfw = new CleantalkSFW($access_key);
 		$result = $sfw->send_logs();
-		if ($result) {
-			$this->app->repository('XF:Option')->updateOption('ct_sfw_last_send_log',time());
-		}
+		$this->app->repository('XF:Option')->updateOption('ct_sfw_last_send_log',time());
 	}
 
 	public function ctRemoteCalls()
