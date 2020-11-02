@@ -42,6 +42,8 @@ class Funcs {
     	$file_url_nums = isset($_GET['file_url_nums']) ? urldecode($_GET['file_url_nums']) : null;
     	$file_url_nums = isset($file_url_nums) ? explode(',', $file_url_nums) : null;
 
+		$base_host_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'] . (isset($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : '');
+
 	    if( ! isset( $file_url_hash, $file_url_nums ) ){
       		$result = $sfw->sfw_update();
 
@@ -59,7 +61,7 @@ class Funcs {
           		if (count($file_url_nums)) {
 
 		            CleantalkHelper::http__request(
-		              (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'], 
+		              $base_host_url, 
 			              array(
 			                'spbc_remote_call_token'  => md5($access_key),
 			                'spbc_remote_call_action' => 'sfw_update__write_base',
