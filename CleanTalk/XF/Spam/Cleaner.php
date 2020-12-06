@@ -1,9 +1,11 @@
 <?php
 namespace CleanTalk\XF\Spam;
 
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/Cleantalk.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/CleantalkRequest.php';
 
-use CleanTalk\Cleantalk;
-use CleanTalk\CleantalkRequest;
+use CleanTalk\Antispam\Cleantalk;
+use CleanTalk\Antispam\CleantalkRequest;
 
 class Cleaner extends XFCP_Cleaner
 {

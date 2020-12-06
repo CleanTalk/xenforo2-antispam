@@ -22,6 +22,7 @@ class Setup extends AbstractSetup
 	    {
 	        $table->addColumn('network', 'int', 10);
 	        $table->addColumn('mask', 'int', 10);
+	        $table->addColumn('status', 'tinyint', 1)->setDefault(0);
 	    });
 
 	    $this->schemaManager()->createTable('xf_cleantalk_sfw_logs', function(Create $table)
@@ -67,7 +68,15 @@ class Setup extends AbstractSetup
 			$table->addColumn('ct_hash', 'varchar', 255)->setDefault('');
 		});
 	}
-	
+
+	public function upgrade24Step1() {
+
+	    $this->schemaManager()->alterTable('xf_cleantalk_sfw', function(\XF\Db\Schema\Alter $table)
+	    {
+	        $table->addColumn('status', 'tinyint', 1)->setDefault(0);
+	    });
+	}
+
 	public function uninstallStep1()
 	{
 	    $this->schemaManager()->dropTable('xf_cleantalk_sfw');
