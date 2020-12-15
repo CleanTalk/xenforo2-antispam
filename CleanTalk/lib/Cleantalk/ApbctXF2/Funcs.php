@@ -17,7 +17,6 @@ class Funcs {
 	}
 	
 	public function ctSetCookie() {
-	    error_log(var_export(\XF::app()->options()->boardUrl,1));
         // Cookie names to validate
         $cookie_test_value = array(
             'cookies_names' => array(),
