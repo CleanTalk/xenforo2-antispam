@@ -17,6 +17,7 @@ class Funcs {
 	}
 	
 	public function ctSetCookie() {
+	    error_log(var_export(\XF::app()->options()->boardUrl,1));
         // Cookie names to validate
         $cookie_test_value = array(
             'cookies_names' => array(),
@@ -42,7 +43,7 @@ class Funcs {
     	$file_url_nums = isset($_GET['file_url_nums']) ? urldecode($_GET['file_url_nums']) : null;
     	$file_url_nums = isset($file_url_nums) ? explode(',', $file_url_nums) : null;
 
-		$base_host_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'] . (isset($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : '');
+		$base_host_url = \XF::app()->options()->boardUrl;
 
 	    if( ! isset( $file_url_hash, $file_url_nums ) ){
       		$result = $sfw->sfw_update();

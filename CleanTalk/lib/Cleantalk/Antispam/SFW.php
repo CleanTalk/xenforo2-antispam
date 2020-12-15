@@ -151,7 +151,7 @@ abstract class SFW
 
 							$pattenrs = array();
 							$pattenrs = array('get', 'async');		
-							$base_host_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'] . (isset($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : '');
+							$base_host_url = \XF::app()->options()->boardUrl;
 
 							$this->universal_query("TRUNCATE TABLE ".$this->table_prefix."cleantalk_sfw");
 
