@@ -42,7 +42,7 @@
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="ct_server_url" edit_format="textbox" data_type="string">
-    <default_value>http://moderate.cleantalk.org</default_value>
+    <default_value>https://moderate.cleantalk.org</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="ct_sfw" edit_format="onoff" data_type="boolean">
