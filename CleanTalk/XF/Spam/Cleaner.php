@@ -55,12 +55,16 @@ class Cleaner extends XFCP_Cleaner
 				    'SELECT `first_post_id` FROM `xf_thread` WHERE `thread_id` IN (' . implode( ',', $thread['threadIds'] ) . ')'
 				);
 
-				// Get first thread's posts hashes
-				$thread_first_posts_hashes = $db->fetchAllColumn(
-					 'SELECT `ct_hash` FROM `xf_post` WHERE `post_id` IN (' . implode( ',', $firs_post_ids ) . ')'
-				);
+                if( isset( $firs_post_ids ) && ! empty( $firs_post_ids ) ) {
 
-				$hashes = array_merge( $hashes, $thread_first_posts_hashes );
+                    // Get first thread's posts hashes
+                    $thread_first_posts_hashes = $db->fetchAllColumn(
+                        'SELECT `ct_hash` FROM `xf_post` WHERE `post_id` IN (' . implode( ',', $firs_post_ids ) . ')'
+                    );
+
+                    $hashes = array_merge( $hashes, $thread_first_posts_hashes );
+
+                }
 
 			}
 		}
