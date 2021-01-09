@@ -155,7 +155,7 @@ abstract class SFW
 
 							$this->universal_query("TRUNCATE TABLE ".$this->table_prefix."cleantalk_sfw");
 
-							if (preg_match('/multifiles/', $result['file_url'])) {
+							if (false !== strpos($result['file_url'], "multifiles")) {
 								
 								$gf = gzopen($result['file_url'], 'rb');
 
