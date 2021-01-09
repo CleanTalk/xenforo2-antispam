@@ -44,43 +44,60 @@ class Funcs {
 
 		$base_host_url = \XF::app()->options()->boardUrl;
 
-	    if( ! isset( $file_url_hash, $file_url_nums ) ){
-      		$result = $sfw->sfw_update();
+		if( isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam', 'anti-spam', 'apbct')) ) {
+		    // It is a remote call - do updating
 
-			return ! empty( $result['error'] )
-				? $result
-				: true;
-    	} elseif( $file_url_hash && is_array( $file_url_nums ) && count( $file_url_nums ) ){
+            if( ! isset( $file_url_hash, $file_url_nums ) ){
+                $result = $sfw->sfw_update();
 
-        	$result = $sfw->sfw_update($file_url_hash, $file_url_nums[0]);
+                return ! empty( $result['error'] )
+                    ? $result
+                    : true;
+            } elseif ( $file_url_hash && is_array( $file_url_nums ) && count( $file_url_nums ) ){
 
-        	if(empty($result['error'])){
-            
-          		array_shift($file_url_nums);  
+                $result = $sfw->sfw_update($file_url_hash, $file_url_nums[0]);
 
-          		if (count($file_url_nums)) {
+                if( empty( $result['error'] ) ){
 
-		            CleantalkHelper::http__request(
-		              $base_host_url, 
-			              array(
-			                'spbc_remote_call_token'  => md5($access_key),
-			                'spbc_remote_call_action' => 'sfw_update__write_base',
-			                'plugin_name'             => 'apbct',
-			                'file_url_hash'           => $file_url_hash,
-			                'file_url_nums'           => implode(',', $file_url_nums),
-			              ),
-			              array('get', 'async')
-		            );              
-				} else {
-              		$this->app->repository('XF:Option')->updateOption('ct_sfw_last_check',time());
-              		return $result;
-          		}
-        	} else {
-        		return array('error' => 'ERROR_WHILE_INSERTING_SFW_DATA');       
-        	} 	
-    	}
+                    array_shift($file_url_nums);
 
-    	return $result;
+                    if (count($file_url_nums)) {
+
+                        CleantalkHelper::http__request(
+                            $base_host_url,
+                            array(
+                                'spbc_remote_call_token'  => md5($access_key),
+                                'spbc_remote_call_action' => 'sfw_update__write_base',
+                                'plugin_name'             => 'apbct',
+                                'file_url_hash'           => $file_url_hash,
+                                'file_url_nums'           => implode(',', $file_url_nums),
+                            ),
+                            array('get', 'async')
+                        );
+                    } else {
+                        $this->app->repository('XF:Option')->updateOption('ct_sfw_last_check',time());
+                        return $result;
+                    }
+                } else {
+                    return array('error' => 'ERROR_WHILE_INSERTING_SFW_DATA');
+                }
+            }
+
+            return $result;
+
+        } else {
+		    // It is direct call - do remote call
+            return CleantalkHelper::http__request(
+                $base_host_url,
+                array(
+                    'spbc_remote_call_token'  => md5($access_key),
+                    'spbc_remote_call_action' => 'sfw_update__write_base',
+                    'plugin_name'             => 'apbct',
+                ),
+                array('get', 'async')
+            );
+        }
+
 	}
 
 	public function ctSFWSendLogs($access_key) {
