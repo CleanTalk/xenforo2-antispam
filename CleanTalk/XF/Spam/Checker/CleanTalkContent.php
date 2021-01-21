@@ -24,7 +24,11 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
     {
         
 		$option = $this->app()->options()->spamPhrases;
-	    $phrases = Arr::stringToArray($option['phrases'], '/\r?\n/');
+		if( method_exists( 'Arr', 'stringToArray' ) ) {
+            $phrases = Arr::stringToArray($option['phrases'], '/\r?\n/');
+        } else {
+		    $phrases = self::stringToArray( $option['phrases'], '/\r?\n/' );
+        }
 
         $decision = 'allowed';
 
@@ -225,6 +229,21 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
 	    }
 	    return $hash;
 
+    }
+
+    /**
+     * Split a string to an array based on pattern. Defaults to space/line break pattern.
+     * Backward compatibility for Xenforo 2.0
+     *
+     * @param $string
+     * @param string $pattern
+     * @param int $limit
+     *
+     * @return array
+     */
+    private static function stringToArray($string, $pattern = '/\s+/', $limit = -1)
+    {
+        return (array)preg_split($pattern, trim($string), $limit, PREG_SPLIT_NO_EMPTY);
     }
 
 }
