@@ -1,6 +1,6 @@
 <?php
 
-namespace CleanTalk\Antispam;
+namespace Cleantalk\Antispam;
 
 /**
  * Cleantalk base class

@@ -2,25 +2,65 @@
 
 namespace CleanTalk\ApbctXF2;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/ApbctXF2/SFW.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Common/Helper.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
 
-use CleanTalk\ApbctXF2\SFW as CleantalkSFW;
-use CleanTalk\Common\Helper as CleantalkHelper;
+define('APBCT_TBL_FIREWALL_DATA', 'cleantalk_sfw');      // Table with firewall data.
+define('APBCT_TBL_FIREWALL_LOG',  'cleantalk_sfw_logs'); // Table with firewall logs.
+define('APBCT_TBL_AC_LOG',        'cleantalk_ac_log');   // Table with firewall logs.
+define('APBCT_TBL_AC_UA_BL',      'cleantalk_ua_bl');    // Table with User-Agents blacklist.
+define('APBCT_TBL_SESSIONS',      'cleantalk_sessions'); // Table with session data.
+define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with session data.
+define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
+define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
 
 class Funcs {
 
-	private $app;
+	static private function getXF() {
 
-	public function __construct($app) {
-		$this->app = $app;
+		// What happens when XF is in a subdirectory off the root?
+		$fileDir = $_SERVER["DOCUMENT_ROOT"];
+
+		if ( ! file_exists( $fileDir . '/src/XF.php'  ) ) {
+		return false;
+		}
+
+		require( $fileDir . '/src/XF.php' );
+		\XF::start($fileDir);
+
+		$app = \XF::setupApp('XF\Pub\App');
+		$app->start();
+
+		return '';
+	}
+
+	static public function apbctRunCron() {
+        $cron = new Cron();
+        $cron_option_name = $cron->getCronOptionName();
+        $cron_option = json_decode(self::getXF()->options()->$cron_option_name,true);
+        if (empty($cron_option)) {
+            $cron->addTask( 'sfw_update', '\CleanTalk\ApbctXF2::apbct_sfw_update', 86400, time() + 60 );
+            $cron->addTask( 'sfw_send_logs', '\CleanTalk\ApbctXF2::apbct_sfw_send_logs', 3600 );
+        }
+        $tasks_to_run = $cron->checkTasks(); // Check for current tasks. Drop tasks inner counters.
+
+        if(
+            ! empty( $tasks_to_run ) && // There is tasks to run
+            ! RemoteCalls::check() && // Do not doing CRON in remote call action
+            (
+                ! defined( 'DOING_CRON' ) ||
+                ( defined( 'DOING_CRON' ) && DOING_CRON !== true )
+            )
+        ){
+            $cron_res = $cron->runTasks( $tasks_to_run );
+            // Handle the $cron_res for errors here.
+        }		
 	}
 	
-	public function ctSetCookie() {
+	static public function ctSetCookie() {
         // Cookie names to validate
         $cookie_test_value = array(
             'cookies_names' => array(),
-            'check_value' => trim($this->app->options()->ct_apikey),
+            'check_value' => trim(self::getXF()->options()->ct_apikey),
         );
         // Pervious referer
         if(!empty($_SERVER['HTTP_REFERER'])){
@@ -34,133 +74,45 @@ class Funcs {
         setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');		
 	}
 
-	public function ctSFWUpdate($access_key) {
-
-	    $sfw = new CleantalkSFW($access_key);
-
-    	$file_url_hash = isset($_GET['file_url_hash']) ? urldecode($_GET['file_url_hash']) : null;   
-    	$file_url_nums = isset($_GET['file_url_nums']) ? urldecode($_GET['file_url_nums']) : null;
-    	$file_url_nums = isset($file_url_nums) ? explode(',', $file_url_nums) : null;
-
-		$base_host_url = \XF::app()->options()->boardUrl;
-
-		if( isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam', 'anti-spam', 'apbct')) ) {
-		    // It is a remote call - do updating
-
-            if( ! isset( $file_url_hash, $file_url_nums ) ){
-                $result = $sfw->sfw_update();
-
-                return ! empty( $result['error'] )
-                    ? $result
-                    : true;
-            } elseif ( $file_url_hash && is_array( $file_url_nums ) && count( $file_url_nums ) ){
-
-                $result = $sfw->sfw_update($file_url_hash, $file_url_nums[0]);
-
-                if( empty( $result['error'] ) ){
-
-                    array_shift($file_url_nums);
-
-                    if (count($file_url_nums)) {
-
-                        CleantalkHelper::http__request(
-                            $base_host_url,
-                            array(
-                                'spbc_remote_call_token'  => md5($access_key),
-                                'spbc_remote_call_action' => 'sfw_update__write_base',
-                                'plugin_name'             => 'apbct',
-                                'file_url_hash'           => $file_url_hash,
-                                'file_url_nums'           => implode(',', $file_url_nums),
-                            ),
-                            array('get', 'async')
-                        );
-                    } else {
-                        $this->app->repository('XF:Option')->updateOption('ct_sfw_last_check',time());
-                        return $result;
-                    }
-                } else {
-                    return array('error' => 'ERROR_WHILE_INSERTING_SFW_DATA');
-                }
+    static public function apbct_sfw_update($access_key = '') {
+        if( empty( $access_key ) ){
+            $access_key = trim(self::getXF()->options()->ct_apikey);
+            if (empty($access_key)) {
+                return false;
             }
+        }     
+        $firewall = new Firewall(
+            $access_key,
+            DB::getInstance(),
+            APBCT_TBL_FIREWALL_LOG
+        );
+        $firewall->setSpecificHelper( new CleantalkHelper() );
+        $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
+        $fw_updater->update();
+        
+    }
 
-            return $result;
+	static public function apbct_sfw_send_logs($access_key) {
+        if( empty( $access_key ) ){
+            $access_key = trim(self::getXF()->options()->ct_apikey);
+            if (empty($access_key)) {
+                return false;
+            }
+        } 
 
-        } else {
-		    // It is direct call - do remote call
-            return CleantalkHelper::http__request(
-                $base_host_url,
-                array(
-                    'spbc_remote_call_token'  => md5($access_key),
-                    'spbc_remote_call_action' => 'sfw_update__write_base',
-                    'plugin_name'             => 'apbct',
-                ),
-                array('get', 'async')
-            );
-        }
+        $firewall = new Firewall( $access_key, DB::getInstance(), APBCT_TBL_FIREWALL_LOG );
+        $firewall->setSpecificHelper( new CleantalkHelper() );
+        $result = $firewall->sendLogs();
 
-	}
-
-	public function ctSFWSendLogs($access_key) {
-		$sfw = new CleantalkSFW($access_key);
-		$result = $sfw->send_logs();
-		$this->app->repository('XF:Option')->updateOption('ct_sfw_last_send_log',time());
+        return true;
 	}
 
 	public function ctRemoteCalls()
 	{
-		$remote_action = $_GET['spbc_remote_call_action'];
-
-		$remote_calls_config = json_decode($this->app->options()->ct_remote_calls,true);
-
-		if ($remote_calls_config && is_array($remote_calls_config))
-		{
-			if (array_key_exists($remote_action, $remote_calls_config))
-			{
-				if (time() - $remote_calls_config[$remote_action] > 10 || ($remote_action == 'sfw_update__write_base' && isset($_GET['file_url_hash'])))
-				{
-					$remote_calls_config[$remote_action] = time();
-					$this->app->repository('XF:Option')->updateOption('ct_remote_calls',json_encode($remote_calls_config));
-					if (strtolower($_GET['spbc_remote_call_token']) == strtolower(md5($this->app->options()->ct_apikey)))
-					{
-						// Close renew banner
-						if ($remote_action == 'close_renew_banner')
-						{
-							die('OK');
-							// SFW update
-						}
-						elseif ($remote_action == 'sfw_update')
-						{
-							$result = $this->ctSFWUpdate(trim($this->app->options()->ct_apikey));
-							die(empty($result['error']) ? 'OK' : 'FAIL ' . json_encode(array('error' => $result['error_string'])));
-							// SFW send logs
-						}
-						elseif ($remote_action == 'sfw_update__write_base')
-						{
-							$result = $this->ctSFWUpdate(trim($this->app->options()->ct_apikey));
-							die(empty($result['error']) ? 'OK' : 'FAIL ' . json_encode(array('error' => $result['error_string'])));
-						}
-						elseif ($remote_action == 'sfw_send_logs')
-						{
-							$result = $this->ctSFWSendLogs(trim($this->app->options()->ct_apikey));
-							die(empty($result['error']) ? 'OK' : 'FAIL ' . json_encode(array('error' => $result['error_string'])));
-							// Update plugin
-						}
-						elseif ($remote_action == 'update_plugin')
-						{
-							//add_action('wp', 'apbct_update', 1);
-						}
-						else
-							die('FAIL ' . json_encode(array('error' => 'UNKNOWN_ACTION_2')));
-					}
-					else
-						die('FAIL ' . json_encode(array('error' => 'WRONG_TOKEN')));
-				}
-				else
-					die('FAIL ' . json_encode(array('error' => 'TOO_MANY_ATTEMPTS')));
-			}
-			else
-				die('FAIL ' . json_encode(array('error' => 'UNKNOWN_ACTION')));
-		}
+        // Remote calls
+        if( RemoteCalls::check() ) {
+            $rc = new RemoteCalls( trim(self::getXF()->options()->ct_apikey) );
+            $rc->perform();
+        }
 	}
-	
 }

@@ -1,10 +1,7 @@
 <?php
 namespace CleanTalk\XF\Spam\Checker;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/Cleantalk.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Common/Helper.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/CleantalkRequest.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Antispam/CleantalkResponse.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
 
 use CleanTalk\Antispam\Cleantalk;
 use CleanTalk\Antispam\CleantalkRequest;

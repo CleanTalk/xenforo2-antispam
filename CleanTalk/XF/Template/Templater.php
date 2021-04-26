@@ -2,17 +2,13 @@
 
 namespace CleanTalk\XF\Template;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/Common/API.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/ApbctXF2/SFW.php';
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/Cleantalk/ApbctXF2/Funcs.php';
+require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
 
 use XF\App;
 use XF\Language;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Router;
 use XF\Util\Arr;
-use CleanTalk\ApbctXF2\SFW as CleantalkSFW;
-use CleanTalk\Common\API as CleantalkAPI;
 use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
 
 class Templater extends XFCP_Templater
@@ -113,30 +109,34 @@ class Templater extends XFCP_Templater
 		if ($show_flag)
 		{
 			$show_flag = false;
-			$funcs = new CleantalkFuncs($this->app);
-			if (!headers_sent())
-				$funcs->ctSetCookie();
 
-			if (isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam', 'anti-spam', 'apbct')))
-				$funcs->ctRemoteCalls();
+			if (!headers_sent())
+				CleantalkFuncs::ctSetCookie();
+			
+			CleantalkFuncs::ctRemoteCalls();
+
+			CleantalkFuncs::apbctRunCron();				
 
 			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
 			{
 		        $ct_key = trim($this->app->options()->ct_apikey);
 		        
-		        if($ct_key != '') {
+                $firewall = new Firewall(
+                    $ct_key,
+                    DB::getInstance(),
+                    APBCT_TBL_FIREWALL_LOG
+                );
 
-					$sfw = new CleantalkSFW($ct_key);
-		          	$sfw->check_ip();
+                $firewall->loadFwModule( new SFW(
+                    APBCT_TBL_FIREWALL_DATA,
+                    array(
+                        'sfw_counter'   => 0,
+                        'cookie_domain' => Server::get('HTTP_HOST'),
+                        'set_cookies'    => 1,
+                    )
+                ) );
 
-	          		if(time() - $this->app->options()->ct_sfw_last_send_log > $this->app->options()->ct_sfw_send_log_interval) {
-		            	$funcs->ctSFWSendLogs($ct_key);
-	          		}
-		          
-		          	if(time() - $this->app->options()->ct_sfw_last_check > $this->app->options()->ct_sfw_check_interval) {
-		            	$funcs->ctSFWUpdate($ct_key);
-		          	}
-		        }     				
+                $firewall->run();    				
 			}
 		}
 		
