@@ -13,33 +13,43 @@ define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with sess
 define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
 define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
 
+use CleanTalk\ApbctXF2\Helper as CleantalkHelper;
+use CleanTalk\Common\Firewall\Firewall;
+use CleanTalk\ApbctXF2\RemoteCalls;
+use CleanTalk\ApbctXF2\Cron;
+use CleanTalk\ApbctXF2\DB;
+use CleanTalk\Common\Firewall\Modules\SFW;
+use CleanTalk\Common\Variables\Server;
+
 class Funcs {
 
-	static private function getXF() {
+    static public function getXF() {
+        if (!\XF::app()) {
+            $fileDir = $_SERVER["DOCUMENT_ROOT"];
 
-		// What happens when XF is in a subdirectory off the root?
-		$fileDir = $_SERVER["DOCUMENT_ROOT"];
+            if ( ! file_exists( $fileDir . '/src/XF.php'  ) ) {
+            return false;
+            }
 
-		if ( ! file_exists( $fileDir . '/src/XF.php'  ) ) {
-		return false;
-		}
+            require_once( $fileDir . '/src/XF.php' );
 
-		require( $fileDir . '/src/XF.php' );
-		\XF::start($fileDir);
+            \XF::start($fileDir);
 
-		$app = \XF::setupApp('XF\Pub\App');
-		$app->start();
+            $app = \XF::setupApp('XF\Pub\App');
+            $app->start();
+            return $app;
+        }
 
-		return '';
-	}
+        return \XF::app();
+    }
 
-	static public function apbctRunCron() {
+    static public function apbctRunCron() {
         $cron = new Cron();
         $cron_option_name = $cron->getCronOptionName();
         $cron_option = json_decode(self::getXF()->options()->$cron_option_name,true);
         if (empty($cron_option)) {
-            $cron->addTask( 'sfw_update', '\CleanTalk\ApbctXF2::apbct_sfw_update', 86400, time() + 60 );
-            $cron->addTask( 'sfw_send_logs', '\CleanTalk\ApbctXF2::apbct_sfw_send_logs', 3600 );
+            $cron->addTask( 'sfw_update', '\CleanTalk\ApbctXF2\Funcs::apbct_sfw_update', 86400, time() + 60 );
+            $cron->addTask( 'sfw_send_logs', '\CleanTalk\ApbctXF2\Funcs::apbct_sfw_send_logs', 3600 );
         }
         $tasks_to_run = $cron->checkTasks(); // Check for current tasks. Drop tasks inner counters.
 
@@ -53,10 +63,10 @@ class Funcs {
         ){
             $cron_res = $cron->runTasks( $tasks_to_run );
             // Handle the $cron_res for errors here.
-        }		
-	}
-	
-	static public function ctSetCookie() {
+        }       
+    }
+    
+    static public function ctSetCookie() {
         // Cookie names to validate
         $cookie_test_value = array(
             'cookies_names' => array(),
@@ -71,8 +81,8 @@ class Funcs {
 
         // Cookies test
         $cookie_test_value['check_value'] = md5($cookie_test_value['check_value']);
-        setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');		
-	}
+        setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');      
+    }
 
     static public function apbct_sfw_update($access_key = '') {
         if( empty( $access_key ) ){
@@ -92,7 +102,7 @@ class Funcs {
         
     }
 
-	static public function apbct_sfw_send_logs($access_key) {
+    static public function apbct_sfw_send_logs($access_key) {
         if( empty( $access_key ) ){
             $access_key = trim(self::getXF()->options()->ct_apikey);
             if (empty($access_key)) {
@@ -105,14 +115,34 @@ class Funcs {
         $result = $firewall->sendLogs();
 
         return true;
-	}
+    }
 
-	public function ctRemoteCalls()
-	{
+    static public function ctRemoteCalls()
+    {
         // Remote calls
         if( RemoteCalls::check() ) {
             $rc = new RemoteCalls( trim(self::getXF()->options()->ct_apikey) );
             $rc->perform();
         }
-	}
+    }
+    static public function sfwCheck() {
+        $ct_key = trim(self::getXF()->options()->ct_apikey);
+        
+        $firewall = new Firewall(
+            $ct_key,
+            DB::getInstance(),
+            APBCT_TBL_FIREWALL_LOG
+        );
+
+        $firewall->loadFwModule( new SFW(
+            APBCT_TBL_FIREWALL_DATA,
+            array(
+                'sfw_counter'   => 0,
+                'cookie_domain' => Server::get('HTTP_HOST'),
+                'set_cookies'    => 1,
+            )
+        ) );
+
+        $firewall->run();  
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cleantalk\Common\Firewall;
+namespace CleanTalk\Common\Firewall;
 
 /**
  * The abstract class for any FireWall modules.
@@ -13,9 +13,9 @@ namespace Cleantalk\Common\Firewall;
  * @since 2.49
  */
 
-use Cleantalk\Common\DB;
-use Cleantalk\Common\Helper;
-use Cleantalk\Common\Variables\Get;
+use CleanTalk\Common\DB;
+use CleanTalk\Common\Helper;
+use CleanTalk\Common\Variables\Get;
 
 abstract class FirewallModule {
 
@@ -145,6 +145,7 @@ abstract class FirewallModule {
      */
     public function setLogTableName( $log_table_name )
     {
+        $this->db_data_table_name = $this->db->prefix . $this->db_data_table_name;
         $this->db_log_table_name = $log_table_name;
     }
 

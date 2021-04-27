@@ -30,7 +30,11 @@
     <relation group_id="cleantalk" display_order="7"/>
   </option>
   <option option_id="ct_remote_calls" edit_format="textbox" data_type="string">
-    <default_value>{"close_renew_banner":"0","sfw_update":"0","sfw_send_logs":"0", "sfw_update__write_base":"0"}</default_value>
+    <default_value>{"close_renew_banner":{"last_call":0,"cooldown":10},"sfw_update":{"last_call":0,"cooldown":10},"sfw_send_logs":{"last_call":0,"cooldown":10},"sfw_update__write_base":{"last_call":0,"cooldown":0}}</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="cleantalk_cron" edit_format="textbox" data_type="string">
+    <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="ct_server_changed" edit_format="spinbox" data_type="integer">
@@ -66,6 +70,18 @@
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="ct_work_url" edit_format="textbox" data_type="string">
+    <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="firewall_updating_id" edit_format="spinbox" data_type="integer">
+    <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="firewall_updating_last_start" edit_format="spinbox" data_type="integer">
+    <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="firewall_update_percent" edit_format="spinbox" data_type="integer">
     <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>

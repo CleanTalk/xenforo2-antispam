@@ -1,6 +1,6 @@
 <?php
 
-namespace Cleantalk\Common\Variables;
+namespace CleanTalk\Common\Variables;
 
 /**
  * Class Cookie

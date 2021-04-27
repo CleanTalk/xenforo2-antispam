@@ -1,8 +1,8 @@
 <?php
 
-namespace Cleantalk\Common\Variables;
+namespace CleanTalk\Common\Variables;
 
-use Cleantalk\Common\Templates\Singleton;
+use CleanTalk\Common\Templates\Singleton;
 
 /**
  * Class ServerVariables

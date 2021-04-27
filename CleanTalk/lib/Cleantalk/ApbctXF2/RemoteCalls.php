@@ -1,8 +1,8 @@
 <?php
 
-namespace Cleantalk\ApbctXF2;
+namespace CleanTalk\ApbctXF2;
 
-class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
+class RemoteCalls extends \CleanTalk\Common\RemoteCalls {
     /**
      * SFW update
      *
@@ -10,7 +10,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
      */
     public function action__sfw_update()
     {
-        return \CleanTalk\ApbctXF2::apbct_sfw_update( $this->api_key );
+        return \CleanTalk\ApbctXF2\Funcs::apbct_sfw_update( $this->api_key );
     }
 
     /**
@@ -20,12 +20,12 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
      */
     public function action__sfw_send_logs()
     {
-        return \CleanTalk\ApbctXF2::apbct_sfw_send_logs( $this->api_key );
+        return \CleanTalk\ApbctXF2\Funcs::apbct_sfw_send_logs( $this->api_key );
     }
 
     public function action__sfw_update__write_base()
     {
-        return \CleanTalk\ApbctXF2::apbct_sfw_update( $this->api_key );
+        return \CleanTalk\ApbctXF2\Funcs::apbct_sfw_update( $this->api_key );
     }
     /**
      * Get available remote calls from the storage.
@@ -34,10 +34,9 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
      */
     protected function getAvailableRcActions()
     {
-        $remote_calls = json_decode(\CleanTalk\ApbctXF2::getXF()->options()->ct_remote_calls, true);
+        $remote_calls = json_decode(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->ct_remote_calls, true);
         $default_rc = array('close_renew_banner' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_update' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_send_logs' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_update__write_base' => array('last_call' => 0, 'cooldown' => 0));
         if ($remote_calls && !empty($remote_calls)) {
-            $remote_calls = json_decode($remote_calls,true);
             return empty(array_diff_key($remote_calls, $default_rc)) ? $remote_calls : $default_rc;
         }
         return $default_rc;
@@ -54,6 +53,6 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
         // TODO: Implement setLastCall() method.
         $remote_calls = $this->getAvailableRcActions();
         $remote_calls[$action]['last_call'] = time();
-        \CleanTalk\ApbctXF2::getXF()->repository('XF:Option')->updateOption('ct_remote_calls', json_encode($remote_calls));
+        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('ct_remote_calls', json_encode($remote_calls));
     }
 }

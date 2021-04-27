@@ -1,8 +1,8 @@
 <?php
 
-namespace Cleantalk\ApbctXF2;
+namespace CleanTalk\ApbctXF2;
 
-class Helper extends \Cleantalk\Common\Helper {
+class Helper extends \CleanTalk\Common\Helper {
 
     /**
      * Get fw stats from the storage.
@@ -13,7 +13,7 @@ class Helper extends \Cleantalk\Common\Helper {
      */
     public static function getFwStats()
     {
-        return array('firewall_updating_id' => \CleanTalk\ApbctXF2::getXF()->options()->firewall_updating_id, 'firewall_updating_last_start' => \CleanTalk\ApbctXF2::getXF()->options()->firewall_updating_last_start, 'firewall_update_percent' => \CleanTalk\ApbctXF2::getXF()->options()->firewall_update_percent);
+        return array('firewall_updating_id' => \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_id, 'firewall_updating_last_start' => \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_last_start, 'firewall_update_percent' => \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_update_percent);
     }
 
     /**
@@ -25,9 +25,9 @@ class Helper extends \Cleantalk\Common\Helper {
      */
     public static function setFwStats( $fw_stats )
     {
-        \CleanTalk\ApbctXF2::getXF()->repository('XF:Option')->updateOption('firewall_updating_id', isset($fw_stats['firewall_updating_id']) ? $fw_stats['firewall_updating_id'] : null);
-        \CleanTalk\ApbctXF2::getXF()->repository('XF:Option')->updateOption('firewall_updating_last_start', isset($fw_stats['firewall_updating_last_start']) ? $fw_stats['firewall_updating_last_start'] : 0);
-        \CleanTalk\ApbctXF2::getXF()->repository('XF:Option')->updateOption('firewall_update_percent', isset($fw_stats['firewall_update_percent']) ? $fw_stats['firewall_update_percent'] : 0);
+        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_updating_id', isset($fw_stats['firewall_updating_id']) ? $fw_stats['firewall_updating_id'] : null);
+        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_updating_last_start', isset($fw_stats['firewall_updating_last_start']) ? $fw_stats['firewall_updating_last_start'] : 0);
+        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_update_percent', isset($fw_stats['firewall_update_percent']) ? $fw_stats['firewall_update_percent'] : 0);
     }
 
     /**
@@ -37,6 +37,6 @@ class Helper extends \Cleantalk\Common\Helper {
      */
     public static function SfwUpdate_DoFinisnAction()
     {
-        \CleanTalk\ApbctXF2::getXF()->repository('XF:Option')->updateOption('sfw_last_update', time());
+        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('ct_sfw_last_check', time());
     }
 }

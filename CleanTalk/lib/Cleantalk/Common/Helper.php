@@ -1,8 +1,8 @@
 <?php
 
-namespace Cleantalk\Common;
+namespace CleanTalk\Common;
 
-use Cleantalk\Common\Variables\Server;
+use CleanTalk\Common\Variables\Server;
 
 /**
  * CleanTalk Helper class.

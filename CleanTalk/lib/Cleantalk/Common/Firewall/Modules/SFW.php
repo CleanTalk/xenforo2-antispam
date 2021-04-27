@@ -1,13 +1,13 @@
 <?php
 
-namespace Cleantalk\Common\Firewall\Modules;
+namespace CleanTalk\Common\Firewall\Modules;
 
-use Cleantalk\Common\Firewall\Firewall;
-use Cleantalk\Common\Firewall\FirewallModule;
-use Cleantalk\Common\Schema;
-use Cleantalk\Common\Variables\Cookie;
-use Cleantalk\Common\Variables\Get;
-use Cleantalk\Common\Variables\Server;
+use CleanTalk\Common\Firewall\Firewall;
+use CleanTalk\Common\Firewall\FirewallModule;
+use CleanTalk\Common\Schema;
+use CleanTalk\Common\Variables\Cookie;
+use CleanTalk\Common\Variables\Get;
+use CleanTalk\Common\Variables\Server;
 
 class SFW extends FirewallModule {
 

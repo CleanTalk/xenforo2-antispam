@@ -1,6 +1,6 @@
 <?php
 
-namespace Cleantalk\Common;
+namespace CleanTalk\Common;
 
 /**
  * CleanTalk Cron class
@@ -222,13 +222,13 @@ abstract class Cron
 
         foreach( $tasks as $task ){
 
-            if( method_exists( '\CleantalkAntispam',$this->tasks[$task]['handler'] ) ){
+            if( is_callable( $this->tasks[$task]['handler'] ) ){
 
                 if( $this->debug ) {
                     error_log( var_export( 'Task ' . $task . ' will be run.', 1 ) );
                 }
 
-                $result = call_user_func_array( '\CleantalkAntispam::'.$this->tasks[$task]['handler'], isset( $this->tasks[$task]['params'] ) ? $this->tasks[$task]['params'] : array() );
+                $result = call_user_func_array( $this->tasks[$task]['handler'], isset( $this->tasks[$task]['params'] ) ? $this->tasks[$task]['params'] : array() );
 
                 if( $this->debug ) {
                     error_log( var_export( 'Result:', 1 ) );

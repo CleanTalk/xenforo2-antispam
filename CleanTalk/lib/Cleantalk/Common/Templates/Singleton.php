@@ -1,6 +1,6 @@
 <?php
 
-namespace Cleantalk\Common\Templates;
+namespace CleanTalk\Common\Templates;
 
 /**
  * Trait Singleton

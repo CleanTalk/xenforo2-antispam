@@ -132,9 +132,9 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
         $ct_request->sender_email = $user->email;
         $ct_request->sender_nickname = $user->username;
         $ct_request->message = $message;
-        $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
-        $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
-        $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+        $ct_request->sender_ip = CleantalkHelper::ip__get(array('real'), false);
+        $ct_request->x_forwarded_for = CleantalkHelper::ip__get(array('x_forwarded_for'), false);
+        $ct_request->x_real_ip       = CleantalkHelper::ip__get(array('x_real_ip'), false);
         $ct_request->agent = 'xenforo2-' . $plugin_version['version_id'];
         $ct_request->js_on = (isset($_POST['ct_checkjs']) && $_POST['ct_checkjs'] == date("Y")) ? 1 : 0;
         $ct_request->submit_time = time() - intval($page_set_timestamp);

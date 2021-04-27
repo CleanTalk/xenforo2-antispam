@@ -20,7 +20,7 @@ class Setup extends AbstractSetup
 	{
 	    $this->schemaManager()->createTable('xf_cleantalk_sfw', function(Create $table)
 	    {
-	    	$table->addColumn('id', 'int', 11);
+	    	$table->addColumn('id', 'int', 11)->autoIncrement();
 	        $table->addColumn('network', 'int', 11);
 	        $table->addColumn('mask', 'int', 11);
 	        $table->addColumn('status', 'tinyint', 1)->setDefault(0);
@@ -34,7 +34,7 @@ class Setup extends AbstractSetup
 	        $table->addColumn('all_entries', 'int', 11);
 	        $table->addColumn('blocked_entries', 'int', 11);
 	        $table->addColumn('entries_timestamp', 'int', 11);
-			$table->addColumn('ua_id', 'int', 11)->setDefault(null);
+			$table->addColumn('ua_id', 'int', 11)->nullable(true);
 			$table->addColumn('ua_name', 'varchar', 1024);
 			$table->addColumn('status', 'varchar', 50);
 	        $table->addPrimaryKey('id');
@@ -90,7 +90,7 @@ class Setup extends AbstractSetup
 		});
 		$this->schemaManager()->alterTable('xf_cleantalk_sfw_logs', function(\XF\Db\Schema\Alter $table) {
 			$table->addColumn('id', 'varchar', 40);
-			$table->addColumn('ua_id', 'int', 11)->setDefault(null);
+			$table->addColumn('ua_id', 'int', 11)->nullable(true);
 			$table->addColumn('ua_name', 'varchar', 1024);
 			$table->addColumn('status', 'varchar', 50);
 			$table->dropPrimaryKey('ip');

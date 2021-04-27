@@ -1,8 +1,8 @@
 <?php
 
-namespace Cleantalk\Common;
+namespace CleanTalk\Common;
 
-use Cleantalk\Common\Variables\Get;
+use CleanTalk\Common\Variables\Get;
 
 abstract class RemoteCalls
 {
@@ -69,7 +69,7 @@ abstract class RemoteCalls
 
                 $actions[$action]['last_call'] = time();
 
-                $this->setLastCall( $actions[$action] );
+                $this->setLastCall( $action );
 
                 // Check API key
                 if( $token === strtolower( md5( $this->api_key ) ) ){

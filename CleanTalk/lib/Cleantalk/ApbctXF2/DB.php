@@ -1,8 +1,8 @@
 <?php
 
-namespace Cleantalk\ApbctXF2;
+namespace CleanTalk\ApbctXF2;
 
-class DB extends \Cleantalk\Common\DB {
+class DB extends \CleanTalk\Common\DB {
     /**
      * Alternative constructor.
      * Initilize Database object and write it to property.

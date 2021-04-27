@@ -119,24 +119,7 @@ class Templater extends XFCP_Templater
 
 			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
 			{
-		        $ct_key = trim($this->app->options()->ct_apikey);
-		        
-                $firewall = new Firewall(
-                    $ct_key,
-                    DB::getInstance(),
-                    APBCT_TBL_FIREWALL_LOG
-                );
-
-                $firewall->loadFwModule( new SFW(
-                    APBCT_TBL_FIREWALL_DATA,
-                    array(
-                        'sfw_counter'   => 0,
-                        'cookie_domain' => Server::get('HTTP_HOST'),
-                        'set_cookies'    => 1,
-                    )
-                ) );
-
-                $firewall->run();    				
+				CleantalkFuncs::sfwCheck();  				
 			}
 		}
 		

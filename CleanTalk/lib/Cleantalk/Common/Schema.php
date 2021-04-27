@@ -1,6 +1,6 @@
 <?php
 
-namespace Cleantalk\Common;
+namespace CleanTalk\Common;
 
 class Schema
 {
