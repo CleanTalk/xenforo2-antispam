@@ -46,24 +46,26 @@ class Funcs {
     static public function apbctRunCron() {
         $cron = new Cron();
         $cron_option_name = $cron->getCronOptionName();
-        $cron_option = json_decode(self::getXF()->options()->$cron_option_name,true);
-        if (empty($cron_option)) {
-            $cron->addTask( 'sfw_update', '\CleanTalk\ApbctXF2\Funcs::apbct_sfw_update', 86400, time() + 60 );
-            $cron->addTask( 'sfw_send_logs', '\CleanTalk\ApbctXF2\Funcs::apbct_sfw_send_logs', 3600 );
-        }
-        $tasks_to_run = $cron->checkTasks(); // Check for current tasks. Drop tasks inner counters.
+        if (isset(self::getXF()->options()->$cron_option_name)) {
+            $cron_option = json_decode(self::getXF()->options()->$cron_option_name,true);
+            if (empty($cron_option)) {
+                $cron->addTask( 'sfw_update', '\CleanTalk\ApbctXF2\Funcs::apbct_sfw_update', 86400, time() + 60 );
+                $cron->addTask( 'sfw_send_logs', '\CleanTalk\ApbctXF2\Funcs::apbct_sfw_send_logs', 3600 );
+            }
+            $tasks_to_run = $cron->checkTasks(); // Check for current tasks. Drop tasks inner counters.
 
-        if(
-            ! empty( $tasks_to_run ) && // There is tasks to run
-            ! RemoteCalls::check() && // Do not doing CRON in remote call action
-            (
-                ! defined( 'DOING_CRON' ) ||
-                ( defined( 'DOING_CRON' ) && DOING_CRON !== true )
-            )
-        ){
-            $cron_res = $cron->runTasks( $tasks_to_run );
-            // Handle the $cron_res for errors here.
-        }       
+            if(
+                ! empty( $tasks_to_run ) && // There is tasks to run
+                ! RemoteCalls::check() && // Do not doing CRON in remote call action
+                (
+                    ! defined( 'DOING_CRON' ) ||
+                    ( defined( 'DOING_CRON' ) && DOING_CRON !== true )
+                )
+            ){
+                $cron_res = $cron->runTasks( $tasks_to_run );
+                // Handle the $cron_res for errors here.
+            }            
+        }
     }
     
     static public function ctSetCookie() {

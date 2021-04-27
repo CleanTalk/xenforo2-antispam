@@ -13,7 +13,7 @@ class Helper extends \CleanTalk\Common\Helper {
      */
     public static function getFwStats()
     {
-        return array('firewall_updating_id' => \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_id, 'firewall_updating_last_start' => \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_last_start, 'firewall_update_percent' => \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_update_percent);
+        return array('firewall_updating_id' =>  isset(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_id) ? \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_id : null, 'firewall_updating_last_start' => isset(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_last_start) ? \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_last_start : 0, 'firewall_update_percent' => isset(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_update_percent) ? \CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_update_percent : 0);
     }
 
     /**
@@ -25,9 +25,15 @@ class Helper extends \CleanTalk\Common\Helper {
      */
     public static function setFwStats( $fw_stats )
     {
-        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_updating_id', isset($fw_stats['firewall_updating_id']) ? $fw_stats['firewall_updating_id'] : null);
-        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_updating_last_start', isset($fw_stats['firewall_updating_last_start']) ? $fw_stats['firewall_updating_last_start'] : 0);
-        \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_update_percent', isset($fw_stats['firewall_update_percent']) ? $fw_stats['firewall_update_percent'] : 0);
+        if (isset(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_id)) {
+            \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_updating_id', isset($fw_stats['firewall_updating_id']) ? $fw_stats['firewall_updating_id'] : null);
+        }
+        if (isset(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_updating_last_start)) {
+            \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_updating_last_start', isset($fw_stats['firewall_updating_last_start']) ? $fw_stats['firewall_updating_last_start'] : 0);
+        }
+        if (isset(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_update_percent)) {
+            \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_update_percent', isset($fw_stats['firewall_update_percent']) ? $fw_stats['firewall_update_percent'] : 0);            
+        }
     }
 
     /**
