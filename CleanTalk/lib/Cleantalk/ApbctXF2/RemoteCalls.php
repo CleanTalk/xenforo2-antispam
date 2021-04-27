@@ -37,7 +37,7 @@ class RemoteCalls extends \CleanTalk\Common\RemoteCalls {
         $remote_calls = json_decode(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->ct_remote_calls, true);
         $default_rc = array('close_renew_banner' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_update' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_send_logs' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_update__write_base' => array('last_call' => 0, 'cooldown' => 0));
         if ($remote_calls && !empty($remote_calls)) {
-            return empty(array_diff_key($remote_calls, $default_rc)) ? $remote_calls : $default_rc;
+            return empty(array_diff_key($remote_calls, $default_rc)) && is_array($remote_calls['sfw_update']) ? $remote_calls : $default_rc;
         }
         return $default_rc;
     }

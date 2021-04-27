@@ -86,7 +86,6 @@ class Setup extends AbstractSetup
 	public function upgrade26Step1() {
 		$this->schemaManager()->alterTable('xf_cleantalk_sfw', function(\XF\Db\Schema\Alter $table) {
 			$table->addColumn('id', 'int', 11)->autoIncrement();
-			$table->addPrimaryKey('id');
 		});
 		$this->schemaManager()->alterTable('xf_cleantalk_sfw_logs', function(\XF\Db\Schema\Alter $table) {
 			$table->addColumn('id', 'varchar', 40);
