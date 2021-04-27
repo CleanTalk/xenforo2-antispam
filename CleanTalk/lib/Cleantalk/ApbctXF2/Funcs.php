@@ -102,7 +102,7 @@ class Funcs {
         
     }
 
-    static public function apbct_sfw_send_logs($access_key) {
+    static public function apbct_sfw_send_logs($access_key = '') {
         if( empty( $access_key ) ){
             $access_key = trim(self::getXF()->options()->ct_apikey);
             if (empty($access_key)) {
