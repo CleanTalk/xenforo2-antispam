@@ -345,7 +345,7 @@ class FirewallUpdater
     }
 
     /**
-     * Creatin a temporary updating table
+     * Creating a temporary updating table
      *
      * @param DB $db database handler
      * @throws \Exception
