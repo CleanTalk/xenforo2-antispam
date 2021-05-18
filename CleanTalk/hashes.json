@@ -17,7 +17,7 @@
     "src/addons/CleanTalk/lib/CleanTalk/Common/Firewall/FirewallModule.php": "3275edf75b8a58fcbaf859b457045b324f48869e6b879230b757df11cd51227e",
     "src/addons/CleanTalk/lib/CleanTalk/Common/Firewall/FirewallUpdater.php": "b2bff28f90e20f7e582707d1a398363d061090170d3f03b3403000ff03eea377",
     "src/addons/CleanTalk/lib/CleanTalk/Common/Firewall/Modules/die_page_sfw.html": "125faf3ea2deb1116b49ea3b5eab3eec4478d707c60145f149933a81d003770f",
-    "src/addons/CleanTalk/lib/CleanTalk/Common/Firewall/Modules/SFW.php": "fc4d289312e9a1e3c21211f464eef40720ac0f79b4ce6e1a1a76462fa2c806d7",
+    "src/addons/CleanTalk/lib/CleanTalk/Common/Firewall/Modules/SFW.php": "c5f150b8570fb8f13d62e665851a9d3208f4a9a0b5cb4642b82c5dae0fd57332",
     "src/addons/CleanTalk/lib/CleanTalk/Common/Helper.php": "6c5e453c3f003e868bdcd7cc8d8e25c9a66ad79e43de493d558ef216e98d793f",
     "src/addons/CleanTalk/lib/CleanTalk/Common/RemoteCalls.php": "75b622c5aab41476e4c76a311e232499b63eece0f851d4eac3d4cd2b31ede15c",
     "src/addons/CleanTalk/lib/CleanTalk/Common/Schema.php": "c54b9279a5f6c175d480221e7864732e0d21daf7c6bdb67caf29b214f4bb794e",
