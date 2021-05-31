@@ -1,6 +1,6 @@
 # xenforo2-antispam
 Xenforo2 anti-spam extension.
-# Version 2.7
+# Version 2.8
 
 ## How to install
 
