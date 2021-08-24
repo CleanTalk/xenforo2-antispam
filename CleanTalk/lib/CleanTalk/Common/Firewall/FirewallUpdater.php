@@ -159,82 +159,86 @@ class FirewallUpdater
 
             // Doing updating here.
             }elseif( $file_urls && $url_count > $current_url ){
+                if ($this->db->isTableExists($this->fw_data_table_name."_temp")) {
+                    $file_url = 'https://' . str_replace( 'multifiles', $current_url, $file_urls );
 
-                $file_url = 'https://' . str_replace( 'multifiles', $current_url, $file_urls );
+                    $lines = $this->unpackData( $file_url );
+                    if( empty( $lines['error'] ) ) {
 
-                $lines = $this->unpackData( $file_url );
-                if( empty( $lines['error'] ) ) {
-
-                    // Do writing to the DB
-                    reset( $lines );
-                    for( $count_result = 0; current($lines) !== false; ) {
-                        $query = "INSERT INTO ".$this->fw_data_table_name."_temp (network, mask, status) VALUES ";
-                        for( $i = 0, $values = array(); self::WRITE_LIMIT !== $i && current( $lines ) !== false; $i ++, $count_result ++, next( $lines ) ){
-                            $entry = current($lines);
-                            if(empty($entry)) {
-                                continue;
+                        // Do writing to the DB
+                        reset( $lines );
+                        for( $count_result = 0; current($lines) !== false; ) {
+                            $query = "INSERT INTO ".$this->fw_data_table_name."_temp (network, mask, status) VALUES ";
+                            for( $i = 0, $values = array(); self::WRITE_LIMIT !== $i && current( $lines ) !== false; $i ++, $count_result ++, next( $lines ) ){
+                                $entry = current($lines);
+                                if(empty($entry)) {
+                                    continue;
+                                }
+                                if ( self::WRITE_LIMIT !== $i ) {
+                                    // Cast result to int
+                                    $ip   = preg_replace('/[^\d]*/', '', $entry[0]);
+                                    $mask = preg_replace('/[^\d]*/', '', $entry[1]);
+                                    $private = isset($entry[2]) ? $entry[2] : 0;
+                                }
+                                $values[] = '('. $ip .','. $mask .','. $private .')';
                             }
-                            if ( self::WRITE_LIMIT !== $i ) {
-                                // Cast result to int
-                                $ip   = preg_replace('/[^\d]*/', '', $entry[0]);
-                                $mask = preg_replace('/[^\d]*/', '', $entry[1]);
-                                $private = isset($entry[2]) ? $entry[2] : 0;
+                            if( ! empty( $values ) ){
+                                $query = $query . implode( ',', $values ) . ';';
+                                $this->db->execute( $query );
                             }
-                            $values[] = '('. $ip .','. $mask .','. $private .')';
                         }
-                        if( ! empty( $values ) ){
-                            $query = $query . implode( ',', $values ) . ';';
-                            $this->db->execute( $query );
-                        }
-                    }
-                    $current_url++;
-                    $fw_stats['firewall_update_percent'] = round( ( ( (int) $current_url + 1 ) / (int) $url_count ), 2) * 100;
-                    $helper::setFwStats( $fw_stats );
+                        $current_url++;
+                        $fw_stats['firewall_update_percent'] = round( ( ( (int) $current_url + 1 ) / (int) $url_count ), 2) * 100;
+                        $helper::setFwStats( $fw_stats );
 
-                    // Updating continue: Do next remote call.
-                    if ( $url_count > $current_url ) {
-                        return Helper::http__request__rc_to_host(
-                            'sfw_update__write_base',
-                            array(
-                                'spbc_remote_call_token'  => md5( $this->api_key ),
-                                'file_urls'               => str_replace( array( 'http://', 'https://' ), '', $file_urls ),
-                                'url_count'               => $url_count,
-                                'current_url'             => $current_url,
-                                // Additional params
-                                'firewall_updating_id'    => $fw_stats['firewall_updating_id'],
-                            ),
-                            array('get', 'async')
-                        );
+                        // Updating continue: Do next remote call.
+                        if ( $url_count > $current_url ) {
+                            return Helper::http__request__rc_to_host(
+                                'sfw_update__write_base',
+                                array(
+                                    'spbc_remote_call_token'  => md5( $this->api_key ),
+                                    'file_urls'               => str_replace( array( 'http://', 'https://' ), '', $file_urls ),
+                                    'url_count'               => $url_count,
+                                    'current_url'             => $current_url,
+                                    // Additional params
+                                    'firewall_updating_id'    => $fw_stats['firewall_updating_id'],
+                                ),
+                                array('get', 'async')
+                            );
 
-                    // Updating end: Do finish actions.
-                    } else {
-
-                        // Wtite local IP as whitelisted
-                        $result = $this->writeDbExclusions();
-
-                        if( empty( $result['error'] ) && is_int( $result ) ) {
-
-                            // @todo We have to handle errors here
-                            $this->deleteMainDataTables();
-                            // @todo We have to handle errors here
-                            $this->renameDataTables();
-
-                            //Files array is empty update sfw stats
-                            $helper::SfwUpdate_DoFinisnAction();
-
-                            $fw_stats['firewall_update_percent'] = 0;
-                            $fw_stats['firewall_updating_id'] = null;
-                            $helper::setFwStats( $fw_stats );
-
-                            return true;
-
+                        // Updating end: Do finish actions.
                         } else {
-                            return array( 'error' => 'SFW_UPDATE: EXCLUSIONS: ' . $result['error'] );
+
+                            // Wtite local IP as whitelisted
+                            $result = $this->writeDbExclusions();
+
+                            if( empty( $result['error'] ) && is_int( $result ) ) {
+
+                                // @todo We have to handle errors here
+                                $this->deleteMainDataTables();
+                                // @todo We have to handle errors here
+                                $this->renameDataTables();
+
+                                //Files array is empty update sfw stats
+                                $helper::SfwUpdate_DoFinisnAction();
+
+                                $fw_stats['firewall_update_percent'] = 0;
+                                $fw_stats['firewall_updating_id'] = null;
+                                $helper::setFwStats( $fw_stats );
+
+                                return true;
+
+                            } else {
+                                return array( 'error' => 'SFW_UPDATE: EXCLUSIONS: ' . $result['error'] );
+                            }
                         }
-                    }
+                    } else {
+                        return array('error' => $lines['error']);
+                    }                    
                 } else {
-                    return array('error' => $lines['error']);
+                    return array('error' => 'TEMP_TABLE_NOT_EXISTS');
                 }
+
             }else {
                 return array('error' => 'SFW_UPDATE WRONG_FILE_URLS');
             }

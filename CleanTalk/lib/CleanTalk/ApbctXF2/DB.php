@@ -84,4 +84,16 @@ class DB extends \CleanTalk\Common\DB {
     public function get_last_error() {
 
     }
+    
+    /**
+     * Checks if the table exists
+     *
+     * @param $table_name
+     *
+     * @return bool
+     * @psalm-suppress PossiblyUnusedMethod
+     */
+    public function isTableExists( $table_name ){
+        return (bool) $this->execute( 'SHOW TABLES LIKE "' . $table_name . '"' );
+    }
 }

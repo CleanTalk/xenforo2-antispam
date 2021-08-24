@@ -99,5 +99,15 @@ abstract class DB
     abstract public function fetch_all( $query = false, $response_type = false );
 
     abstract public function get_last_error();
+    
+    /**
+     * Checks if the table exists
+     *
+     * @param $table_name
+     *
+     * @return bool
+     * @psalm-suppress PossiblyUnusedMethod
+     */
+    abstract public function isTableExists( $table_name );
 
 }
