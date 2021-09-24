@@ -168,6 +168,10 @@ abstract class Cron
         if( empty( $this->tasks ) ){
             return false;
         }
+    
+        if ( ! $this->setCronLastStart() ) {
+            return false;
+        }
         
         $tasks_to_run = array();
         foreach( $this->tasks as $task => &$task_data ){
@@ -213,10 +217,6 @@ abstract class Cron
     public function runTasks( $tasks )
     {
         if( empty( $tasks ) ) {
-            return;
-        }
-
-        if( ! $this->setCronLastStart() ) {
             return;
         }
 
