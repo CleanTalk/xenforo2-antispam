@@ -374,7 +374,7 @@ class FirewallUpdater
      */
     private function deleteMainDataTables()
     {
-        $this->db->execute( 'DROP TABLE `'. $this->fw_data_table_name .'`;' );
+        $this->db->execute( 'DROP TABLE IF EXISTS `'. $this->fw_data_table_name .'`;' );
     }
 
     /**
