@@ -48,11 +48,18 @@ class RemoteCalls extends \CleanTalk\Common\RemoteCalls {
      * @param array $action
      * @return void
      */
-    protected function setLastCall( $action )
+    protected function setLastCall( $actions )
     {
-        // TODO: Implement setLastCall() method.
         $remote_calls = $this->getAvailableRcActions();
-        $remote_calls[$action]['last_call'] = time();
+        if ( isset($remote_calls) ) {
+            foreach ( $remote_calls as $call => &$stats ) {
+                if ( isset($actions[$call]['last_call']) ) {
+                    $stats['last_call'] = $actions[$call]['last_call'];
+                }
+            }
+            unset($stats);
+        }
+
         \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('ct_remote_calls', json_encode($remote_calls));
     }
 }
