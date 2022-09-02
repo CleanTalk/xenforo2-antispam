@@ -45,7 +45,7 @@ class RemoteCalls extends \CleanTalk\Common\RemoteCalls {
     /**
      * Set last call timestamp and save it to the storage.
      *
-     * @param array $action
+     * @param array $actions
      * @return void
      */
     protected function setLastCall( $actions )
