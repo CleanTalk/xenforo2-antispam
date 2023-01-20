@@ -19,6 +19,12 @@ class CleanTalkContent extends \XF\Spam\Checker\AbstractProvider implements \XF\
 
     public function check(\XF\Entity\User $user, $message, array $extraParams = [])
     {
+        if (isset($_SERVER['HTTP_REFERER']) 
+            && (strpos($_SERVER['HTTP_REFERER'], '/index.php?account/account-details') !== false
+            || substr($_SERVER['HTTP_REFERER'], -strlen('/account')) === '/account')
+        ) {
+            return;
+        }
         
 		$option = $this->app()->options()->spamPhrases;
 		if( method_exists( 'Arr', 'stringToArray' ) ) {
