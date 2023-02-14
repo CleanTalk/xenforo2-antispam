@@ -8,6 +8,10 @@
     <default_value></default_value>
     <relation group_id="cleantalk" display_order="1"/>
   </option>
+  <option option_id="ct_apikey_error" edit_format="spinbox" data_type="string">
+    <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
   <option option_id="ct_block_type" edit_format="radio" data_type="string">
     <default_value>rejected</default_value>
     <edit_format_params>

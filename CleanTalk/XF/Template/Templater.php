@@ -121,12 +121,28 @@ class Templater extends XFCP_Templater
 			{
 				CleantalkFuncs::sfwCheck();  				
 			}
+
+            if ( $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] === '/admin.php' ) {
+                //key error render
+                $key_error = $this->app->options()['ct_apikey_error'];
+                if ( !empty($key_error) ) {
+                    preg_match('/name="options\[ct_apikey\]".*xf[uU]id.*>/', $output, $matches);
+                    $replace_with = '<div class="formRow-explain" style="color:red">'
+                        . 'CleanTalk Error: '
+                        . $key_error
+                        . '</div>';
+                    if ( isset($matches[0]) ) {
+                        $replace_this = $matches[0];
+                        $output = str_replace($replace_this, $replace_this . $replace_with, $output);
+                    }
+                }
+            }
 		}
 		
 		if ($this->app->options()->ct_footerlink)
 		{
 			$footer = "<li><div id='cleantalk_footer_link' style='width:100%;margin-right:250px;'><a href='https://cleantalk.org/xenforo-antispam-addon'>Anti-spam by CleanTalk</a> for Xenforo!</div></li>";
-			$output = str_replace('<ul class="p-footer-linkList">', '<ul class="p-footer-linkList">' . $footer, $output);			
+			$output = str_replace('<ul class="p-footer-linkList">', '<ul class="p-footer-linkList">' . $footer, $output);
 		}
 
 
