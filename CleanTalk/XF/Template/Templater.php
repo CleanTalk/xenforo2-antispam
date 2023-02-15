@@ -117,14 +117,16 @@ class Templater extends XFCP_Templater
 
 			CleantalkFuncs::apbctRunCron();				
 
-			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
+			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
 			{
 				CleantalkFuncs::sfwCheck();  				
 			}
 
-            if ( $_SERVER["REQUEST_METHOD"] == 'GET' && $_SERVER['SCRIPT_NAME'] === '/admin.php' ) {
+            if ( $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] === '/admin.php' ) {
                 //key error render
-                $key_error = $this->app->options()['ct_apikey_error'];
+                $key_error = isset($this->app->options()['ct_apikey_error'])
+                    ? $this->app->options()['ct_apikey_error']
+                    : '';
                 if ( !empty($key_error) ) {
                     preg_match('/name="options\[ct_apikey\]".*xf[uU]id.*>/', $output, $matches);
                     $replace_with = '<div class="formRow-explain" style="color:red">'
