@@ -14,31 +14,31 @@ class Option extends XFCP_Option
 	{
 		parent::updateOptions($values);
 		$plugin_version = $this->app()->addOnManager()->getById('CleanTalk')->getJsonVersion();
-
-        if ($this->checkAccessKey($values['ct_apikey']))
+        $ct_access_key = isset($values['ct_apikey']) ? $values['ct_apikey'] : '';
+        if ( $this->checkAccessKey($ct_access_key) )
         {
-            CleantalkAPI::method__send_empty_feedback($values['ct_apikey'], 'xenforo2-' . $plugin_version['version_id']);
+            CleantalkAPI::method__send_empty_feedback($ct_access_key, 'xenforo2-' . $plugin_version['version_id']);
 
             if (isset($values['ct_sfw']) && intval($values['ct_sfw']) == 1)
             {
-                CleantalkFuncs::apbct_sfw_update($values['ct_apikey']);
-                CleantalkFuncs::apbct_sfw_send_logs($values['ct_apikey']);
+                CleantalkFuncs::apbct_sfw_update($ct_access_key);
+                CleantalkFuncs::apbct_sfw_send_logs($ct_access_key);
             }
         }
     }
 
     /**
      * Check the key and set an error on options if is incorrect.
-     * @param $ct_apikey
+     * @param $ct_access_key
      * @return bool
      */
-    private function checkAccessKey($ct_apikey){
+    private function checkAccessKey($ct_access_key){
         $key_error = '';
-        if (isset($ct_apikey) && $ct_apikey != '')
+        if ( !empty($ct_access_key) )
         {
             $site_url = $_SERVER['HTTP_HOST'];
             //take a notice_paid_till result
-            $npt_result = CleantalkAPI::method__notice_paid_till($ct_apikey,$site_url);
+            $npt_result = CleantalkAPI::method__notice_paid_till($ct_access_key,$site_url);
             if ( !$npt_result ){
                 $key_error = 'Cannot validate the access key. Check if cURL support is enabled.';
             }
