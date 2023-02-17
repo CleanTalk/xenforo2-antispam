@@ -39,6 +39,7 @@ class Option extends XFCP_Option
             $site_url = $_SERVER['HTTP_HOST'];
             //take a notice_paid_till result
             $npt_result = CleantalkAPI::method__notice_paid_till($ct_access_key,$site_url);
+            error_log('CTDEBUG: [' . __FUNCTION__ . '] [$npt_result]: ' . var_export($npt_result,true));
             if ( !$npt_result ){
                 $key_error = 'Cannot validate the access key. Check if cURL support is enabled.';
             }
@@ -48,6 +49,8 @@ class Option extends XFCP_Option
             } elseif (isset($npt_result['valid']) && $npt_result['valid'] == '0'){
                 //valid flag
                 $key_error = 'Access key is invalid.';
+            } elseif (isset($npt_result['moderate']) && $npt_result['moderate'] == '0'){
+                $key_error = 'Access key is inactive. Check your account status.';
             }
         } else {
             // empty key
