@@ -687,16 +687,17 @@ class Cleantalk {
     * @return string
     */
     function stringToUTF8($str, $data_codepage = null){
-        if (!preg_match('//u', $str) && function_exists('mb_detect_encoding') && function_exists('mb_convert_encoding')) {
-            
-            if ($data_codepage !== null)
-                return mb_convert_encoding($str, 'UTF-8', $data_codepage);
+        if (!empty($str)) {
+            if (!preg_match('//u', $str) && function_exists('mb_detect_encoding') && function_exists('mb_convert_encoding')) {
+                if ($data_codepage !== null)
+                    return mb_convert_encoding($str, 'UTF-8', $data_codepage);
 
-            $encoding = mb_detect_encoding($str);
-            if ($encoding)
-                return mb_convert_encoding($str, 'UTF-8', $encoding);
+                $encoding = mb_detect_encoding($str);
+                if ($encoding)
+                    return mb_convert_encoding($str, 'UTF-8', $encoding);
+            }
         }
-        
+
         return $str;
     }
     
