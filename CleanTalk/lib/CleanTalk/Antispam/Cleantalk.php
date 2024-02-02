@@ -199,20 +199,21 @@ class Cleantalk {
      * @return string 
      */
   private function compressData($data = null){
-    
-    if (strlen($data) > $this->dataMaxSise && function_exists('gzencode') && function_exists('base64_encode')){
+    if (!empty($data)) {
+        if (strlen($data) > $this->dataMaxSise && function_exists('gzencode') && function_exists('base64_encode')){
 
-      $localData = gzencode($data, $this->compressRate, FORCE_GZIP);
+            $localData = gzencode($data, $this->compressRate, FORCE_GZIP);
 
-      if ($localData === false)
-        return $data;
-      
-      $localData = base64_encode($localData);
-      
-      if ($localData === false)
-        return $data;
-      
-      return $localData;
+            if ($localData === false)
+                return $data;
+            
+            $localData = base64_encode($localData);
+            
+            if ($localData === false)
+                return $data;
+            
+            return $localData;
+        }
     }
 
     return $data;
