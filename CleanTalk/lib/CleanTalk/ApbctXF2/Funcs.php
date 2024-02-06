@@ -12,6 +12,7 @@ define('APBCT_TBL_SESSIONS',      'cleantalk_sessions'); // Table with session d
 define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with session data.
 define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
 define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
+define('APBCT_SFW_DIRECT_UPDATE',       false); // Write limit for firewall data.
 
 use CleanTalk\ApbctXF2\Helper as CleantalkHelper;
 use CleanTalk\Common\Firewall\Firewall;
@@ -64,10 +65,10 @@ class Funcs {
             ){
                 $cron_res = $cron->runTasks( $tasks_to_run );
                 // Handle the $cron_res for errors here.
-            }            
+            }
         }
     }
-    
+
     static public function ctSetCookie() {
         // Cookie names to validate
         $cookie_test_value = array(
@@ -79,11 +80,11 @@ class Funcs {
             setcookie('ct_prev_referer', $_SERVER['HTTP_REFERER'], 0, '/');
             $cookie_test_value['cookies_names'][] = 'ct_prev_referer';
             $cookie_test_value['check_value'] .= $_SERVER['HTTP_REFERER'];
-        }           
+        }
 
         // Cookies test
         $cookie_test_value['check_value'] = md5($cookie_test_value['check_value']);
-        setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');      
+        setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');
     }
 
     static public function apbct_sfw_update($access_key = '') {
@@ -92,7 +93,7 @@ class Funcs {
             if (empty($access_key)) {
                 return false;
             }
-        }     
+        }
         $firewall = new Firewall(
             $access_key,
             DB::getInstance(),
@@ -100,8 +101,12 @@ class Funcs {
         );
         $firewall->setSpecificHelper( new CleantalkHelper() );
         $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
-        $fw_updater->update();
-        
+        if (defined('APBCT_SFW_DIRECT_UPDATE') && APBCT_SFW_DIRECT_UPDATE === true) {
+            $result = $fw_updater->directUpdate();
+        } else {
+            $result = $fw_updater->update();
+        }
+        return $result;
     }
 
     static public function apbct_sfw_send_logs($access_key = '') {
@@ -110,7 +115,7 @@ class Funcs {
             if (empty($access_key)) {
                 return false;
             }
-        } 
+        }
 
         $firewall = new Firewall( $access_key, DB::getInstance(), APBCT_TBL_FIREWALL_LOG );
         $firewall->setSpecificHelper( new CleantalkHelper() );
@@ -129,7 +134,7 @@ class Funcs {
     }
     static public function sfwCheck() {
         $ct_key = trim(self::getXF()->options()->ct_apikey);
-        
+
         $firewall = new Firewall(
             $ct_key,
             DB::getInstance(),
@@ -145,6 +150,6 @@ class Funcs {
             )
         ) );
 
-        $firewall->run();  
+        $firewall->run();
     }
 }
