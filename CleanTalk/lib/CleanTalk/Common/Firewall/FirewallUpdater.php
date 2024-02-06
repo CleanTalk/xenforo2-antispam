@@ -234,7 +234,7 @@ class FirewallUpdater
                         }
                     } else {
                         return array('error' => $lines['error']);
-                    }                    
+                    }
                 } else {
                     return array('error' => 'TEMP_TABLE_NOT_EXISTS');
                 }
@@ -255,6 +255,90 @@ class FirewallUpdater
         }
 
     }
+
+    public function directUpdate()
+    {
+        $helper = $this->helper;
+        // @todo We have to handle errors here
+        $this->createTempTables();
+
+        $blacklists = $this->getSfwBlacklists( $this->api_key );
+
+        if( empty( $blacklists['error'] ) ){
+            if( ! empty( $blacklists['file_url'] ) ){
+                $data = $this->unpackData( $blacklists['file_url'] );
+                if( empty( $data['error'] ) ) {
+                    $file_urls = array_column($data,'0');
+                } else {
+                    return array('error' => $data['error']  . $blacklists['file_url'] );
+                }
+            } else {
+                return array('error' => 'NO_REMOTE_MULTIFILE_FOUND: ' . $blacklists['file_url'] );
+            }
+        } else {
+            // Error getting blacklists.
+            return array('error' => 'ERROR_GETTING_BLACKLISTS: ' . $blacklists['file_url'] );
+        }
+
+        if( $file_urls ){
+            foreach ($file_urls as $current_url) {
+                if ($this->db->isTableExists($this->fw_data_table_name."_temp")) {
+                    $lines = $this->unpackData( $current_url );
+                    if( empty( $lines['error'] ) ) {
+                        // Do writing to the DB
+                        reset( $lines );
+                        for( $count_result = 0; current($lines) !== false; ) {
+                            $query = "INSERT INTO ".$this->fw_data_table_name."_temp (network, mask, status) VALUES ";
+                            for( $i = 0, $values = array(); self::WRITE_LIMIT !== $i && current( $lines ) !== false; $i ++, $count_result ++, next( $lines ) ){
+                                $entry = current($lines);
+                                if(empty($entry)) {
+                                    continue;
+                                }
+                                if ( self::WRITE_LIMIT !== $i ) {
+                                    // Cast result to int
+                                    $ip   = preg_replace('/[^\d]*/', '', $entry[0]);
+                                    $mask = preg_replace('/[^\d]*/', '', $entry[1]);
+                                    $private = isset($entry[2]) ? $entry[2] : 0;
+                                }
+                                $values[] = '('. $ip .','. $mask .','. $private .')';
+                            }
+                            if( ! empty( $values ) ){
+                                $query = $query . implode( ',', $values ) . ';';
+                                $this->db->execute( $query );
+                            }
+                        }
+
+                        // Wtite local IP as whitelisted
+                        $result = $this->writeDbExclusions();
+
+                        if( empty( $result['error'] ) && is_int( $result ) ) {
+
+                            // @todo We have to handle errors here
+                            $this->deleteMainDataTables();
+                            // @todo We have to handle errors here
+                            $this->renameDataTables();
+
+                            //Files array is empty update sfw stats
+                            $helper::SfwUpdate_DoFinisnAction();
+
+                            return true;
+
+                        } else {
+                            return array( 'error' => 'SFW_UPDATE: EXCLUSIONS: ' . $result['error'] );
+                            }
+                    } else {
+                        return array('error' => $lines['error']);
+                    }
+                } else {
+                    return array('error' => 'TEMP_TABLE_NOT_EXISTS');
+                }
+            }
+        }else {
+            return array('error' => 'SFW_UPDATE WRONG_FILE_URLS');
+        }
+    return false;
+    }
+
 
     private function getSfwBlacklists( $api_key )
     {
