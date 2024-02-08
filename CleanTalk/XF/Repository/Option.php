@@ -4,11 +4,10 @@ namespace CleanTalk\XF\Repository;
 require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
 
 use XF\Mvc\Entity\Finder;
-use XF\Mvc\Entity\Repository;
 use CleanTalk\Common\API as CleantalkAPI;
 use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
 
-class Option extends XFCP_Option
+class Option extends \XF\Repository\Option
 {
 	public function updateOptions(array $values)
 	{
@@ -39,7 +38,6 @@ class Option extends XFCP_Option
             $site_url = $_SERVER['HTTP_HOST'];
             //take a notice_paid_till result
             $npt_result = CleantalkAPI::method__notice_paid_till($ct_access_key,$site_url);
-            error_log('CTDEBUG: [' . __FUNCTION__ . '] [$npt_result]: ' . var_export($npt_result,true));
             if ( !$npt_result ){
                 $key_error = 'Cannot validate the access key. Check if cURL support is enabled.';
             }
