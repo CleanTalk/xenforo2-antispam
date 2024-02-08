@@ -12,7 +12,7 @@ define('APBCT_TBL_SESSIONS',      'cleantalk_sessions'); // Table with session d
 define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with session data.
 define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
 define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
-define('APBCT_SFW_DIRECT_UPDATE',       true); // Write limit for firewall data.
+define('APBCT_SFW_DIRECT_UPDATE',       false); // Write limit for firewall data.
 
 use CleanTalk\ApbctXF2\Helper as CleantalkHelper;
 use CleanTalk\Common\Firewall\Firewall;
