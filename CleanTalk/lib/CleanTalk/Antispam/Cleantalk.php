@@ -199,20 +199,21 @@ class Cleantalk {
      * @return string 
      */
   private function compressData($data = null){
-    
-    if (strlen($data) > $this->dataMaxSise && function_exists('gzencode') && function_exists('base64_encode')){
+    if (!empty($data)) {
+        if (strlen($data) > $this->dataMaxSise && function_exists('gzencode') && function_exists('base64_encode')){
 
-      $localData = gzencode($data, $this->compressRate, FORCE_GZIP);
+            $localData = gzencode($data, $this->compressRate, FORCE_GZIP);
 
-      if ($localData === false)
-        return $data;
-      
-      $localData = base64_encode($localData);
-      
-      if ($localData === false)
-        return $data;
-      
-      return $localData;
+            if ($localData === false)
+                return $data;
+            
+            $localData = base64_encode($localData);
+            
+            if ($localData === false)
+                return $data;
+            
+            return $localData;
+        }
     }
 
     return $data;
@@ -256,8 +257,10 @@ class Cleantalk {
         // Removing non UTF8 characters from request, because non UTF8 or malformed characters break json_encode().
         //
         foreach ($request as $param => $value) {
-            if (!preg_match('//u', $value)) {
-                $request->{$param} = 'Nulled. Not UTF8 encoded or malformed.'; 
+            if (!empty($value)) {
+                if (!preg_match('//u', $value)) {
+                    $request->{$param} = 'Nulled. Not UTF8 encoded or malformed.';
+                }
             }
         }
         
@@ -539,6 +542,7 @@ class Cleantalk {
                 
                 // -1 server is down, skips not reachable server
                 if ($ping != -1) {
+                    $ping = intval(round($ping));
                     $r_temp[$ping + $i] = $server;
                 }
                 $i++;
@@ -685,16 +689,17 @@ class Cleantalk {
     * @return string
     */
     function stringToUTF8($str, $data_codepage = null){
-        if (!preg_match('//u', $str) && function_exists('mb_detect_encoding') && function_exists('mb_convert_encoding')) {
-            
-            if ($data_codepage !== null)
-                return mb_convert_encoding($str, 'UTF-8', $data_codepage);
+        if (!empty($str)) {
+            if (!preg_match('//u', $str) && function_exists('mb_detect_encoding') && function_exists('mb_convert_encoding')) {
+                if ($data_codepage !== null)
+                    return mb_convert_encoding($str, 'UTF-8', $data_codepage);
 
-            $encoding = mb_detect_encoding($str);
-            if ($encoding)
-                return mb_convert_encoding($str, 'UTF-8', $encoding);
+                $encoding = mb_detect_encoding($str);
+                if ($encoding)
+                    return mb_convert_encoding($str, 'UTF-8', $encoding);
+            }
         }
-        
+
         return $str;
     }
     
