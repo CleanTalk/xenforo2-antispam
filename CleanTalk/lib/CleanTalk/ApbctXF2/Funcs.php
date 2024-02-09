@@ -12,7 +12,7 @@ define('APBCT_TBL_SESSIONS',      'cleantalk_sessions'); // Table with session d
 define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with session data.
 define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
 define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
-define('APBCT_SFW_DIRECT_UPDATE',       false); // Write limit for firewall data.
+define('APBCT_SFW_DIRECT_UPDATE',       true); // Write limit for firewall data.
 
 use CleanTalk\ApbctXF2\Helper as CleantalkHelper;
 use CleanTalk\Common\Firewall\Firewall;
@@ -103,6 +103,13 @@ class Funcs {
         $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
         if (defined('APBCT_SFW_DIRECT_UPDATE') && APBCT_SFW_DIRECT_UPDATE === true) {
             $result = $fw_updater->directUpdate();
+            if (true !== $result) {
+                \XF::logError('CleanTalk: SFW direct update failed: ' . isset($result['error']) ? $result['error'] : 'unknown reason');
+            } else {
+                \XF::logError('CleanTalk: SFW direct update finished. All OK.');
+            }
+            //do not handle directupdate fail
+            return true;
         } else {
             $result = $fw_updater->update();
         }

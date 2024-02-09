@@ -11,7 +11,7 @@ use XF\Mvc\Router;
 use XF\Util\Arr;
 use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
 
-class Templater extends XFCP_Templater
+class Templater extends \XF\Template\Templater
 {
 	public function form($contentHtml, array $options)
 	{
@@ -112,14 +112,14 @@ class Templater extends XFCP_Templater
 
 			if (!headers_sent())
 				CleantalkFuncs::ctSetCookie();
-			
+
 			CleantalkFuncs::ctRemoteCalls();
 
-			CleantalkFuncs::apbctRunCron();				
+			CleantalkFuncs::apbctRunCron();
 
 			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
 			{
-				CleantalkFuncs::sfwCheck();  				
+				CleantalkFuncs::sfwCheck();
 			}
 
             if ( $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] === '/admin.php' ) {
@@ -140,7 +140,7 @@ class Templater extends XFCP_Templater
                 }
             }
 		}
-		
+
 		if ($this->app->options()->ct_footerlink)
 		{
 			$footer = "<li><div id='cleantalk_footer_link' style='width:100%;margin-right:250px;'><a href='https://cleantalk.org/xenforo-antispam-addon'>Anti-spam by CleanTalk</a> for Xenforo!</div></li>";

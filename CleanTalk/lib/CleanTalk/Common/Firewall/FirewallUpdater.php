@@ -127,7 +127,11 @@ class FirewallUpdater
             if( ! $file_urls ){
 
                 // @todo We have to handle errors here
-                $this->createTempTables();
+                try {
+                    $this->createTempTables();
+                } catch (\Exception $e) {
+                    return array('error' => $e->getMessage() );
+                }
 
                 $blacklists = $this->getSfwBlacklists( $this->api_key );
 
@@ -260,83 +264,87 @@ class FirewallUpdater
     {
         $helper = $this->helper;
         // @todo We have to handle errors here
-        $this->createTempTables();
+        try {
+            $this->createTempTables();
 
-        $blacklists = $this->getSfwBlacklists( $this->api_key );
+            $blacklists = $this->getSfwBlacklists( $this->api_key );
 
-        if( empty( $blacklists['error'] ) ){
-            if( ! empty( $blacklists['file_url'] ) ){
-                $data = $this->unpackData( $blacklists['file_url'] );
-                if( empty( $data['error'] ) ) {
-                    $file_urls = array_column($data,'0');
-                } else {
-                    return array('error' => $data['error']  . $blacklists['file_url'] );
-                }
-            } else {
-                return array('error' => 'NO_REMOTE_MULTIFILE_FOUND: ' . $blacklists['file_url'] );
+            if( !empty( $blacklists['error'] ) ) {
+                throw new \Exception('ERROR_GETTING_BLACKLISTS');
             }
-        } else {
-            // Error getting blacklists.
-            return array('error' => 'ERROR_GETTING_BLACKLISTS: ' . $blacklists['file_url'] );
-        }
 
-        if( $file_urls ){
+            if (empty( $blacklists['file_url'])) {
+                throw new \Exception('NO_REMOTE_MULTIFILE_FOUND');
+            }
+
+            $data = $this->unpackData( $blacklists['file_url'] );
+
+            if( !empty( $data['error'] ) ) {
+                throw new \Exception($data['error']  . $blacklists['file_url']);
+            }
+
+            $file_urls = array_column($data,'0');
+
+            if( !$file_urls ) {
+                throw new \Exception('SFW_UPDATE WRONG_FILE_URLS');
+            }
+
             foreach ($file_urls as $current_url) {
-                if ($this->db->isTableExists($this->fw_data_table_name."_temp")) {
-                    $lines = $this->unpackData( $current_url );
-                    if( empty( $lines['error'] ) ) {
-                        // Do writing to the DB
-                        reset( $lines );
-                        for( $count_result = 0; current($lines) !== false; ) {
-                            $query = "INSERT INTO ".$this->fw_data_table_name."_temp (network, mask, status) VALUES ";
-                            for( $i = 0, $values = array(); self::WRITE_LIMIT !== $i && current( $lines ) !== false; $i ++, $count_result ++, next( $lines ) ){
-                                $entry = current($lines);
-                                if(empty($entry)) {
-                                    continue;
-                                }
-                                if ( self::WRITE_LIMIT !== $i ) {
-                                    // Cast result to int
-                                    $ip   = preg_replace('/[^\d]*/', '', $entry[0]);
-                                    $mask = preg_replace('/[^\d]*/', '', $entry[1]);
-                                    $private = isset($entry[2]) ? $entry[2] : 0;
-                                }
-                                $values[] = '('. $ip .','. $mask .','. $private .')';
-                            }
-                            if( ! empty( $values ) ){
-                                $query = $query . implode( ',', $values ) . ';';
-                                $this->db->execute( $query );
-                            }
+                $temp_table_name = $this->fw_data_table_name . "_temp";
+
+                if (!$this->db->isTableExists($temp_table_name)) {
+                    throw new \Exception('SFW_UPDATE TEMP_TABLE_NOT_EXISTS');
+                }
+
+                $lines = $this->unpackData( $current_url );
+
+                if( !empty( $lines['error'] ) ) {
+                    throw new \Exception('SFW_UPDATE UNPACK DATA ERROR' . $lines['error']);
+                }
+
+                // Do writing to the DB
+                reset( $lines );
+                for( $count_result = 0; current($lines) !== false; ) {
+                    $query = "INSERT INTO " . $temp_table_name . " (network, mask, status) VALUES ";
+                    for( $i = 0, $values = array(); self::WRITE_LIMIT !== $i && current( $lines ) !== false; $i ++, $count_result ++, next( $lines ) ){
+                        $entry = current($lines);
+                        if(empty($entry)) {
+                            continue;
                         }
-
-                        // Wtite local IP as whitelisted
-                        $result = $this->writeDbExclusions();
-
-                        if( empty( $result['error'] ) && is_int( $result ) ) {
-
-                            // @todo We have to handle errors here
-                            $this->deleteMainDataTables();
-                            // @todo We have to handle errors here
-                            $this->renameDataTables();
-
-                            //Files array is empty update sfw stats
-                            $helper::SfwUpdate_DoFinisnAction();
-
-                            return true;
-
-                        } else {
-                            return array( 'error' => 'SFW_UPDATE: EXCLUSIONS: ' . $result['error'] );
-                            }
-                    } else {
-                        return array('error' => $lines['error']);
+                        if ( self::WRITE_LIMIT !== $i ) {
+                            // Cast result to int
+                            $ip   = preg_replace('/[^\d]*/', '', $entry[0]);
+                            $mask = preg_replace('/[^\d]*/', '', $entry[1]);
+                            $private = isset($entry[2]) ? $entry[2] : 0;
+                        }
+                        $values[] = '('. $ip .','. $mask .','. $private .')';
                     }
-                } else {
-                    return array('error' => 'TEMP_TABLE_NOT_EXISTS');
+                    if( ! empty( $values ) ){
+                        $query = $query . implode( ',', $values ) . ';';
+                        $this->db->execute( $query );
+                    }
                 }
             }
-        }else {
-            return array('error' => 'SFW_UPDATE WRONG_FILE_URLS');
+
+            // Wtite local IP as whitelisted
+            $result = $this->writeDbExclusions();
+
+            if( !(empty( $result['error'] ) && is_int( $result) ) ) {
+                throw new \Exception('SFW_UPDATE: EXCLUSIONS: ' . $result['error']);
+            }
+
+            // @todo We have to handle errors here
+            $this->deleteMainDataTables();
+            // @todo We have to handle errors here
+            $this->renameDataTables();
+            //Files array is empty update sfw stats
+            $helper::SfwUpdate_DoFinisnAction();
+
+            return true;
+
+        } catch (\Exception $e) {
+            return array('error' => $e->getMessage() );
         }
-    return false;
     }
 
 
@@ -447,8 +455,16 @@ class FirewallUpdater
             $sql = sprintf( Schema::getSchema('sfw'), $this->db->prefix );
             $this->db->execute( $sql );
         }
-        $this->db->execute( 'CREATE TABLE IF NOT EXISTS `' . $this->fw_data_table_name . '_temp` LIKE `' . $this->fw_data_table_name . '`;' );
-        $this->db->execute( 'TRUNCATE TABLE `' . $this->fw_data_table_name . '_temp`;' );
+        $result_create = $this->db->execute( 'CREATE TABLE IF NOT EXISTS `' . $this->fw_data_table_name . '_temp` LIKE `' . $this->fw_data_table_name . '`;' );
+        if ($result_create) {
+            $result_truncate = $this->db->execute( 'TRUNCATE TABLE `' . $this->fw_data_table_name . '_temp`;' );
+        } else {
+            throw new \Exception('Cannot create table: ' . $this->fw_data_table_name . '_temp');
+        }
+
+        if ($result_truncate === false) {
+            throw new \Exception('Cannot truncate table: ' . $this->fw_data_table_name . '_temp');
+        }
     }
 
     /**

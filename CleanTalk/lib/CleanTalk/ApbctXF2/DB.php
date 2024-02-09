@@ -44,9 +44,13 @@ class DB extends \CleanTalk\Common\DB {
      */
     public function execute( $query ) {
 
-        $this->db_result =\XF::db()->query($query);
-        
-        return $this->db_result;
+        try {
+            $this->db_result =\XF::db()->query($query);
+        } catch (\Exception) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -61,7 +65,7 @@ class DB extends \CleanTalk\Common\DB {
     public function fetch( $query = false, $response_type = false ) {
 
         $this->result = \XF::db()->fetchRow($query);
-        
+
         return $this->result;
     }
 
@@ -84,7 +88,7 @@ class DB extends \CleanTalk\Common\DB {
     public function get_last_error() {
 
     }
-    
+
     /**
      * Checks if the table exists
      *
@@ -94,6 +98,6 @@ class DB extends \CleanTalk\Common\DB {
      * @psalm-suppress PossiblyUnusedMethod
      */
     public function isTableExists( $table_name ){
-        return (bool) $this->execute( 'SHOW TABLES LIKE "' . $table_name . '"' );
+        return $this->execute( 'SHOW TABLES LIKE "' . $table_name . '"' );
     }
 }
