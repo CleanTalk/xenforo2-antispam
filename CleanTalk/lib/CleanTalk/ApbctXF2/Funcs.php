@@ -103,11 +103,11 @@ class Funcs {
         $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
         if (defined('APBCT_SFW_DIRECT_UPDATE') && APBCT_SFW_DIRECT_UPDATE === true) {
             $result = $fw_updater->directUpdate();
-            if (true !== $result) {
-                \XF::logError('CleanTalk: SFW direct update failed: ' . isset($result['error']) ? $result['error'] : 'unknown reason');
-            } else {
-                \XF::logError('CleanTalk: SFW direct update finished. All OK.');
-            }
+//            if (true !== $result) {
+//                \XF::logError('CleanTalk: SFW direct update failed: ' . isset($result['error']) ? $result['error'] : 'unknown reason');
+//            } else {
+//                \XF::logError('CleanTalk: SFW direct update finished. All OK.');
+//            }
             //do not handle directupdate fail
             return true;
         } else {
