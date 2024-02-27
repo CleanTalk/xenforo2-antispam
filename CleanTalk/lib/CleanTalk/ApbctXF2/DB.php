@@ -46,7 +46,7 @@ class DB extends \CleanTalk\Common\DB {
 
         try {
             $this->db_result =\XF::db()->query($query);
-        } catch (\Exception) {
+        } catch (\Exception $e) {
             return false;
         }
 
