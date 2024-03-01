@@ -1,0 +1,10 @@
+{
+    "require": {
+        "cleantalk/firewall": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "cleantalk/apbct-installer": true
+        }
+    }
+}

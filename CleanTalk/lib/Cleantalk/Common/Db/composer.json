@@ -1,0 +1,22 @@
+{
+  "name": "cleantalk/db",
+  "description": "CleanTalk APBCT database classes",
+  "type": "cleantalk-apbct-lib",
+  "authors": [
+    {
+      "name": "CleanTalk Team",
+      "email": "support@cleantalk.org"
+    }
+  ],
+  "license": "GPL-3.0-or-later",
+  "require": {
+    "cleantalk/apbct-installer": "*",
+    "cleantalk/templates": "*",
+    "cleantalk/mloader": "*"
+  },
+  "config": {
+    "allow-plugins": {
+      "cleantalk/apbct-installer": true
+    }
+  }
+}

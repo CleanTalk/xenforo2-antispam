@@ -3,9 +3,10 @@ namespace CleanTalk\XF\Repository;
 
 require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
 
-use XF\Mvc\Entity\Finder;
-use CleanTalk\Common\API as CleantalkAPI;
-use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
+use CleanTalk\Antispam\Cleantalk;
+use CleanTalk\Antispam\CleantalkRequest;
+use Cleantalk\ApbctXF2\Funcs as CleantalkFuncs;
+use Cleantalk\Common\Api\Api;
 
 class Option extends \XF\Repository\Option
 {
@@ -16,7 +17,7 @@ class Option extends \XF\Repository\Option
         $ct_access_key = isset($values['ct_apikey']) ? $values['ct_apikey'] : '';
         if ( $this->checkAccessKey($ct_access_key) )
         {
-            CleantalkAPI::method__send_empty_feedback($ct_access_key, 'xenforo2-' . $plugin_version['version_id']);
+            $this->sendEmptyFeedback($ct_access_key, 'xenforo2-' . $plugin_version['version_id']);
 
             if (isset($values['ct_sfw']) && intval($values['ct_sfw']) == 1)
             {
@@ -37,7 +38,7 @@ class Option extends \XF\Repository\Option
         {
             $site_url = $_SERVER['HTTP_HOST'];
             //take a notice_paid_till result
-            $npt_result = CleantalkAPI::method__notice_paid_till($ct_access_key,$site_url);
+            $npt_result = Api::methodNoticePaidTill($ct_access_key,$site_url);
             if ( !$npt_result ){
                 $key_error = 'Cannot validate the access key. Check if cURL support is enabled.';
             }
@@ -58,5 +59,19 @@ class Option extends \XF\Repository\Option
         parent::updateOption('ct_apikey_error', $key_error);
 
         return empty($key_error) ? true : false;
+    }
+
+    private function sendEmptyFeedback($ct_access_key, $string)
+    {
+        $ct_request = new CleantalkRequest(array(
+            // General
+            'auth_key' => $ct_access_key,
+            // Additional
+            'feedback' => 0 . ':' . $string,
+        ));
+
+        $ct = new Cleantalk();
+        $ct->server_url = $ct->work_url = CleantalkFuncs::getXF()->options()->ct_server_url;
+        $res = $ct->sendFeedback($ct_request);
     }
 }

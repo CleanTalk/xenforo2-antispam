@@ -4,12 +4,7 @@ namespace CleanTalk\XF\Template;
 
 require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
 
-use XF\App;
-use XF\Language;
-use XF\Mvc\Entity\AbstractCollection;
-use XF\Mvc\Router;
-use XF\Util\Arr;
-use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
+use Cleantalk\ApbctXF2\Funcs as CleantalkFuncs;
 
 class Templater extends \XF\Template\Templater
 {

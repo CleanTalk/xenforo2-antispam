@@ -1,0 +1,21 @@
+{
+  "name": "cleantalk/api",
+  "description": "CleanTalk APBCT `API` class",
+  "type": "cleantalk-apbct-lib",
+  "authors": [
+    {
+      "name": "CleanTalk Team",
+      "email": "support@cleantalk.org"
+    }
+  ],
+  "license": "GPL-3.0-or-later",
+  "require": {
+    "cleantalk/apbct-installer": "*",
+    "cleantalk/http": "*"
+  },
+  "config": {
+    "allow-plugins": {
+      "cleantalk/apbct-installer": true
+    }
+  }
+}
