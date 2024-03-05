@@ -1,8 +1,11 @@
 <?php
 
-namespace CleanTalk\ApbctXF2;
+namespace Cleantalk\Custom\RemoteCalls;
 
-class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls {
+class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls
+{
+    public const OPTION_NAME = 'ct_remote_calls';
+
     /**
      * SFW update
      *
@@ -10,7 +13,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls {
      */
     public function action__sfw_update()
     {
-        return \CleanTalk\ApbctXF2\Funcs::apbct_sfw_update( $this->api_key );
+        return \CleanTalk\ApbctXF2\Funcs::sfwUpdate( $this->api_key );
     }
 
     /**
@@ -20,12 +23,12 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls {
      */
     public function action__sfw_send_logs()
     {
-        return \CleanTalk\ApbctXF2\Funcs::apbct_sfw_send_logs( $this->api_key );
+        return \CleanTalk\ApbctXF2\Funcs::sfwSendLogs( $this->api_key );
     }
 
     public function action__sfw_update__write_base()
     {
-        return \CleanTalk\ApbctXF2\Funcs::apbct_sfw_update( $this->api_key );
+        return \CleanTalk\ApbctXF2\Funcs::sfwUpdate( $this->api_key );
     }
     /**
      * Get available remote calls from the storage.

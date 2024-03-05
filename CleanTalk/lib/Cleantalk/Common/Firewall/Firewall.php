@@ -418,7 +418,6 @@ class Firewall
         $storage_handler_class = Mloader::get('StorageHandler');
         $storage_handler_class = new $storage_handler_class();
         $stats = $storage_handler_class->getSetting(self::FW_STATS_SETTING_NAME);
-        error_log(var_export($stats,1));
         if ( $stats !== null ) {
             foreach ( $stats as $stat_key => $stat_val ) {
                 $fw_stats->$stat_key = $stat_val;

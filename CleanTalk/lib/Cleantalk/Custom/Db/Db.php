@@ -2,7 +2,8 @@
 
 namespace Cleantalk\Custom\Db;
 
-class Db extends \Cleantalk\Common\Db\Db {
+class Db extends \Cleantalk\Common\Db\Db
+{
     /**
      * Alternative constructor.
      * Initilize Database object and write it to property.
@@ -10,18 +11,6 @@ class Db extends \Cleantalk\Common\Db\Db {
      */
     protected function init() {
         $this->prefix = "xf_";
-    }
-
-    /**
-     * Safely replace place holders
-     *
-     * @param string $query
-     * @param array  $vars
-     *
-     * @return $this
-     */
-    public function prepare( $query, $vars = array() ) {
-
     }
 
     /**
@@ -79,10 +68,6 @@ class Db extends \Cleantalk\Common\Db\Db {
         $this->result = \XF::db()->fetchAll($query);
 
         return $this->result;
-    }
-
-    public function getLastError() {
-
     }
 
     /**

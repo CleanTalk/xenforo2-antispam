@@ -7,15 +7,13 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
     public function getSetting($setting_name)
     {
         $setting_value =  \Cleantalk\ApbctXF2\Funcs::getXF()->options()->$setting_name;
-        if ( $setting_value === '' ) {
-            return null;
-        }
-        return $setting_value;
+
+        return json_decode($setting_value, true);
     }
 
     public function deleteSetting($setting_name)
     {
-        \Cleantalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, '');
+        return \Cleantalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, '');
     }
 
     public function saveSetting($setting_name, $setting_value)
@@ -23,12 +21,15 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
         if ( is_array($setting_value) ) {
             $setting_value = json_encode($setting_value);
         }
-        \Cleantalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, $setting_value);
+        $saving_result = \Cleantalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, $setting_value);
+        \Cleantalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
+
+        return $saving_result;
     }
 
     public static function getUpdatingFolder()
     {
-        return \Cleantalk\ApbctXF2\Funcs::getXF()->config('internalDataPath') . '/temp';
+        return \XF::getRootDirectory() . '/' . \Cleantalk\ApbctXF2\Funcs::getXF()->config('internalDataPath') . '/temp/cleantalk_fw_files/';
     }
 
     public static function getJsLocation()

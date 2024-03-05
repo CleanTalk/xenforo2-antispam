@@ -13,6 +13,14 @@ define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with sess
 define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
 define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
 
+// Cron handlers specific names
+if (!defined('APBCT_CRON_HANDLER__SFW_UPDATE')) {
+    define('APBCT_CRON_HANDLER__SFW_UPDATE', '\CleanTalk\ApbctXF2\Funcs::sfwUpdate');
+}
+if (!defined('APBCT_CRON_HANDLER__SFW_LOGS')) {
+    define('APBCT_CRON_HANDLER__SFW_LOGS', '\CleanTalk\ApbctXF2\Funcs::sfwSendLogs');
+}
+
 use CleanTalk\Common\Firewall\Firewall;
 use CleanTalk\Common\Firewall\Modules\SFW;
 use Cleantalk\Common\Mloader\Mloader;
@@ -86,7 +94,7 @@ class Funcs {
         setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');
     }
 
-    public static function apbct_sfw_update($api_key = '')
+    public static function sfwUpdate($api_key = '')
     {
         if( empty($api_key) ){
             $api_key = trim(self::getXF()->options()->ct_apikey);
@@ -108,7 +116,7 @@ class Funcs {
         return $fw_updater->update();
     }
 
-    public static function apbct_sfw_send_logs($api_key = '')
+    public static function sfwSendLogs($api_key = '')
     {
         if( empty( $api_key ) ){
             $api_key = trim(self::getXF()->options()->ct_apikey);

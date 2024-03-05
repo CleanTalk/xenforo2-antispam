@@ -800,7 +800,8 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
                 //return array('error' => 'RENAME TABLE: MAIN TABLE IS STILL EXISTS: ' . $table_name);
             }
 
-            if ( !$db->execute('ALTER TABLE `' . $table_name__temp . '` RENAME `' . $table_name . '`;') ) {
+            $alter_res = $db->execute('ALTER TABLE `' . $table_name__temp . '` RENAME `' . $table_name . '`;');
+            if ( ! $alter_res ) {
                 return array(
                     'error' => 'RENAME TABLE: FAILED TO RENAME: ' . $table_name
                         . ' DB Error: ' . $db->getLastError()

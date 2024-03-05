@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <options>
-  <option option_id="cleantalk_cron" edit_format="textbox" data_type="string">
-    <default_value></default_value>
-    <relation group_id="cleantalk_data" display_order="0"/>
-  </option>
+
+  <!-- Real options -->
   <option option_id="ct_apikey" edit_format="textbox" data_type="string">
     <default_value></default_value>
     <relation group_id="cleantalk" display_order="1"/>
-  </option>
-  <option option_id="ct_apikey_error" edit_format="spinbox" data_type="string">
-    <default_value></default_value>
-    <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="ct_block_type" edit_format="radio" data_type="string">
     <default_value>rejected</default_value>
@@ -37,12 +31,36 @@
     <default_value>0</default_value>
     <relation group_id="cleantalk" display_order="7"/>
   </option>
-  <option option_id="ct_remote_calls" edit_format="textbox" data_type="string">
-    <default_value>{"close_renew_banner":{"last_call":0,"cooldown":10},"sfw_update":{"last_call":0,"cooldown":10},"sfw_send_logs":{"last_call":0,"cooldown":10},"sfw_update__write_base":{"last_call":0,"cooldown":0}}</default_value>
+  <option option_id="ct_sfw" edit_format="onoff" data_type="boolean">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk" display_order="6"/>
+  </option>
+
+  <!-- Service data -->
+  <option option_id="ct_apikey_error" edit_format="spinbox" data_type="string">
+    <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="cleantalk_cron" edit_format="textbox" data_type="string">
+    <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="cleantalk_cron_last_start" edit_format="spinbox" data_type="integer">
     <default_value>0</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="cleantalk_cron_pid" edit_format="spinbox" data_type="integer">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option><option option_id="ct_remote_calls" edit_format="textbox" data_type="string">
+    <default_value>{"close_renew_banner":{"last_call":0,"cooldown":10},"sfw_update":{"last_call":0,"cooldown":10},"sfw_send_logs":{"last_call":0,"cooldown":10},"sfw_update__write_base":{"last_call":0,"cooldown":0}}</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option><option option_id="ct_server_url" edit_format="textbox" data_type="string">
+    <default_value>https://moderate.cleantalk.org</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="ct_work_url" edit_format="textbox" data_type="string">
+    <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="ct_server_changed" edit_format="spinbox" data_type="integer">
@@ -52,14 +70,6 @@
   <option option_id="ct_server_ttl" edit_format="spinbox" data_type="integer">
     <default_value>0</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
-  </option>
-  <option option_id="ct_server_url" edit_format="textbox" data_type="string">
-    <default_value>https://moderate.cleantalk.org</default_value>
-    <relation group_id="cleantalk_data" display_order="0"/>
-  </option>
-  <option option_id="ct_sfw" edit_format="onoff" data_type="boolean">
-    <default_value>0</default_value>
-    <relation group_id="cleantalk" display_order="6"/>
   </option>
   <option option_id="ct_sfw_check_interval" edit_format="spinbox" data_type="integer">
     <default_value>86400</default_value>
@@ -77,11 +87,11 @@
     <default_value>3600</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
-  <option option_id="ct_work_url" edit_format="textbox" data_type="string">
+  <option option_id="apbct_fw_stats" edit_format="textbox" data_type="string">
     <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
-  <option option_id="apbct_fw_stats" edit_format="textbox" data_type="string">
+  <option option_id="sfw_update_queue" edit_format="textbox" data_type="string">
     <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>

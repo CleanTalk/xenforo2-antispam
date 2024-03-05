@@ -18,12 +18,6 @@ class Cron extends \Cleantalk\Common\Cron\Cron
                 'next_call' => time() + 3600,
                 'period'    => 3600,
                 'params'    => [],
-            ],
-            'sfw_ac__clear_table' => [
-                'handler'   => APBCT_CRON_HANDLER__AC_CLEAR_TABLE,
-                'next_call' => time() + 3600,
-                'period'    => 3600,
-                'params'    => [],
             ]
         ];
     }

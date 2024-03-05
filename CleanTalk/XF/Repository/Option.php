@@ -21,8 +21,8 @@ class Option extends \XF\Repository\Option
 
             if (isset($values['ct_sfw']) && intval($values['ct_sfw']) == 1)
             {
-                CleantalkFuncs::apbct_sfw_update($ct_access_key);
-                CleantalkFuncs::apbct_sfw_send_logs($ct_access_key);
+                CleantalkFuncs::sfwUpdate($ct_access_key);
+                CleantalkFuncs::sfwSendLogs($ct_access_key);
             }
         }
     }
