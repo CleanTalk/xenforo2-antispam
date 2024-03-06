@@ -2,22 +2,22 @@
 
 namespace Cleantalk\ApbctXF2;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
+require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
 define('APBCT_TBL_FIREWALL_DATA', 'cleantalk_sfw');      // Table with firewall data.
-define('APBCT_TBL_FIREWALL_LOG',  'cleantalk_sfw_logs'); // Table with firewall logs.
-define('APBCT_TBL_AC_LOG',        'cleantalk_ac_log');   // Table with firewall logs.
-define('APBCT_TBL_AC_UA_BL',      'cleantalk_ua_bl');    // Table with User-Agents blacklist.
-define('APBCT_TBL_SESSIONS',      'cleantalk_sessions'); // Table with session data.
-define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with session data.
-define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
-define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
+define('APBCT_TBL_FIREWALL_LOG', 'cleantalk_sfw_logs'); // Table with firewall logs.
+define('APBCT_TBL_AC_LOG', 'cleantalk_ac_log');   // Table with firewall logs.
+define('APBCT_TBL_AC_UA_BL', 'cleantalk_ua_bl');    // Table with User-Agents blacklist.
+define('APBCT_TBL_SESSIONS', 'cleantalk_sessions'); // Table with session data.
+define('APBCT_SPAMSCAN_LOGS', 'cleantalk_spamscan_logs'); // Table with session data.
+define('APBCT_SELECT_LIMIT', 5000); // Select limit for logs.
+define('APBCT_WRITE_LIMIT', 5000); // Write limit for firewall data.
 
 // Cron handlers specific names
-if (!defined('APBCT_CRON_HANDLER__SFW_UPDATE')) {
+if ( !defined('APBCT_CRON_HANDLER__SFW_UPDATE') ) {
     define('APBCT_CRON_HANDLER__SFW_UPDATE', '\CleanTalk\ApbctXF2\Funcs::sfwUpdate');
 }
-if (!defined('APBCT_CRON_HANDLER__SFW_LOGS')) {
+if ( !defined('APBCT_CRON_HANDLER__SFW_LOGS') ) {
     define('APBCT_CRON_HANDLER__SFW_LOGS', '\CleanTalk\ApbctXF2\Funcs::sfwSendLogs');
 }
 
@@ -25,14 +25,15 @@ use CleanTalk\Common\Firewall\Firewall;
 use CleanTalk\Common\Firewall\Modules\SFW;
 use Cleantalk\Common\Mloader\Mloader;
 
-class Funcs {
-
-    static public function getXF() {
-        if (!\XF::app()) {
+class Funcs
+{
+    public static function getXF()
+    {
+        if ( !\XF::app() ) {
             $fileDir = $_SERVER["DOCUMENT_ROOT"];
 
-            if ( ! file_exists( $fileDir . '/src/XF.php'  ) ) {
-            return false;
+            if ( !file_exists($fileDir . '/src/XF.php') ) {
+                return false;
             }
 
             require_once($fileDir . '/src/XF.php');
@@ -47,7 +48,7 @@ class Funcs {
         return \XF::app();
     }
 
-    static public function apbctRunCron()
+    public static function apbctRunCron()
     {
         /** @var \Cleantalk\Common\RemoteCalls\RemoteCalls $rc_class */
         $rc_class = Mloader::get('RemoteCalls');
@@ -56,21 +57,21 @@ class Funcs {
         $cron_class = Mloader::get('Cron');
         $cron = new $cron_class();
         $cron_option_name = $cron->getCronOptionName();
-        $cron_option = json_decode(self::getXF()->options()->$cron_option_name,true);
-        if (empty($cron_option)) {
+        $cron_option = json_decode(self::getXF()->options()->$cron_option_name, true);
+        if ( empty($cron_option) ) {
             $cron->saveTasks($cron->getDefaultTasks());
         }
         $tasks_to_run = $cron->checkTasks(); // Check for current tasks. Drop tasks inner counters.
 
         if (
-            ! empty( $tasks_to_run ) && // There is tasks to run
-            ! $rc_class::check() && // Do not doing CRON in remote call action
+            !empty($tasks_to_run) && // There is tasks to run
+            !$rc_class::check() && // Do not doing CRON in remote call action
             (
-                ! defined( 'DOING_CRON' ) ||
-                ( defined( 'DOING_CRON' ) && DOING_CRON !== true )
+                !defined('DOING_CRON') ||
+                (defined('DOING_CRON') && DOING_CRON !== true)
             )
-        ){
-            $cron_res = $cron->runTasks( $tasks_to_run );
+        ) {
+            $cron_res = $cron->runTasks($tasks_to_run);
             // Handle the $cron_res for errors here.
         }
     }
@@ -83,7 +84,7 @@ class Funcs {
             'check_value' => trim(self::getXF()->options()->ct_apikey),
         );
         // Pervious referer
-        if(!empty($_SERVER['HTTP_REFERER'])){
+        if ( !empty($_SERVER['HTTP_REFERER']) ) {
             setcookie('ct_prev_referer', $_SERVER['HTTP_REFERER'], 0, '/');
             $cookie_test_value['cookies_names'][] = 'ct_prev_referer';
             $cookie_test_value['check_value'] .= $_SERVER['HTTP_REFERER'];
@@ -96,7 +97,7 @@ class Funcs {
 
     public static function sfwUpdate($api_key = '')
     {
-        if( empty($api_key) ){
+        if ( empty($api_key) ) {
             $api_key = trim(self::getXF()->options()->ct_apikey);
             if ( empty($api_key) ) {
                 return false;
@@ -118,9 +119,9 @@ class Funcs {
 
     public static function sfwSendLogs($api_key = '')
     {
-        if( empty( $api_key ) ){
+        if ( empty($api_key) ) {
             $api_key = trim(self::getXF()->options()->ct_apikey);
-            if (empty($api_key)) {
+            if ( empty($api_key) ) {
                 return false;
             }
         }
@@ -129,23 +130,24 @@ class Funcs {
         return $firewall->sendLogs();
     }
 
-    static public function ctRemoteCalls()
+    public static function ctRemoteCalls()
     {
         // Remote calls
         /** @var \Cleantalk\Common\RemoteCalls\RemoteCalls $rc_class */
         $rc_class = Mloader::get('RemoteCalls');
         /** @var \Cleantalk\Common\StorageHandler\StorageHandler $storage_handler */
         $storage_handler = Mloader::get('StorageHandler');
-        if ($rc_class::check()) {
+        if ( $rc_class::check() ) {
             $remote_calls = new $rc_class(trim(self::getXF()->options()->ct_apikey), new $storage_handler());
             try {
-                die ($remote_calls->process());
+                die($remote_calls->process());
             } catch ( \Cleantalk\Common\RemoteCalls\Exceptions\RemoteCallsException $exception ) {
-                die ('FAIL ' . json_encode(array('error' => $exception->getMessage())));
+                die('FAIL ' . json_encode(array('error' => $exception->getMessage())));
             }
         }
     }
-    static public function sfwCheck()
+
+    public static function sfwCheck()
     {
         $api_key = trim(self::getXF()->options()->ct_apikey);
         $fw_logs_table_name = APBCT_TBL_FIREWALL_LOG;
@@ -159,7 +161,7 @@ class Funcs {
             );
 
             $firewall->run();
-        } catch (\Exception $e) {
+        } catch ( \Exception $e ) {
             error_log('CleanTalk Firewall is not loaded: ' . $e->getMessage());
         }
     }

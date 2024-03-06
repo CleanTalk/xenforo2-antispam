@@ -9,7 +9,8 @@ class Db extends \Cleantalk\Common\Db\Db
      * Initilize Database object and write it to property.
      * Set tables prefix.
      */
-    protected function init() {
+    protected function init()
+    {
         $this->prefix = "xf_";
     }
 
@@ -21,11 +22,11 @@ class Db extends \Cleantalk\Common\Db\Db
      * @param false $return_affected
      * @return bool|int Raw result
      */
-    public function execute($query, $return_affected = false) {
-
+    public function execute($query, $return_affected = false)
+    {
         try {
-            $this->db_result =\XF::db()->query($query);
-        } catch (\Exception $e) {
+            $this->db_result = \XF::db()->query($query);
+        } catch ( \Exception $e ) {
             return false;
         }
 
@@ -41,9 +42,9 @@ class Db extends \Cleantalk\Common\Db\Db
      *
      * @return array|object|void|null
      */
-    public function fetch( $query = false, $response_type = false )
+    public function fetch($query = false, $response_type = false)
     {
-        if ( ! $query ) {
+        if ( !$query ) {
             $query = $this->getQuery();
         }
         $this->result = \XF::db()->fetchRow($query);
@@ -60,9 +61,9 @@ class Db extends \Cleantalk\Common\Db\Db
      *
      * @return array|object|null
      */
-    public function fetchAll( $query = false, $response_type = false )
+    public function fetchAll($query = false, $response_type = false)
     {
-        if ( ! $query ) {
+        if ( !$query ) {
             $query = $this->getQuery();
         }
         $this->result = \XF::db()->fetchAll($query);
@@ -78,8 +79,9 @@ class Db extends \Cleantalk\Common\Db\Db
      * @return bool
      * @psalm-suppress PossiblyUnusedMethod
      */
-    public function isTableExists( $table_name ){
-        return $this->execute( 'SHOW TABLES LIKE "' . $table_name . '"' );
+    public function isTableExists($table_name)
+    {
+        return $this->execute('SHOW TABLES LIKE "' . $table_name . '"');
     }
 
     public function getAffectedRows()

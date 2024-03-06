@@ -1,12 +1,12 @@
 <?php
 
-namespace CleanTalk\Antispam;
+namespace Cleantalk\Antispam;
 
 /**
  * Response class
  */
-class CleantalkResponse {
-
+class CleantalkResponse
+{
     /**
      * Received feedback nubmer
      * @var int
@@ -121,14 +121,15 @@ class CleantalkResponse {
      * @param type $response
      * @param type $obj
      */
-    function __construct($response = null, $obj = null) {
-        if ($response && is_array($response) && count($response) > 0) {
-            foreach ($response as $param => $value) {
+    public function __construct($response = null, $obj = null)
+    {
+        if ( $response && is_array($response) && count($response) > 0 ) {
+            foreach ( $response as $param => $value ) {
                 $this->{$param} = $value;
             }
         } else {
             $this->errno = $obj->errno;
-            $this->errstr         = isset($obj->errstr) ?
+            $this->errstr = isset($obj->errstr) ?
                 preg_replace("/.+(\*\*\*.+\*\*\*).+/", "$1", htmlspecialchars($obj->errstr)) :
                 null;
 
@@ -149,10 +150,9 @@ class CleantalkResponse {
             $this->account_status = (isset($obj->account_status)) ? $obj->account_status : -1;
             $this->received = (isset($obj->received)) ? $obj->received : -1;
 
-            if ($this->errno !== 0 && $this->errstr !== null && $this->comment === null)
+            if ( $this->errno !== 0 && $this->errstr !== null && $this->comment === null ) {
                 $this->comment = '*** ' . $this->errstr . ' Antispam service cleantalk.org ***';
+            }
         }
     }
-
 }
-?>

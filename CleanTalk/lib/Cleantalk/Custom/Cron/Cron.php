@@ -8,16 +8,16 @@ class Cron extends \Cleantalk\Common\Cron\Cron
     {
         return [
             'sfw_update' => [
-                'handler'   => APBCT_CRON_HANDLER__SFW_UPDATE,
+                'handler' => APBCT_CRON_HANDLER__SFW_UPDATE,
                 'next_call' => time() + 60,
-                'period'    => 86400,
-                'params'    => [],
+                'period' => 86400,
+                'params' => [],
             ],
             'sfw_send_logs' => [
-                'handler'   => APBCT_CRON_HANDLER__SFW_LOGS,
+                'handler' => APBCT_CRON_HANDLER__SFW_LOGS,
                 'next_call' => time() + 3600,
-                'period'    => 3600,
-                'params'    => [],
+                'period' => 3600,
+                'params' => [],
             ]
         ];
     }

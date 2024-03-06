@@ -6,7 +6,7 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
 {
     public function getSetting($setting_name)
     {
-        $setting_value =  \Cleantalk\ApbctXF2\Funcs::getXF()->options()->$setting_name;
+        $setting_value = \Cleantalk\ApbctXF2\Funcs::getXF()->options()->$setting_name;
 
         return json_decode($setting_value, true);
     }
