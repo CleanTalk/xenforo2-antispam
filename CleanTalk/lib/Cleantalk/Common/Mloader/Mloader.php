@@ -25,6 +25,6 @@ class Mloader
 			return $common_class;
 		}
 
-		throw new \InvalidArgumentException('Called module ' . $module_name . ' not found.' . "\n" . var_export(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true));
+		throw new \InvalidArgumentException('Called module ' . $module_name . ' not found.');
 	}
 }
