@@ -32,7 +32,7 @@ class Helper extends \CleanTalk\Common\Helper {
             \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_updating_last_start', isset($fw_stats['firewall_updating_last_start']) ? $fw_stats['firewall_updating_last_start'] : 0);
         }
         if (isset(\CleanTalk\ApbctXF2\Funcs::getXF()->options()->firewall_update_percent)) {
-            \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_update_percent', isset($fw_stats['firewall_update_percent']) ? $fw_stats['firewall_update_percent'] : 0);            
+            \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('firewall_update_percent', isset($fw_stats['firewall_update_percent']) ? $fw_stats['firewall_update_percent'] : 0);
         }
     }
 
@@ -44,5 +44,35 @@ class Helper extends \CleanTalk\Common\Helper {
     public static function SfwUpdate_DoFinisnAction()
     {
         \CleanTalk\ApbctXF2\Funcs::getXF()->repository('XF:Option')->updateOption('ct_sfw_last_check', time());
+    }
+
+    /**
+     * Function convert from UTF8
+     *
+     * @param array|object|string $obj
+     * @param string              $data_codepage
+     *
+     * @return mixed (array|object|string)
+     */
+    public static function fromUTF8($obj, $data_codepage = null)
+    {
+        // Array || object
+        if (is_array($obj) || is_object($obj)) {
+            foreach ($obj as $_key => &$val) {
+                $val = self::fromUTF8($val, $data_codepage);
+            }
+            unset($val);
+            //String
+        } else {
+            if ($data_codepage !== null && preg_match('//u', $obj)) {
+                if ( function_exists('mb_convert_encoding') ) {
+                    $obj = mb_convert_encoding($obj, $data_codepage, 'UTF-8');
+                } elseif (version_compare(phpversion(), '8.3', '<')) {
+                    $obj = @utf8_decode($obj);
+                }
+            }
+        }
+
+        return $obj;
     }
 }
