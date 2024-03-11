@@ -25,7 +25,7 @@ class Db extends \Cleantalk\Common\Db\Db
     public function execute($query, $return_affected = false)
     {
         try {
-            $this->db_result = \XF::db()->query($query);
+            $this->result = \XF::db()->query($query);
         } catch ( \Exception $e ) {
             return false;
         }
