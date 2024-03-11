@@ -4,6 +4,8 @@ namespace Cleantalk\Antispam;
 
 use Cleantalk\Common\Helper\Helper;
 
+use CleanTalk\ApbctXF2\Helper;
+
 /**
  * Response class
  */
