@@ -2,20 +2,15 @@
 
 namespace CleanTalk\XF\Template;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
+require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
-use XF\App;
-use XF\Language;
-use XF\Mvc\Entity\AbstractCollection;
-use XF\Mvc\Router;
-use XF\Util\Arr;
-use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
+use Cleantalk\ApbctXF2\Funcs as CleantalkFuncs;
 
 class Templater extends \XF\Template\Templater
 {
-	public function form($contentHtml, array $options)
-	{
-		$form = parent::form($contentHtml, $options);
+    public function form($contentHtml, array $options)
+    {
+        $form = parent::form($contentHtml, $options);
 
         $input = '<input type="hidden" name="ct_checkjs" id="ct_checkjs" value="0" /><script>var date = new Date(); document.getElementById("ct_checkjs").value = date.getFullYear(); var d = new Date(), 
 			ctTimeMs = new Date().getTime(),
@@ -99,28 +94,31 @@ class Templater extends \XF\Template\Templater
         $form = str_replace('</form>', $input . '</form>', $form);
 
         return $form;
-	}
+    }
 
-	public function renderTemplate($template, array $params = [], $addDefaultParams = true, \XF\Template\ExtensionSet $extensionOverrides = null)
-	{
-		$output = parent::renderTemplate($template, $params, $addDefaultParams, $extensionOverrides);
-		static $show_flag = true;
+    public function renderTemplate(
+        $template,
+        array $params = [],
+        $addDefaultParams = true,
+        \XF\Template\ExtensionSet $extensionOverrides = null
+    ) {
+        $output = parent::renderTemplate($template, $params, $addDefaultParams, $extensionOverrides);
+        static $show_flag = true;
 
-		if ($show_flag)
-		{
-			$show_flag = false;
+        if ( $show_flag ) {
+            $show_flag = false;
 
-			if (!headers_sent())
-				CleantalkFuncs::ctSetCookie();
+            if ( !headers_sent() ) {
+                CleantalkFuncs::ctSetCookie();
+            }
 
-			CleantalkFuncs::ctRemoteCalls();
+            CleantalkFuncs::ctRemoteCalls();
 
-			CleantalkFuncs::apbctRunCron();
+            CleantalkFuncs::apbctRunCron();
 
-			if ($this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php')
-			{
-				CleantalkFuncs::sfwCheck();
-			}
+            if ( $this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php' ) {
+                CleantalkFuncs::sfwCheck();
+            }
 
             if ( $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] === '/admin.php' ) {
                 //key error render
@@ -139,15 +137,18 @@ class Templater extends \XF\Template\Templater
                     }
                 }
             }
-		}
+        }
 
-		if ($this->app->options()->ct_footerlink)
-		{
-			$footer = "<li><div id='cleantalk_footer_link' style='width:100%;margin-right:250px;'><a href='https://cleantalk.org/xenforo-antispam-addon'>Anti-spam by CleanTalk</a> for Xenforo!</div></li>";
-			$output = str_replace('<ul class="p-footer-linkList">', '<ul class="p-footer-linkList">' . $footer, $output);
-		}
+        if ( $this->app->options()->ct_footerlink ) {
+            $footer = "<li><div id='cleantalk_footer_link' style='width:100%;margin-right:250px;'><a href='https://cleantalk.org/xenforo-antispam-addon'>Anti-spam by CleanTalk</a> for Xenforo!</div></li>";
+            $output = str_replace(
+                '<ul class="p-footer-linkList">',
+                '<ul class="p-footer-linkList">' . $footer,
+                $output
+            );
+        }
 
 
-		return $output;
-	}
+        return $output;
+    }
 }
