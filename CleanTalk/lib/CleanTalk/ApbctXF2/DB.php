@@ -45,7 +45,7 @@ class DB extends \CleanTalk\Common\DB {
     public function execute( $query ) {
 
         try {
-            $this->db_result =\XF::db()->query($query);
+            $this->result =\XF::db()->query($query);
         } catch (\Exception $e) {
             return false;
         }
