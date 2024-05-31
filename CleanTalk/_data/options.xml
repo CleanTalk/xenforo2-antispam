@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <options>
+  <option option_id="apbct_fw_stats" edit_format="textbox" data_type="string">
+    <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
   <option option_id="cleantalk_cron" edit_format="textbox" data_type="string">
     <default_value></default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="cleantalk_cron_last_start" edit_format="spinbox" data_type="integer">
+    <default_value>0</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
+  <option option_id="cleantalk_cron_pid" edit_format="spinbox" data_type="integer">
+    <default_value>0</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
   <option option_id="ct_apikey" edit_format="textbox" data_type="string">
@@ -77,16 +89,8 @@
     <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
-  <option option_id="firewall_update_percent" edit_format="spinbox" data_type="integer">
-    <default_value>0</default_value>
-    <relation group_id="cleantalk_data" display_order="0"/>
-  </option>
-  <option option_id="firewall_updating_id" edit_format="spinbox" data_type="string">
+  <option option_id="sfw_update_queue" edit_format="textbox" data_type="string">
     <default_value></default_value>
-    <relation group_id="cleantalk_data" display_order="0"/>
-  </option>
-  <option option_id="firewall_updating_last_start" edit_format="spinbox" data_type="integer">
-    <default_value>0</default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
 </options>

@@ -1,27 +1,27 @@
 <?php
+
 namespace CleanTalk\XF\Repository;
 
-require_once \XF::getRootDirectory().'/src/addons/CleanTalk/lib/autoload.php';
+require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
-use XF\Mvc\Entity\Finder;
-use CleanTalk\Common\API as CleantalkAPI;
-use CleanTalk\ApbctXF2\Funcs as CleantalkFuncs;
+use CleanTalk\Antispam\Cleantalk;
+use CleanTalk\Antispam\CleantalkRequest;
+use Cleantalk\ApbctXF2\Funcs as CleantalkFuncs;
+use Cleantalk\Common\Api\Api;
 
 class Option extends \XF\Repository\Option
 {
-	public function updateOptions(array $values)
-	{
-		parent::updateOptions($values);
-		$plugin_version = $this->app()->addOnManager()->getById('CleanTalk')->getJsonVersion();
+    public function updateOptions(array $values)
+    {
+        parent::updateOptions($values);
+        $plugin_version = $this->app()->addOnManager()->getById('CleanTalk')->getJsonVersion();
         $ct_access_key = isset($values['ct_apikey']) ? $values['ct_apikey'] : '';
-        if ( $this->checkAccessKey($ct_access_key) )
-        {
-            CleantalkAPI::method__send_empty_feedback($ct_access_key, 'xenforo2-' . $plugin_version['version_id']);
+        if ( $this->checkAccessKey($ct_access_key) ) {
+            $this->sendEmptyFeedback($ct_access_key, 'xenforo2-' . $plugin_version['version_id']);
 
-            if (isset($values['ct_sfw']) && intval($values['ct_sfw']) == 1)
-            {
-                CleantalkFuncs::apbct_sfw_update($ct_access_key);
-                CleantalkFuncs::apbct_sfw_send_logs($ct_access_key);
+            if ( isset($values['ct_sfw']) && intval($values['ct_sfw']) == 1 ) {
+                CleantalkFuncs::sfwUpdate($ct_access_key);
+                CleantalkFuncs::sfwSendLogs($ct_access_key);
             }
         }
     }
@@ -31,23 +31,23 @@ class Option extends \XF\Repository\Option
      * @param $ct_access_key
      * @return bool
      */
-    private function checkAccessKey($ct_access_key){
+    private function checkAccessKey($ct_access_key)
+    {
         $key_error = '';
-        if ( !empty($ct_access_key) )
-        {
+        if ( !empty($ct_access_key) ) {
             $site_url = $_SERVER['HTTP_HOST'];
             //take a notice_paid_till result
-            $npt_result = CleantalkAPI::method__notice_paid_till($ct_access_key,$site_url);
-            if ( !$npt_result ){
+            $npt_result = Api::methodNoticePaidTill($ct_access_key, $site_url);
+            if ( !$npt_result ) {
                 $key_error = 'Cannot validate the access key. Check if cURL support is enabled.';
             }
-            if ( !empty($npt_result['error_message']) ){
+            if ( !empty($npt_result['error_message']) ) {
                 //error message if provided
                 $key_error = $npt_result['error_message'];
-            } elseif (isset($npt_result['valid']) && $npt_result['valid'] == '0'){
+            } elseif ( isset($npt_result['valid']) && $npt_result['valid'] == '0' ) {
                 //valid flag
                 $key_error = 'Access key is invalid.';
-            } elseif (isset($npt_result['moderate']) && $npt_result['moderate'] == '0'){
+            } elseif ( isset($npt_result['moderate']) && $npt_result['moderate'] == '0' ) {
                 $key_error = 'Access key is inactive. Check your account status.';
             }
         } else {
@@ -58,5 +58,19 @@ class Option extends \XF\Repository\Option
         parent::updateOption('ct_apikey_error', $key_error);
 
         return empty($key_error) ? true : false;
+    }
+
+    private function sendEmptyFeedback($ct_access_key, $string)
+    {
+        $ct_request = new CleantalkRequest(array(
+            // General
+            'auth_key' => $ct_access_key,
+            // Additional
+            'feedback' => 0 . ':' . $string,
+        ));
+
+        $ct = new Cleantalk();
+        $ct->server_url = $ct->work_url = CleantalkFuncs::getXF()->options()->ct_server_url;
+        $ct->sendFeedback($ct_request);
     }
 }
