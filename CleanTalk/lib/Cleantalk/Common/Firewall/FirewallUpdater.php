@@ -69,6 +69,10 @@ class FirewallUpdater
             $this->saveSfwUpdateError($e);
         } catch ( SfwUpdateExit $e ) {
             $this->logSfwExit($e);
+        } catch ( \Exception $e ) {
+            if ( $this->debug ) {
+                error_log('SFW updating error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+            }
         }
 
         return false;
@@ -194,6 +198,7 @@ class FirewallUpdater
             throw new SfwUpdateException('updateWorker: Worker call limit exceeded');
         }
 
+        /** @var Queue $queue */
         $queue = new $this->queue($this->api_key);
 
         if ( count($queue->queue['stages']) === 0 ) {
