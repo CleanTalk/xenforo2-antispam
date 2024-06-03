@@ -1,6 +1,6 @@
 <?php
 
-namespace Cleantalk\ApbctXF2;
+namespace Cleantalk\Custom;
 
 require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
@@ -15,10 +15,10 @@ define('APBCT_WRITE_LIMIT', 5000); // Write limit for firewall data.
 
 // Cron handlers specific names
 if ( !defined('APBCT_CRON_HANDLER__SFW_UPDATE') ) {
-    define('APBCT_CRON_HANDLER__SFW_UPDATE', '\CleanTalk\ApbctXF2\Funcs::sfwUpdate');
+    define('APBCT_CRON_HANDLER__SFW_UPDATE', '\CleanTalk\Custom\Funcs::sfwUpdate');
 }
 if ( !defined('APBCT_CRON_HANDLER__SFW_LOGS') ) {
-    define('APBCT_CRON_HANDLER__SFW_LOGS', '\CleanTalk\ApbctXF2\Funcs::sfwSendLogs');
+    define('APBCT_CRON_HANDLER__SFW_LOGS', '\CleanTalk\Custom\Funcs::sfwSendLogs');
 }
 
 use CleanTalk\Common\Firewall\Firewall;
@@ -114,7 +114,9 @@ class Funcs
             return $fw_updater->directUpdate();
         }
 
-        return $fw_updater->update();
+        $upd_res = $fw_updater->update();
+
+        return $upd_res;
     }
 
     public static function sfwSendLogs($api_key = '')
