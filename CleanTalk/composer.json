@@ -1,6 +1,7 @@
 {
     "require": {
-        "cleantalk/firewall": "*"
+        "cleantalk/firewall": "*",
+        "cleantalk/antispam": "*"
     },
     "config": {
         "allow-plugins": {

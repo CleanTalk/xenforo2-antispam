@@ -4,8 +4,8 @@ namespace CleanTalk\XF\Spam\Checker;
 
 require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
-use CleanTalk\Antispam\Cleantalk;
-use CleanTalk\Antispam\CleantalkRequest;
+use CleanTalk\Common\Antispam\Cleantalk;
+use CleanTalk\Common\Antispam\CleantalkRequest;
 use CleanTalk\Common\Helper\Helper as CleantalkHelper;
 
 use XF\Util\Arr;

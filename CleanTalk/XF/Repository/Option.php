@@ -4,9 +4,9 @@ namespace CleanTalk\XF\Repository;
 
 require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
-use CleanTalk\Antispam\Cleantalk;
-use CleanTalk\Antispam\CleantalkRequest;
-use Cleantalk\ApbctXF2\Funcs as CleantalkFuncs;
+use CleanTalk\Common\Antispam\Cleantalk;
+use CleanTalk\Common\Antispam\CleantalkRequest;
+use Cleantalk\Custom\Funcs as CleantalkFuncs;
 use Cleantalk\Common\Api\Api;
 
 class Option extends \XF\Repository\Option

@@ -4,7 +4,7 @@ namespace CleanTalk\XF\Template;
 
 require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
-use Cleantalk\ApbctXF2\Funcs as CleantalkFuncs;
+use Cleantalk\Custom\Funcs as CleantalkFuncs;
 
 class Templater extends \XF\Template\Templater
 {
@@ -112,9 +112,12 @@ class Templater extends \XF\Template\Templater
                 CleantalkFuncs::ctSetCookie();
             }
 
-            CleantalkFuncs::ctRemoteCalls();
-
-            CleantalkFuncs::apbctRunCron();
+            try {
+                CleantalkFuncs::ctRemoteCalls();
+                CleantalkFuncs::apbctRunCron();
+            } catch (\Exception $e) {
+                error_log(var_export($e->getMessage(),1));
+            }
 
             if ( $this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php' ) {
                 CleantalkFuncs::sfwCheck();
