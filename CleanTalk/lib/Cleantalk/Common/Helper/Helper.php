@@ -875,7 +875,7 @@ class Helper
             unset($val);
         //String
         } else {
-            if ( !preg_match('//u', $obj) ) {
+            if ( !preg_match('//u', (string) $obj) ) {
                 if ( function_exists('mb_detect_encoding') ) {
                     $encoding = mb_detect_encoding($obj);
                     $encoding = $encoding ?: $data_codepage;
@@ -914,7 +914,7 @@ class Helper
             unset($val);
         //String
         } else {
-            if ($data_codepage !== null && preg_match('//u', $obj)) {
+            if ($data_codepage !== null && preg_match('//u', (string) $obj)) {
                 if ( function_exists('mb_convert_encoding') ) {
                     $obj = mb_convert_encoding($obj, $data_codepage, 'UTF-8');
                 } elseif (version_compare(phpversion(), '8.3', '<')) {
