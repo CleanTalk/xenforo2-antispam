@@ -13,7 +13,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls
      */
     public function action__sfw_update() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return \CleanTalk\Custom\Funcs::sfwUpdate($this->api_key);
+        return \Cleantalk\Custom\Funcs::sfwUpdate($this->api_key);
     }
 
     /**
@@ -23,7 +23,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls
      */
     public function action__sfw_send_logs() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return \CleanTalk\Custom\Funcs::sfwSendLogs($this->api_key);
+        return \Cleantalk\Custom\Funcs::sfwSendLogs($this->api_key);
     }
 
     /**
@@ -33,7 +33,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls
      */
     protected function getAvailableRcActions()
     {
-        $remote_calls = json_decode(\CleanTalk\Custom\Funcs::getXF()->options()->ct_remote_calls, true);
+        $remote_calls = json_decode(\Cleantalk\Custom\Funcs::getXF()->options()->ct_remote_calls, true);
         $default_rc = array(
             'sfw_update' => array('last_call' => 0, 'cooldown' => 0),
             'sfw_send_logs' => array('last_call' => 0, 'cooldown' => self::COOLDOWN)

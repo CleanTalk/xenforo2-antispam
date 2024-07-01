@@ -4,8 +4,8 @@ namespace CleanTalk\XF\Repository;
 
 require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
-use CleanTalk\Common\Antispam\Cleantalk;
-use CleanTalk\Common\Antispam\CleantalkRequest;
+use Cleantalk\Common\Antispam\Cleantalk;
+use Cleantalk\Common\Antispam\CleantalkRequest;
 use Cleantalk\Custom\Funcs as CleantalkFuncs;
 use Cleantalk\Common\Api\Api;
 

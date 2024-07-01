@@ -15,14 +15,14 @@ define('APBCT_WRITE_LIMIT', 5000); // Write limit for firewall data.
 
 // Cron handlers specific names
 if ( !defined('APBCT_CRON_HANDLER__SFW_UPDATE') ) {
-    define('APBCT_CRON_HANDLER__SFW_UPDATE', '\CleanTalk\Custom\Funcs::sfwUpdate');
+    define('APBCT_CRON_HANDLER__SFW_UPDATE', '\Cleantalk\Custom\Funcs::sfwUpdate');
 }
 if ( !defined('APBCT_CRON_HANDLER__SFW_LOGS') ) {
-    define('APBCT_CRON_HANDLER__SFW_LOGS', '\CleanTalk\Custom\Funcs::sfwSendLogs');
+    define('APBCT_CRON_HANDLER__SFW_LOGS', '\Cleantalk\Custom\Funcs::sfwSendLogs');
 }
 
-use CleanTalk\Common\Firewall\Firewall;
-use CleanTalk\Common\Firewall\Modules\SFW;
+use Cleantalk\Common\Firewall\Firewall;
+use Cleantalk\Common\Firewall\Modules\Sfw;
 use Cleantalk\Common\Mloader\Mloader;
 
 class Funcs
