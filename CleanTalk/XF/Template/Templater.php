@@ -144,11 +144,12 @@ class Templater extends \XF\Template\Templater
 
         if ( $this->app->options()->ct_footerlink ) {
             $footer = "<li><div id='cleantalk_footer_link' style='width:100%;margin-right:250px;'><a href='https://cleantalk.org/xenforo-antispam-addon'>Anti-spam by CleanTalk</a> for Xenforo!</div></li>";
-            $output = str_replace(
-                '<ul class="p-footer-linkList">',
-                '<ul class="p-footer-linkList">' . $footer,
-                $output
-            );
+			$output = str_replace(
+				'<div class="p-footer-row-opposite">',
+				'<div class="p-footer-row-opposite"><ul class="p-footer-linkList">' . $footer,
+				$output
+			);
+
         }
 
 
