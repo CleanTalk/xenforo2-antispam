@@ -858,7 +858,7 @@ class FirewallUpdater
             $table_name = $db_obj->prefix . Schema::getSchemaTablePrefix() . 'sfw';
             $db_tables_creator->createTable($table_name);
 
-            $result__creating_tmp_table = \Cleantalk\Common\Firewall\Modules\SFW::createTempTables(
+            $result__creating_tmp_table = \Cleantalk\Common\Firewall\Modules\Sfw::createTempTables(
                 $db_obj,
                 $db_obj->prefix . APBCT_TBL_FIREWALL_DATA
             );
@@ -884,7 +884,7 @@ class FirewallUpdater
             /**
              * UPDATING BLACK LIST
              */
-            $upd_result = \Cleantalk\Common\Firewall\Modules\SFW::directUpdate(
+            $upd_result = \Cleantalk\Common\Firewall\Modules\Sfw::directUpdate(
                 $db_obj,
                 $db_obj->prefix . APBCT_TBL_FIREWALL_DATA . '_temp',
                 $blacklists
@@ -948,7 +948,7 @@ class FirewallUpdater
         $db_class = Mloader::get('Db');
         $db_obj = $db_class::getInstance();
 
-        \Cleantalk\Common\Firewall\Modules\SFW::dataTablesDelete(
+        \Cleantalk\Common\Firewall\Modules\Sfw::dataTablesDelete(
             $db_obj,
             $db_obj->prefix . APBCT_TBL_FIREWALL_DATA . '_temp'
         );

@@ -22,7 +22,7 @@ if ( !defined('APBCT_CRON_HANDLER__SFW_LOGS') ) {
 }
 
 use Cleantalk\Common\Firewall\Firewall;
-use Cleantalk\Common\Firewall\Modules\SFW;
+use Cleantalk\Common\Firewall\Modules\Sfw;
 use Cleantalk\Common\Mloader\Mloader;
 
 class Funcs
