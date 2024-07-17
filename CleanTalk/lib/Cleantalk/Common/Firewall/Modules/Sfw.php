@@ -141,7 +141,6 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
                         'status' => 'PASS_SFW__BY_WHITELIST'
                     );
                 }
-
                 return $results;
             }
         }
@@ -166,27 +165,38 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
 
             $db_results = $this->db->fetchAll($query);
 
-            $test_status = 1;
+            $test_entry['status'] = 1;
             if ( !empty($db_results) ) {
                 foreach ( $db_results as $db_result ) {
+
+                    switch ( $db_result['status'] ) {
+                        case 1:
+                            $text_status = 'PASS_SFW__BY_WHITELIST';
+                            break;
+                        case 0:
+                            $this->blocked_ips[] = $helper_class::ipLong2ip($db_result['network']);
+                            $text_status = 'DENY_SFW';
+                            break;
+                        default:
+                            $text_status = 'PASS_SFW';
+                            break;
+                    }
+
                     $result_entry = array(
                         'ip' => $current_ip,
                         'network' => $helper_class::ipLong2ip($db_result['network'])
                             . '/'
                             . $helper_class::ipMaskLongToNumber((int)$db_result['mask']),
                         'is_personal' => $db_result['source'],
+                        'status'      => $text_status
                     );
 
-                    if ( (int)$db_result['status'] === 1 ) {
-                        $result_entry['status'] = 'PASS_SFW__BY_WHITELIST';
+                    $test_entry = $result_entry;
+                    $test_status['status'] = (int)($db_result['status']);
+
+                    if ($text_status === 'PASS_SFW__BY_WHITELIST') {
                         break;
                     }
-                    if ( (int)$db_result['status'] === 0 ) {
-                        $this->blocked_ips[] = $helper_class::ipLong2ip($db_result['network']);
-                        $result_entry['status'] = 'DENY_SFW';
-                    }
-
-                    $test_status = (int)$db_result['status'];
                 }
             } else {
                 $result_entry = array(
@@ -255,6 +265,7 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
                 substr(Server::get('HTTP_HOST') . Server::get('REQUEST_URI'), 0, 100),
             )
         );
+        $this->db->execute($this->db->getQuery());
     }
 
     public function actionsForDenied($result)
@@ -305,7 +316,7 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
 
             $block_message = sprintf(
                 'SpamFireWall is checking your browser and IP %s for spam bots',
-                '<a href="' . $result['ip'] . '" target="_blank">' . $result['ip'] . '</a>'
+                '<a href="https://cleantalk.org/blacklists/' . $result['ip'] . '" target="_blank">' . $result['ip'] . '</a>'
             );
 
             $request_uri = Server::get('REQUEST_URI');
@@ -359,13 +370,34 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
              * Message about IP status
              */
             if ( $this->test ) {
-                $message_ip_status = 'IP in the common blacklist';
+                $test_status = isset($this->test_status["status"]) ? (int)$this->test_status["status"] : null;
+                $common_text_passed = 'This IP is passed';
+                $common_text_blocked = 'This IP is blocked';
+                $global_text = '(in global lists)';
+                $personal_text ='(in personal lists)';
+                $lists_text = $global_text;
+                switch ( $test_status ) {
+                    case 1:
+                        $message_ip_status = $common_text_passed . ' ' . $lists_text;
+                        $message_ip_status_color = 'green';
+                        break;
+                    case 0:
+                        $message_ip_status = $common_text_blocked . ' ' . $lists_text;
+                        $message_ip_status_color = 'red';
+                        break;
+                    default:
+                        $message_ip_status = __('This IP is passed (not in any lists)', 'cleantalk-spam-protect');
+                        $message_ip_status_color = 'green';
+                        break;
+                }
+
+                /*$message_ip_status = 'IP in the common blacklist';
                 $message_ip_status_color = 'red';
 
                 if ( $this->test_status === 1 ) {
                     $message_ip_status = 'IP in the whitelist';
                     $message_ip_status_color = 'green';
-                }
+                }*/
 
                 $replaces['{MESSAGE_IP_STATUS}'] = "<h3 style='color:$message_ip_status_color;'>$message_ip_status</h3>";
             }
