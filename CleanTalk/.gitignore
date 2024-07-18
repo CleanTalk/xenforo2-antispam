@@ -1,0 +1,10 @@
+.idea
+/vendor/
+/tests/
+package-lock.json
+composer.lock
+/lib/Cleantalk/Common/**/**/.gitignore
+/lib/Cleantalk/Common/**/**/composer.json
+/lib/Cleantalk/Common/**/**/.github
+/lib/Cleantalk/Common/**/**/README.MD
+/lib/Cleantalk/Common/**/**/tests/
