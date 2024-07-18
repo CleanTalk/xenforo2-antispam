@@ -165,7 +165,7 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
 
             $db_results = $this->db->fetchAll($query);
 
-            $test_entry['status'] = 1;
+            $test_entry['status'] = 99;
             if ( !empty($db_results) ) {
                 foreach ( $db_results as $db_result ) {
 
@@ -209,7 +209,7 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
             $results[] = $result_entry;
 
             if ( $this->test && $_origin === 'sfw_test' ) {
-                $this->test_status = $test_status;
+                $this->test_status = $test_entry;
             }
         }
 
@@ -373,20 +373,18 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
                 $test_status = isset($this->test_status["status"]) ? (int)$this->test_status["status"] : null;
                 $common_text_passed = 'This IP is passed';
                 $common_text_blocked = 'This IP is blocked';
-                $global_text = '(in global lists)';
-                $personal_text ='(in personal lists)';
-                $lists_text = $global_text;
+
                 switch ( $test_status ) {
                     case 1:
-                        $message_ip_status = $common_text_passed . ' ' . $lists_text;
+                        $message_ip_status = $common_text_passed;
                         $message_ip_status_color = 'green';
                         break;
                     case 0:
-                        $message_ip_status = $common_text_blocked . ' ' . $lists_text;
+                        $message_ip_status = $common_text_blocked;
                         $message_ip_status_color = 'red';
                         break;
                     default:
-                        $message_ip_status = __('This IP is passed (not in any lists)', 'cleantalk-spam-protect');
+                        $message_ip_status = 'This IP is passed (not in any lists)';
                         $message_ip_status_color = 'green';
                         break;
                 }
