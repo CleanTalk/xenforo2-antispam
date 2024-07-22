@@ -1,6 +1,5 @@
 {
     "src/addons/CleanTalk/addon.json": "4d333533f7d359b2ca16a8b5dd6a2a2170813fd34923fd3208794729bdf7bb66",
-    "src/addons/CleanTalk/composer.json": "80ba35d599f50ff8a7b99d32bf825005413b79bd892cc61830aca63db9b84578",
     "src/addons/CleanTalk/ct_icon.png": "fb2c4bc996616fb6cb2386a162b6cbb1ce5500bd8fa7a9fe8bc6c344855d846e",
     "src/addons/CleanTalk/lib/autoload.php": "1af9bd939f9eb94f17c2b65f6be0f84938b43e3a9555a09911d912ce360629f7",
     "src/addons/CleanTalk/lib/Cleantalk/Common/Antispam/.github/workflows/tests.yml": "f8a0174e5215385a40b87be0d86f288126c2a3ea133bebde284d09c0786f814e",
@@ -104,7 +103,7 @@
     "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "04e2edc43235caa81e2f0d5978c2bd20a9e0d5de596cd1dc42ed14628b607e89",
     "src/addons/CleanTalk/XF/Spam/Cleaner.php": "9c88b6b3382b5ebf9b5ebbd53e05ed98e856ab92d59bf00fd78e804ef0c6fcdd",
     "src/addons/CleanTalk/XF/SubContainer/Spam.php": "84789fe3a2834cbe5d91a2e8693224dde342c9e65544d00377e2781b7b6707a5",
-    "src/addons/CleanTalk/XF/Template/Templater.php": "df9f31cb99a6cdf4e48952cb20fa7af4b887c0eaa430523bb5b1b3697eb5a658",
+    "src/addons/CleanTalk/XF/Template/Templater.php": "9355322ee0d6466608cfda3a81fde3256dc976b6df5d9d59b9a6785aa554aba6",
     "src/addons/CleanTalk/_data/activity_summary_definitions.xml": "99d8c2563a31320d66f958fc8bda78613545f5f7959bb3cf5318805e3a3c39d2",
     "src/addons/CleanTalk/_data/admin_navigation.xml": "064ec797484ac00d5ee37367b50b06846d11f480d00550997712707f8fdac8c0",
     "src/addons/CleanTalk/_data/admin_permission.xml": "ec6fb97cebf0bceb24f1ed1d5778c1db54eeb7535fbb3e31d824840e7aa9ff87",
