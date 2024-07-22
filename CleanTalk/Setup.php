@@ -109,7 +109,7 @@ class Setup extends AbstractSetup
             $table->addColumn('first_url', 'varchar', 100)->setDefault(null);
             $table->addColumn('last_url', 'varchar', 100)->setDefault(null);
         });
-        $this->schemaManager()->alterTable('xf_cleantalk_sfw_logs', function (\XF\Db\Schema\Alter $table) {
+        $this->schemaManager()->alterTable('xf_cleantalk_sfw', function (\XF\Db\Schema\Alter $table) {
             $table->addColumn('source', 'tinyint', 1)->setDefault(0);
         });
         $this->schemaManager()->createTable('xf_cleantalk_ua_bl', function (Create $table) {
