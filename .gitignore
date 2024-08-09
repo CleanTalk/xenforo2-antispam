@@ -1,5 +1,7 @@
 /*
 !/.gitignore
+!/.github
+!/composer.json
 !/LICENSE
 !/README.md
 !/CleanTalk

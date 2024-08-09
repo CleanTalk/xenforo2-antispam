@@ -9,7 +9,7 @@ use Cleantalk\Common\StorageHandler\StorageHandler;
  * CleanTalk Cron class
  *
  * @package Anti-Spam by CleanTalk
- * @Version 3.0.1-dev
+ * @Version 3.0.1
  * @author Cleantalk team (welcome@cleantalk.org)
  * @copyright (C) 2014 CleanTalk team (http://cleantalk.org)
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
