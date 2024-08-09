@@ -50,8 +50,10 @@ class Setup extends AbstractSetup
         });
 
         // Adding a column to the post table to store the request id.
-        $this->schemaManager()->alterTable('xf_post', function (\XF\Db\Schema\Alter $table) {
-            $table->addColumn('ct_hash', 'varchar', 255)->setDefault('');
+        $this->schemaManager()->createTable('xf_cleantalk_ct_hash', function (\XF\Db\Schema\Alter $table) {
+            $table->addColumn('post_id', 'int', 10)->nullable(false);
+            $table->addColumn('hash', 'varchar', 255)->setDefault('');
+            $table->addPrimaryKey('post_id');
         });
     }
 
@@ -120,14 +122,32 @@ class Setup extends AbstractSetup
         });
     }
 
+    public function upgrade310Step1() {
+        // Adding a column to the post table to store the request id.
+        $this->schemaManager()->createTable('xf_cleantalk_ct_hash', function (\XF\Db\Schema\Create $table) {
+            $table->addColumn('post_id', 'int', 10)->nullable(false);
+            $table->addColumn('hash', 'varchar', 255)->setDefault('');
+            $table->addPrimaryKey('post_id');
+        });
+
+        // Move the old hashes to the new table
+        $old_hashes = \XF::db()->fetchAll("SELECT post_id, ct_hash as hash FROM xf_post WHERE ct_hash <> ''");
+        if ( count($old_hashes) > 0 ) {
+            \XF::db()->insertBulk('xf_cleantalk_ct_hash', $old_hashes);
+        }
+
+        // Delete the old column
+        $this->schemaManager()->alterTable('xf_post', function (\XF\Db\Schema\Alter $table) {
+            $table->dropColumns(array('ct_hash'));
+        });
+    }
+
     public function uninstallStep1()
     {
         $this->schemaManager()->dropTable('xf_cleantalk_sfw');
         $this->schemaManager()->dropTable('xf_cleantalk_sfw_temp');
         $this->schemaManager()->dropTable('xf_cleantalk_sfw_logs');
         $this->schemaManager()->dropTable('xf_cleantalk_ua_bl');
-        $this->schemaManager()->alterTable('xf_post', function (\XF\Db\Schema\Alter $table) {
-            $table->dropColumns(array('ct_hash'));
-        });
+        $this->schemaManager()->dropTable('xf_cleantalk_ct_hash');
     }
 }
