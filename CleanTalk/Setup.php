@@ -49,8 +49,8 @@ class Setup extends AbstractSetup
             $table->addPrimaryKey('id');
         });
 
-        // Adding a column to the post table to store the request id.
-        $this->schemaManager()->createTable('xf_cleantalk_ct_hash', function (\XF\Db\Schema\Alter $table) {
+        // Adding a new table to store the request id.
+        $this->schemaManager()->createTable('xf_cleantalk_ct_hash', function (Create $table) {
             $table->addColumn('post_id', 'int', 10)->nullable(false);
             $table->addColumn('hash', 'varchar', 255)->setDefault('');
             $table->addPrimaryKey('post_id');
@@ -124,8 +124,8 @@ class Setup extends AbstractSetup
 
     public function upgrade310Step1()
     {
-        // Adding a column to the post table to store the request id.
-        $this->schemaManager()->createTable('xf_cleantalk_ct_hash', function (\XF\Db\Schema\Create $table) {
+        // Adding a new table to store the request id.
+        $this->schemaManager()->createTable('xf_cleantalk_ct_hash', function (Create $table) {
             $table->addColumn('post_id', 'int', 10)->nullable(false);
             $table->addColumn('hash', 'varchar', 255)->setDefault('');
             $table->addPrimaryKey('post_id');
