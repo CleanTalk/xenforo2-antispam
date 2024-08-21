@@ -2,6 +2,7 @@
 
 namespace CleanTalk\XF\Pub\Controller;
 
+use Cleantalk\Custom\Funcs;
 use CleanTalk\XF\Spam\Checker\CleanTalkContent;
 
 class Thread extends XFCP_Thread
@@ -12,13 +13,7 @@ class Thread extends XFCP_Thread
 
         if ( !is_null(CleanTalkContent::ctHash()) ) {
             $post = $replier->getPost();
-
-            $db = \XF::db();
-            $db->update(
-                'xf_post',
-                array('ct_hash' => CleanTalkContent::ctHash()),
-                'post_id = ' . $post->getEntityId()
-            );
+            Funcs::setCtHash($post->getEntityId(), CleanTalkContent::ctHash());
         }
     }
 }

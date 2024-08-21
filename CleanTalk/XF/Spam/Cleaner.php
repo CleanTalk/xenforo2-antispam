@@ -6,6 +6,7 @@ require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
 use Cleantalk\Common\Antispam\Cleantalk;
 use Cleantalk\Common\Antispam\CleantalkRequest;
+use Cleantalk\Custom\Funcs;
 
 class Cleaner extends XFCP_Cleaner
 {
@@ -25,12 +26,8 @@ class Cleaner extends XFCP_Cleaner
             $post = $this->log['post'];
 
             if ( isset($post['postIds']) && !empty($post['postIds']) ) {
-                $db = \XF::db();
                 // Get users's posts hashes
-                $post_hashes = $db->fetchAllColumn(
-                    'SELECT ct_hash FROM xf_post WHERE post_id IN (' . implode(',', $post['postIds']) . ')'
-                );
-
+                $post_hashes = Funcs::getCtHashes($post['postIds']);
                 $hashes = array_merge($hashes, $post_hashes);
             }
         }
@@ -52,10 +49,7 @@ class Cleaner extends XFCP_Cleaner
 
                 if ( isset($firs_post_ids) && !empty($firs_post_ids) ) {
                     // Get first thread's posts hashes
-                    $thread_first_posts_hashes = $db->fetchAllColumn(
-                        'SELECT `ct_hash` FROM `xf_post` WHERE `post_id` IN (' . implode(',', $firs_post_ids) . ')'
-                    );
-
+                    $thread_first_posts_hashes = Funcs::getCtHashes($firs_post_ids);
                     $hashes = array_merge($hashes, $thread_first_posts_hashes);
                 }
             }
