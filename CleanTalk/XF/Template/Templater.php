@@ -151,12 +151,12 @@ class Templater extends \XF\Template\Templater
             );
         }
 
-		// Bot detector
-		if ( $this->app->options()->ct_bot_detector && !\XF::visitor()->is_admin ) {
-			if ( strripos ($output,'</head>') >= 0 ) {
-				$output = str_replace(
-					'</head>',
-					'<script src="https://moderate.cleantalk.org/ct-bot-detector-wrapper.js"></script>
+        // Bot detector
+        if ( $this->app->options()->ct_bot_detector && !\XF::visitor()->is_admin ) {
+            if ( strripos($output, '</head>') >= 0 ) {
+                $output = str_replace(
+                    '</head>',
+                    '<script src="https://moderate.cleantalk.org/ct-bot-detector-wrapper.js"></script>
 					<script>
 						let apbctLocalStorage = {
 							get: function(key, property) {
@@ -215,10 +215,10 @@ class Templater extends \XF\Template\Templater
 						}
 					</script>
 					</head>',
-					$output
-				);
-			}
-		}
+                    $output
+                );
+            }
+        }
 
         return $output;
     }
