@@ -151,6 +151,75 @@ class Templater extends \XF\Template\Templater
             );
         }
 
+        // Bot detector
+        if ( $this->app->options()->ct_bot_detector && !\XF::visitor()->is_admin ) {
+            if ( strripos($output, '</head>') >= 0 ) {
+                $output = str_replace(
+                    '</head>',
+                    '<script src="https://moderate.cleantalk.org/ct-bot-detector-wrapper.js"></script>
+					<script>
+						let apbctLocalStorage = {
+							get: function(key, property) {
+								if ( typeof property === "undefined" ) {
+									property = "value";
+								}
+								const storageValue = localStorage.getItem(key);
+								if ( storageValue !== null ) {
+									try {
+										const json = JSON.parse(storageValue);
+										if ( json.hasOwnProperty(property) ) {
+											try {
+												// if property can be parsed as JSON - do it
+												return JSON.parse( json[property] );
+											} catch (e) {
+												// if not - return string of value
+												return json[property].toString();
+											}
+										} else {
+											return json;
+										}
+									} catch (e) {
+										return storageValue;
+									}
+								}
+								return false;
+							},
+						};
+
+						cronFormsHandler(2000);
+
+						/**
+						 * Do handle periodical actions.
+						 * @param {int} cronStartTimeout Time to go before cron start.
+						 */
+						function cronFormsHandler(cronStartTimeout = 2000) {
+							setTimeout(function() {
+								setInterval(function() {
+									restartBotDetectorEventTokenAttach();
+								}, 2000);
+							}, cronStartTimeout);
+						}
+
+						/**
+						 * Restart event_token attachment if some forms load after document ready.
+						 */
+						function restartBotDetectorEventTokenAttach() {
+							try {
+								const token = apbctLocalStorage.get("bot_detector_event_token");
+								if (typeof setEventTokenField === "function" && token !== undefined && token.length === 64) {
+									setEventTokenField(token);
+								}
+							} catch (e) {
+								console.log(e.toString());
+							}
+						}
+					</script>
+					</head>',
+                    $output
+                );
+            }
+        }
+
         return $output;
     }
 }

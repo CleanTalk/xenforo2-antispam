@@ -55,6 +55,7 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
         $js_timezone = (isset($_COOKIE['ct_timezone']) ? $_COOKIE['ct_timezone'] : '');
         $first_key_timestamp = (isset($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : '');
         $pointer_data = (isset($_COOKIE['ct_pointer_data']) ? json_decode($_COOKIE['ct_pointer_data']) : '');
+        $event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
 
         $sender_info = json_encode(
             array(
@@ -82,6 +83,7 @@ class CleanTalkUser extends \XF\Spam\Checker\AbstractProvider implements \XF\Spa
         $ct_request->auth_key = $this->getApiKey();
         $ct_request->sender_email = $user->email;
         $ct_request->sender_nickname = $user->username;
+        $ct_request->event_token = $event_token;
         $ct_request->sender_ip = CleantalkHelper::ipGet('real', false);
         $ct_request->x_forwarded_for = CleantalkHelper::ipGet('x_forwarded_for', false);
         $ct_request->x_real_ip = CleantalkHelper::ipGet('x_real_ip', false);

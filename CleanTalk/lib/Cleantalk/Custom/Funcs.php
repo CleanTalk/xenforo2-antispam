@@ -167,4 +167,31 @@ class Funcs
             error_log('CleanTalk Firewall is not loaded: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Retrieves CleanTalk hashes for the given post IDs.
+     *
+     * @param array $post_ids An array of post IDs for which to retrieve the CleanTalk hashes.
+     * @return array An associative array where the keys are post IDs and the values are the corresponding CleanTalk hashes.
+     */
+    public static function getCtHashes($post_ids)
+    {
+        $db = \XF::db();
+        $post_hashes = $db->fetchAllColumn(
+            'SELECT hash FROM xf_cleantalk_ct_hash WHERE post_id IN (' . implode(',', $post_ids) . ')'
+        );
+        return $post_hashes;
+    }
+
+    /**
+     * Sets the CleanTalk hash for a given post ID.
+     *
+     * @param int $post_id The ID of the post for which to set the CleanTalk hash.
+     * @param string $ct_hash The CleanTalk hash to set for the given post ID.
+     */
+    public static function setCtHash($post_id, $ct_hash)
+    {
+        $db = \XF::db();
+        $db->insert('xf_cleantalk_ct_hash', array('post_id' => $post_id, 'hash' => $ct_hash));
+    }
 }
