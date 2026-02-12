@@ -585,25 +585,6 @@ class Helper
     }
 
     /**
-     * Get URL form IP
-     *
-     * @param $ip
-     *
-     * @return string
-     */
-    public static function ipResolve($ip)
-    {
-        if ( self::ipValidate($ip) ) {
-            $url = gethostbyaddr($ip);
-            if ( $url ) {
-                return $url;
-            }
-        }
-
-        return $ip;
-    }
-
-    /**
      * Resolve DNS to IP
      *
      * @param      $host
