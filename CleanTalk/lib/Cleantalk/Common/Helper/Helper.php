@@ -569,7 +569,7 @@ class Helper
      *
      * @param $ip
      *
-     * @return false|int|string|bool
+     * @return string|false Hostname if IP is in CleanTalk whitelist, false otherwise
      */
     public static function ipResolveCleantalks($ip)
     {
@@ -578,10 +578,10 @@ class Helper
 
             return $url
                 ? parse_url($url, PHP_URL_HOST)
-                : self::ipResolve($ip);
+                : false;
         }
 
-        return $ip;
+        return false;
     }
 
     /**
