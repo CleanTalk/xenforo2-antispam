@@ -585,22 +585,65 @@ class Helper
     }
 
     /**
-     * Get URL form IP
+     * Resolve IP to hostname with FCrDNS (Forward-Confirmed reverse DNS) verification.
+     * Protects against PTR spoofing by verifying the hostname resolves back to the same IP.
      *
-     * @param $ip
+     * @param string $ip IP address to resolve
      *
-     * @return string
+     * @return string|false Verified hostname or false on failure
      */
     public static function ipResolve($ip)
     {
-        if ( self::ipValidate($ip) ) {
-            $url = gethostbyaddr($ip);
-            if ( $url ) {
-                return $url;
+        // Validate IP first
+        $ip_version = self::ipValidate($ip);
+        if (!$ip_version) {
+            return false;
+        }
+
+        // Reverse DNS lookup (PTR record)
+        $hostname = gethostbyaddr($ip);
+
+        // If gethostbyaddr returns the IP itself, it means no PTR record exists
+        if (!$hostname || $hostname === $ip) {
+            return false;
+        }
+
+        // Forward DNS lookup - use dns_get_record() to support both IPv4 (A) and IPv6 (AAAA) records
+        $record_type = ($ip_version === 'v6') ? DNS_AAAA : DNS_A;
+        $ip_field = ($ip_version === 'v6') ? 'ipv6' : 'ip';
+
+        $records = @dns_get_record($hostname, $record_type);
+
+        // If forward lookup fails, we can't verify
+        if (empty($records)) {
+            return false;
+        }
+
+        // Extract IPs from DNS records
+        $forward_ips = array();
+        foreach ($records as $record) {
+            if (isset($record[$ip_field])) {
+                $forward_ips[] = $record[$ip_field];
             }
         }
 
-        return $ip;
+        if (empty($forward_ips)) {
+            return false;
+        }
+
+        // Check if the original IP is in the list of IPs the hostname resolves to
+        if ($ip_version === 'v6') {
+            $normalized_ip = self::ipV6Normalize($ip);
+            foreach ($forward_ips as $forward_ip) {
+                if (self::ipV6Normalize($forward_ip) === $normalized_ip) {
+                    return $hostname;
+                }
+            }
+        } elseif (in_array($ip, $forward_ips, true)) {
+            return $hostname;
+        }
+
+        return false;
     }
 
     /**
