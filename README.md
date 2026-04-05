@@ -1,6 +1,8 @@
 # xenforo2-antispam
 Xenforo2 anti-spam extension.
 
+If you find this project useful, please consider starring ⭐ it on GitHub — it helps us grow and support development!
+
 ## How to install
 
 1) Copy CleanTalk folder to your <xenforo root directory>/src/Addons
