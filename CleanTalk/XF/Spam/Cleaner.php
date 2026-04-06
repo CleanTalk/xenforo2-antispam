@@ -40,7 +40,7 @@ class Cleaner extends XFCP_Cleaner
                 $db = \XF::db();
 
                 // Ensure threadIds is a flat array of integers (handles nested arrays)
-                $thread_ids = array_map(function($id) {
+                $thread_ids = array_map(function ($id) {
                     return is_array($id) ? (int)(reset($id)) : (int)$id;
                 }, $thread['threadIds']);
                 $thread_ids = array_filter($thread_ids);
