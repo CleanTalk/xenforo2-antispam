@@ -45,10 +45,6 @@
     <default_value>1</default_value>
     <relation group_id="cleantalk" display_order="4"/>
   </option>
-  <option option_id="ct_bot_detector" edit_format="onoff" data_type="boolean">
-    <default_value>1</default_value>
-    <relation group_id="cleantalk" display_order="4"/>
-  </option>
   <option option_id="ct_footerlink" edit_format="onoff" data_type="boolean">
     <default_value>0</default_value>
     <relation group_id="cleantalk" display_order="7"/>
