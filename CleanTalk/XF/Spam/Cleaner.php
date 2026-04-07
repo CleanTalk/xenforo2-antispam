@@ -26,9 +26,17 @@ class Cleaner extends XFCP_Cleaner
             $post = $this->log['post'];
 
             if ( isset($post['postIds']) && !empty($post['postIds']) ) {
-                // Get users's posts hashes
-                $post_hashes = Funcs::getCtHashes($post['postIds']);
-                $hashes = array_merge($hashes, $post_hashes);
+                // Ensure postIds is a flat array of integers (handles nested arrays)
+                $post_ids = array_map(function ($id) {
+                    return is_array($id) ? (int)(reset($id)) : (int)$id;
+                }, $post['postIds']);
+                $post_ids = array_filter($post_ids);
+
+                if ( !empty($post_ids) ) {
+                    // Get users's posts hashes
+                    $post_hashes = Funcs::getCtHashes($post_ids);
+                    $hashes = array_merge($hashes, $post_hashes);
+                }
             }
         }
 
