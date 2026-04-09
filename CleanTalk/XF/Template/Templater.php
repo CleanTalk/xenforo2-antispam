@@ -119,7 +119,7 @@ class Templater extends \XF\Template\Templater
                 error_log(var_export($e->getMessage(), true));
             }
 
-            if ( $this->app->options()->ct_sfw && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php' ) {
+            if ( isset($this->app->options()['ct_sfw']) && $this->app->options()['ct_sfw'] && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php' ) {
                 CleantalkFuncs::sfwCheck();
             }
 
@@ -142,7 +142,7 @@ class Templater extends \XF\Template\Templater
             }
         }
 
-        if ( $this->app->options()->ct_footerlink ) {
+        if ( isset($this->app->options()['ct_footerlink']) && $this->app->options()['ct_footerlink'] ) {
             $footer = "<li><div id='cleantalk_footer_link' style='width:100%;margin-right:250px;'><a href='https://cleantalk.org/xenforo-antispam-addon'>Anti-spam by CleanTalk</a> for Xenforo!</div></li>";
             $output = str_replace(
                 '<div class="p-footer-row-opposite">',
@@ -152,7 +152,7 @@ class Templater extends \XF\Template\Templater
         }
 
         // Bot detector
-        if ( $this->app->options()->ct_bot_detector && !\XF::visitor()->is_admin ) {
+        if ( isset($this->app->options()['ct_bot_detector']) && $this->app->options()['ct_bot_detector'] && !\XF::visitor()->is_admin ) {
             if ( strripos($output, '</head>') >= 0 ) {
                 $output = str_replace(
                     '</head>',

@@ -26,9 +26,17 @@ class Cleaner extends XFCP_Cleaner
             $post = $this->log['post'];
 
             if ( isset($post['postIds']) && !empty($post['postIds']) ) {
-                // Get users's posts hashes
-                $post_hashes = Funcs::getCtHashes($post['postIds']);
-                $hashes = array_merge($hashes, $post_hashes);
+                // Ensure postIds is a flat array of integers (handles nested arrays)
+                $post_ids = array_map(function ($id) {
+                    return is_array($id) ? (int)(reset($id)) : (int)$id;
+                }, $post['postIds']);
+                $post_ids = array_filter($post_ids);
+
+                if ( !empty($post_ids) ) {
+                    // Get users's posts hashes
+                    $post_hashes = Funcs::getCtHashes($post_ids);
+                    $hashes = array_merge($hashes, $post_hashes);
+                }
             }
         }
 
@@ -39,18 +47,26 @@ class Cleaner extends XFCP_Cleaner
             if ( isset($thread['threadIds']) && !empty($thread['threadIds']) ) {
                 $db = \XF::db();
 
-                // Get first thread's posts IDs
-                $firs_post_ids = $db->fetchAllColumn(
-                    'SELECT `first_post_id` FROM `xf_thread` WHERE `thread_id` IN (' . implode(
-                        ',',
-                        $thread['threadIds']
-                    ) . ')'
-                );
+                // Ensure threadIds is a flat array of integers (handles nested arrays)
+                $thread_ids = array_map(function ($id) {
+                    return is_array($id) ? (int)(reset($id)) : (int)$id;
+                }, $thread['threadIds']);
+                $thread_ids = array_filter($thread_ids);
 
-                if ( isset($firs_post_ids) && !empty($firs_post_ids) ) {
-                    // Get first thread's posts hashes
-                    $thread_first_posts_hashes = Funcs::getCtHashes($firs_post_ids);
-                    $hashes = array_merge($hashes, $thread_first_posts_hashes);
+                if ( !empty($thread_ids) ) {
+                    // Get first thread's posts IDs
+                    $firs_post_ids = $db->fetchAllColumn(
+                        'SELECT `first_post_id` FROM `xf_thread` WHERE `thread_id` IN (' . implode(
+                            ',',
+                            $thread_ids
+                        ) . ')'
+                    );
+
+                    if ( isset($firs_post_ids) && !empty($firs_post_ids) ) {
+                        // Get first thread's posts hashes
+                        $thread_first_posts_hashes = Funcs::getCtHashes($firs_post_ids);
+                        $hashes = array_merge($hashes, $thread_first_posts_hashes);
+                    }
                 }
             }
         }
