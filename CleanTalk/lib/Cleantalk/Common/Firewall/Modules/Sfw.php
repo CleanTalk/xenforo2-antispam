@@ -437,8 +437,6 @@ class Sfw extends \Cleantalk\Common\Firewall\FirewallModule
     {
         parent::diePage($result);
 
-        http_response_code(403);
-
         $localize_js = array(
             'sfw__random_get' => '1',
         );
