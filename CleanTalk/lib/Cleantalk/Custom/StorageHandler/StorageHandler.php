@@ -13,9 +13,14 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
 
     public function deleteSetting($setting_name)
     {
-        $delete_result = \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, '');
+        try {
+            $delete_result = \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, '');
 
-        \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
+            \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
+        } catch ( \Throwable $e ) {
+            // Container may be locked at this stage of the request (e.g. friendly-url/error pages).
+            return false;
+        }
 
         return $delete_result;
     }
@@ -25,9 +30,15 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
         if ( is_array($setting_value) ) {
             $setting_value = json_encode($setting_value);
         }
-        $saving_result = \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, $setting_value);
 
-        \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
+        try {
+            $saving_result = \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, $setting_value);
+
+            \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
+        } catch ( \Throwable $e ) {
+            // Container may be locked at this stage of the request (e.g. friendly-url/error pages).
+            return false;
+        }
 
         return $saving_result;
     }
