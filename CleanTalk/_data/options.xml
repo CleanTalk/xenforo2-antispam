@@ -24,6 +24,10 @@
     <default_value></default_value>
     <relation group_id="cleantalk_data" display_order="0"/>
   </option>
+  <option option_id="ct_license_notice" edit_format="textbox" data_type="string">
+    <default_value>{"valid":0,"moderate":0,"show_notice":0,"renew":0,"trial":0,"user_token":"","last_check":0}</default_value>
+    <relation group_id="cleantalk_data" display_order="0"/>
+  </option>
   <option option_id="ct_block_type" edit_format="radio" data_type="string">
     <default_value>rejected</default_value>
     <edit_format_params>

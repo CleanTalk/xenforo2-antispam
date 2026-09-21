@@ -18,7 +18,13 @@ class Cron extends \Cleantalk\Common\Cron\Cron
                 'next_call' => time() + 3600,
                 'period' => 3600,
                 'params' => [],
-            ]
+            ],
+            'notice_paid_till' => [
+                'handler' => APBCT_CRON_HANDLER__LICENSE_NOTICE,
+                'next_call' => time() + 60,
+                'period' => 86400,
+                'params' => [],
+            ],
         ];
     }
 }

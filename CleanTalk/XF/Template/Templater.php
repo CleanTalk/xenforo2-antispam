@@ -5,6 +5,7 @@ namespace CleanTalk\XF\Template;
 require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
 use Cleantalk\Custom\Funcs as CleantalkFuncs;
+use Cleantalk\Custom\LicenseBanner;
 
 class Templater extends \XF\Template\Templater
 {
@@ -217,6 +218,32 @@ class Templater extends \XF\Template\Templater
 					</head>',
                     $output
                 );
+            }
+        }
+
+        $script_name = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+        $visitor = \XF::visitor();
+        if (
+            isset($_SERVER['REQUEST_METHOD'])
+            && $_SERVER['REQUEST_METHOD'] === 'GET'
+            && substr($script_name, -10) === '/admin.php'
+            && !empty($visitor->user_id)
+            && !empty($visitor->is_admin)
+            && strpos($output, 'data-ct-license-banner') === false
+            && (strpos($output, '<!--XF:EXTRA_OUTPUT-->') !== false || strpos($output, 'id="content"') !== false)
+        ) {
+            $banner_html = LicenseBanner::render(LicenseBanner::isSettingsPage());
+            if ( $banner_html !== '' ) {
+                if ( strpos($output, '<!--XF:EXTRA_OUTPUT-->') !== false ) {
+                    $output = str_replace('<!--XF:EXTRA_OUTPUT-->', '<!--XF:EXTRA_OUTPUT-->' . $banner_html, $output);
+                } else {
+                    $output = preg_replace(
+                        '/<div class="p-content" id="content">/',
+                        $banner_html . '<div class="p-content" id="content">',
+                        $output,
+                        1
+                    );
+                }
             }
         }
 

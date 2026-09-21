@@ -7,6 +7,7 @@ require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 use Cleantalk\Common\Antispam\Cleantalk;
 use Cleantalk\Common\Antispam\CleantalkRequest;
 use Cleantalk\Custom\Funcs as CleantalkFuncs;
+use Cleantalk\Custom\LicenseBanner;
 use Cleantalk\Common\Api\Api;
 
 class Option extends \XF\Repository\Option
@@ -56,6 +57,12 @@ class Option extends \XF\Repository\Option
         }
 
         parent::updateOption('ct_apikey_error', $key_error);
+
+        if ( !empty($ct_access_key) && !empty($npt_result) && is_array($npt_result) ) {
+            LicenseBanner::saveFromNoticePaidTill($npt_result, empty($key_error));
+        } else {
+            LicenseBanner::clear();
+        }
 
         return empty($key_error) ? true : false;
     }
