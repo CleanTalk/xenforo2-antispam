@@ -20,6 +20,9 @@ if ( !defined('APBCT_CRON_HANDLER__SFW_UPDATE') ) {
 if ( !defined('APBCT_CRON_HANDLER__SFW_LOGS') ) {
     define('APBCT_CRON_HANDLER__SFW_LOGS', '\Cleantalk\Custom\Funcs::sfwSendLogs');
 }
+if ( !defined('APBCT_CRON_HANDLER__LICENSE_NOTICE') ) {
+    define('APBCT_CRON_HANDLER__LICENSE_NOTICE', '\Cleantalk\Custom\Funcs::updateLicenseNotice');
+}
 
 use Cleantalk\Common\Firewall\Firewall;
 use Cleantalk\Common\Firewall\Modules\Sfw;
@@ -58,8 +61,19 @@ class Funcs
         $cron = new $cron_class();
         $cron_option_name = $cron->getCronOptionName();
         $cron_option = json_decode(self::getXF()->options()->$cron_option_name, true);
-        if ( empty($cron_option) ) {
+        // Old 2.x format stored {last_start, tasks}. Reset to the current task list.
+        if ( empty($cron_option) || isset($cron_option['tasks']) ) {
             $cron->saveTasks($cron->getDefaultTasks());
+        } elseif ( empty($cron_option['notice_paid_till']) ) {
+            $cron->addTask('notice_paid_till', APBCT_CRON_HANDLER__LICENSE_NOTICE, 86400, time() + 60);
+        } elseif ( isset($cron_option['notice_paid_till']['period']) && (int)$cron_option['notice_paid_till']['period'] !== 86400 ) {
+            $cron->updateTask(
+                'notice_paid_till',
+                APBCT_CRON_HANDLER__LICENSE_NOTICE,
+                86400,
+                $cron_option['notice_paid_till']['next_call'],
+                isset($cron_option['notice_paid_till']['params']) ? $cron_option['notice_paid_till']['params'] : array()
+            );
         }
         $tasks_to_run = $cron->checkTasks(); // Check for current tasks. Drop tasks inner counters.
 
@@ -193,5 +207,30 @@ class Funcs
     {
         $db = \XF::db();
         $db->insert('xf_cleantalk_ct_hash', array('post_id' => $post_id, 'hash' => $ct_hash));
+    }
+
+    /**
+     * Daily notice_paid_till refresh for renew/trial banners.
+     *
+     * @return bool
+     */
+    public static function updateLicenseNotice()
+    {
+        $api_key = trim(self::getXF()->options()->ct_apikey);
+        if ( $api_key === '' ) {
+            LicenseBanner::clear();
+            return true;
+        }
+
+        $site_url = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+        $npt_result = \Cleantalk\Common\Api\Api::methodNoticePaidTill($api_key, $site_url);
+        $key_is_ok = is_array($npt_result)
+            && empty($npt_result['error'])
+            && empty($npt_result['error_message'])
+            && !empty($npt_result['valid']);
+
+        LicenseBanner::saveFromNoticePaidTill(is_array($npt_result) ? $npt_result : array(), $key_is_ok);
+
+        return true;
     }
 }
