@@ -222,10 +222,13 @@ class Templater extends \XF\Template\Templater
         }
 
         $script_name = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+        $visitor = \XF::visitor();
         if (
             isset($_SERVER['REQUEST_METHOD'])
             && $_SERVER['REQUEST_METHOD'] === 'GET'
             && substr($script_name, -10) === '/admin.php'
+            && !empty($visitor->user_id)
+            && !empty($visitor->is_admin)
             && strpos($output, 'data-ct-license-banner') === false
             && (strpos($output, '<!--XF:EXTRA_OUTPUT-->') !== false || strpos($output, 'id="content"') !== false)
         ) {

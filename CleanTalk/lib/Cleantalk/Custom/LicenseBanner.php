@@ -96,6 +96,11 @@ class LicenseBanner
             return false;
         }
 
+        $visitor = \XF::visitor();
+        if ( empty($visitor->user_id) || empty($visitor->is_admin) ) {
+            return false;
+        }
+
         if ( $is_settings_page === null ) {
             $is_settings_page = self::isSettingsPage();
         }
