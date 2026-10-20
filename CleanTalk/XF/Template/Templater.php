@@ -106,7 +106,10 @@ class Templater extends \XF\Template\Templater
         $output = parent::renderTemplate($template, $params, $addDefaultParams, $extensionOverrides);
         static $show_flag = true;
 
-        if ( $show_flag ) {
+        // XF 2.3.13+ locks the container while rendering nested templates/macros.
+        // Option writes (rebuildOptionCache) and die() in remote calls/SFW must not happen
+        // in that state, so defer the bootstrap until an unlocked (outermost) render.
+        if ( $show_flag && !$this->isContainerLocked() ) {
             $show_flag = false;
 
             if ( !headers_sent() ) {
@@ -248,5 +251,15 @@ class Templater extends \XF\Template\Templater
         }
 
         return $output;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isContainerLocked()
+    {
+        $container = $this->app->container();
+
+        return method_exists($container, 'isLocked') && $container->isLocked();
     }
 }
