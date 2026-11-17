@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code_event_listeners>
-  <listener event_id="app_pub_start_begin" execute_order="10" callback_class="CleanTalk\Listener" callback_method="appStart" active="1" hint="" description="Initialize CleanTalk before page caching and template rendering."/>
-  <listener event_id="app_admin_start_begin" execute_order="10" callback_class="CleanTalk\Listener" callback_method="appStart" active="1" hint="" description="Initialize CleanTalk before admin template rendering."/>
+  <listener event_id="app_admin_start_begin" execute_order="10" callback_class="CleanTalk\Listener" callback_method="appStart" active="1" description="Initialize CleanTalk before admin template rendering."/>
+  <listener event_id="app_pub_start_begin" execute_order="10" callback_class="CleanTalk\Listener" callback_method="appStart" active="1" description="Initialize CleanTalk before page caching and template rendering."/>
 </code_event_listeners>
