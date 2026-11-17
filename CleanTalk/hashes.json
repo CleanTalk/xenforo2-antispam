@@ -63,7 +63,7 @@
   "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "567e887ee0b4ebb76e4c8b3d7e6429cc8f7a6169af448fb560d6f80a6b9f98f0",
   "src/addons/CleanTalk/XF/Spam/Cleaner.php": "cf6324c0592ad52091defcf326ea922d80a0afdd2d5924ba6d31ef374050d9fb",
   "src/addons/CleanTalk/XF/SubContainer/Spam.php": "84789fe3a2834cbe5d91a2e8693224dde342c9e65544d00377e2781b7b6707a5",
-  "src/addons/CleanTalk/XF/Template/Templater.php": "07de422ec039f65769c1d4c5d35d56e62cf6487c68fa89c4383d48ba07961a71",
+  "src/addons/CleanTalk/XF/Template/Templater.php": "8b3d016ae9fa64dcee241b3de600290ee4ebc555d680b1ceafcfd9022e66fc6d",
   "src/addons/CleanTalk/_data/activity_summary_definitions.xml": "99d8c2563a31320d66f958fc8bda78613545f5f7959bb3cf5318805e3a3c39d2",
   "src/addons/CleanTalk/_data/admin_navigation.xml": "064ec797484ac00d5ee37367b50b06846d11f480d00550997712707f8fdac8c0",
   "src/addons/CleanTalk/_data/admin_permission.xml": "ec6fb97cebf0bceb24f1ed1d5778c1db54eeb7535fbb3e31d824840e7aa9ff87",
