@@ -4,7 +4,6 @@ namespace CleanTalk\XF\Template;
 
 require_once \XF::getRootDirectory() . '/src/addons/CleanTalk/lib/autoload.php';
 
-use Cleantalk\Custom\Funcs as CleantalkFuncs;
 use Cleantalk\Custom\LicenseBanner;
 
 class Templater extends \XF\Template\Templater
@@ -106,26 +105,8 @@ class Templater extends \XF\Template\Templater
         $output = parent::renderTemplate($template, $params, $addDefaultParams, $extensionOverrides);
         static $show_flag = true;
 
-        // XF 2.3.13+ locks the container while rendering nested templates/macros.
-        // Option writes (rebuildOptionCache) and die() in remote calls/SFW must not happen
-        // in that state, so defer the bootstrap until an unlocked (outermost) render.
-        if ( $show_flag && !$this->isContainerLocked() ) {
+        if ( $show_flag ) {
             $show_flag = false;
-
-            if ( !headers_sent() ) {
-                CleantalkFuncs::ctSetCookie();
-            }
-
-            try {
-                CleantalkFuncs::ctRemoteCalls();
-                CleantalkFuncs::apbctRunCron();
-            } catch (\Exception $e) {
-                error_log(var_export($e->getMessage(), true));
-            }
-
-            if ( isset($this->app->options()['ct_sfw']) && $this->app->options()['ct_sfw'] && $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] !== '/admin.php' ) {
-                CleantalkFuncs::sfwCheck();
-            }
 
             if ( $_SERVER["REQUEST_METHOD"] === 'GET' && $_SERVER['SCRIPT_NAME'] === '/admin.php' ) {
                 //key error render
@@ -253,13 +234,4 @@ class Templater extends \XF\Template\Templater
         return $output;
     }
 
-    /**
-     * @return bool
-     */
-    private function isContainerLocked()
-    {
-        $container = $this->app->container();
-
-        return method_exists($container, 'isLocked') && $container->isLocked();
-    }
 }

@@ -18,7 +18,7 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
 
             \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
         } catch ( \Throwable $e ) {
-            // Container may be locked at this stage of the request (e.g. friendly-url/error pages).
+            \XF::logException($e, false, 'CleanTalk storage delete failed: ');
             return false;
         }
 
@@ -36,7 +36,7 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
 
             \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
         } catch ( \Throwable $e ) {
-            // Container may be locked at this stage of the request (e.g. friendly-url/error pages).
+            \XF::logException($e, false, 'CleanTalk storage save failed: ');
             return false;
         }
 
