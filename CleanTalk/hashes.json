@@ -1,4 +1,5 @@
 {
+  "js/cleantalk/form.js": "b7fabfd86c03d7fbb2b5f821077f3329d31b2582903e08fa7f7dda9c58669694",
   "src/addons/CleanTalk/addon.json": "c678b25c34aab6c07b9e68eb9c1090cff9ae70960113ed42f6b0dc1a2332681c",
   "src/addons/CleanTalk/ct_icon.png": "fb2c4bc996616fb6cb2386a162b6cbb1ce5500bd8fa7a9fe8bc6c344855d846e",
   "src/addons/CleanTalk/lib/autoload.php": "1af9bd939f9eb94f17c2b65f6be0f84938b43e3a9555a09911d912ce360629f7",
@@ -52,6 +53,7 @@
   "src/addons/CleanTalk/Listener.php": "79594276fdaa973e33740c91ae110ccc13aeba0bd1d34b9385aa5ef9739735e7",
   "src/addons/CleanTalk/Setup.php": "826a78c669ace99192761c6e2ce72ae68626b9ceab458ab7296873acfe464674",
   "src/addons/CleanTalk/tests/bootstrap.php": "775fc33df0481713159236f2c706f7bdf1f37a19c5d65dae94068b723a5fca49",
+  "src/addons/CleanTalk/tests/form.test.js": "d731e231f8b02c036616fd2591c267724694b4ee3b2b08dbb8b5c73028479b15",
   "src/addons/CleanTalk/tests/phpunit.xml": "b2a09c9158518e83c565163bf458eb1ad8aafba8d21805a55448611cb27e4957",
   "src/addons/CleanTalk/tests/psalm.xml": "f7812c2360613426e62eb835256d4ad1adc80efa5e1b5ee02b91d63b0f712271",
   "src/addons/CleanTalk/XF/Pub/Controller/Forum.php": "e1c48f30cd50fabd2fb4c88342096186e08d6da4d803691a852aea52a297e3f4",
@@ -61,7 +63,7 @@
   "src/addons/CleanTalk/XF/Spam/Checker/CleanTalkUser.php": "567e887ee0b4ebb76e4c8b3d7e6429cc8f7a6169af448fb560d6f80a6b9f98f0",
   "src/addons/CleanTalk/XF/Spam/Cleaner.php": "cf6324c0592ad52091defcf326ea922d80a0afdd2d5924ba6d31ef374050d9fb",
   "src/addons/CleanTalk/XF/SubContainer/Spam.php": "84789fe3a2834cbe5d91a2e8693224dde342c9e65544d00377e2781b7b6707a5",
-  "src/addons/CleanTalk/XF/Template/Templater.php": "858d843bdf5c56e7e35c01e9e6769b9c962e2d150a27a59d7d4c724e73387f96",
+  "src/addons/CleanTalk/XF/Template/Templater.php": "07de422ec039f65769c1d4c5d35d56e62cf6487c68fa89c4383d48ba07961a71",
   "src/addons/CleanTalk/_data/activity_summary_definitions.xml": "99d8c2563a31320d66f958fc8bda78613545f5f7959bb3cf5318805e3a3c39d2",
   "src/addons/CleanTalk/_data/admin_navigation.xml": "064ec797484ac00d5ee37367b50b06846d11f480d00550997712707f8fdac8c0",
   "src/addons/CleanTalk/_data/admin_permission.xml": "ec6fb97cebf0bceb24f1ed1d5778c1db54eeb7535fbb3e31d824840e7aa9ff87",
