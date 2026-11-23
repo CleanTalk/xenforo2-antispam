@@ -33,7 +33,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls\RemoteCalls
      */
     protected function getAvailableRcActions()
     {
-        $remote_calls = json_decode(\Cleantalk\Custom\Funcs::getXF()->options()->ct_remote_calls, true);
+        $remote_calls = $this->storage_handler_class->getSetting(static::OPTION_NAME);
         $default_rc = array(
             'sfw_update' => array('last_call' => 0, 'cooldown' => 0),
             'sfw_send_logs' => array('last_call' => 0, 'cooldown' => self::COOLDOWN)

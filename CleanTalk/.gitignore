@@ -1,6 +1,5 @@
 .idea
 /vendor/
-/tests/
 package-lock.json
 composer.lock
 /lib/Cleantalk/Common/**/**/.gitignore

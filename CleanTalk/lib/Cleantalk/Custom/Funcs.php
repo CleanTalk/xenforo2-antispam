@@ -60,7 +60,8 @@ class Funcs
         $cron_class = Mloader::get('Cron');
         $cron = new $cron_class();
         $cron_option_name = $cron->getCronOptionName();
-        $cron_option = json_decode(self::getXF()->options()->$cron_option_name, true);
+        $storage = new \Cleantalk\Custom\StorageHandler\StorageHandler();
+        $cron_option = $storage->getSetting($cron_option_name);
         // Old 2.x format stored {last_start, tasks}. Reset to the current task list.
         if ( empty($cron_option) || isset($cron_option['tasks']) ) {
             $cron->saveTasks($cron->getDefaultTasks());

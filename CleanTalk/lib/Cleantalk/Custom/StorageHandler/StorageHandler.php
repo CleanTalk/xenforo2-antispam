@@ -6,41 +6,44 @@ class StorageHandler implements \Cleantalk\Common\StorageHandler\StorageHandler
 {
     public function getSetting($setting_name)
     {
-        $setting_value = \Cleantalk\Custom\Funcs::getXF()->options()->$setting_name;
+        // Read live state: the XenForo options cache is a request-local snapshot.
+        $setting_value = \XF::db()->fetchOne(
+            'SELECT option_value FROM xf_option WHERE option_id = ?',
+            $setting_name
+        );
 
-        return json_decode($setting_value, true);
+        return $setting_value === false ? null : json_decode($setting_value, true);
     }
 
     public function deleteSetting($setting_name)
     {
-        try {
-            $delete_result = \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, '');
-
-            \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
-        } catch ( \Throwable $e ) {
-            \XF::logException($e, false, 'CleanTalk storage delete failed: ');
-            return false;
-        }
-
-        return $delete_result;
+        return $this->saveSetting($setting_name, '');
     }
 
     public function saveSetting($setting_name, $setting_value)
     {
         if ( is_array($setting_value) ) {
             $setting_value = json_encode($setting_value);
+            if ( $setting_value === false ) {
+                throw new \UnexpectedValueException('CleanTalk storage JSON encoding failed: ' . json_last_error_msg());
+            }
         }
 
-        try {
-            $saving_result = \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->updateOption($setting_name, $setting_value);
-
-            \Cleantalk\Custom\Funcs::getXF()->repository('XF:Option')->rebuildOptionCache();
-        } catch ( \Throwable $e ) {
-            \XF::logException($e, false, 'CleanTalk storage save failed: ');
-            return false;
+        // Runtime state must not schedule a rebuild of XenForo's global options cache.
+        $updated = \XF::db()->update(
+            'xf_option',
+            array('option_value' => $setting_value),
+            'option_id = ?',
+            $setting_name
+        );
+        if ( !$updated && \XF::db()->fetchOne(
+            'SELECT option_id FROM xf_option WHERE option_id = ?',
+            $setting_name
+        ) === false ) {
+            throw new \InvalidArgumentException("Unknown option $setting_name");
         }
 
-        return $saving_result;
+        return true;
     }
 
     public static function getUpdatingFolder()
